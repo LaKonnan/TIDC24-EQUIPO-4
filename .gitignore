@@ -1,4 +1,3 @@
-
 # Created by https://www.toptal.com/developers/gitignore/api/python,node,vue,vuejs,flask,serverless,amplify
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,node,vue,vuejs,flask,serverless,amplify
 
@@ -12,7 +11,7 @@ amplify/backend/awscloudformation
 build/
 dist/
 node_modules/
-aws-exports.js
+# aws-exports.js
 awsconfiguration.json
 amplifyconfiguration.json
 amplify-build-config.json
@@ -373,8 +372,6 @@ temp/
 # TODO: where does this rule come from?
 docs/_book
 
-# TODO: where does this rule come from?
-test/
 
 ### Vuejs ###
 # Recommended template: Node.gitignore
