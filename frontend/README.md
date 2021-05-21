@@ -1,4 +1,4 @@
-# app_ccch ejemplo
+# app_ccch
 
 ## Project setup
 ```
