@@ -1,6 +1,6 @@
 org: campodonico
-app: api-obras
-service: api-obras
+app: obrasapi
+service: obrasapi
 
 frameworkVersion: '2'
 
