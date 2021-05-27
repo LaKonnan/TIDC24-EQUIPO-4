@@ -1,6 +1,6 @@
 <template>
     <div class="obras">
-        <Navbar></Navbar>
+        <Navbar/>
         <div class="album py-5 bg-light">
           <div class="container">
               <h1>Obras de la empresa</h1>
@@ -47,6 +47,7 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss">
+    @import '../components/estilos.scss';
 
 </style>

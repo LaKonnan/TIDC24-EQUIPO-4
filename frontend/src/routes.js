@@ -12,6 +12,10 @@ export default new VueRouter({
             path: '/',
             name: 'obras',
             component: Obras,
+        },
+        {
+            path: '/cajas_chicas',
+            name: 'Cajas chicas'
         }
     ]
 })

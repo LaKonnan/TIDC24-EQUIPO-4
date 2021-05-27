@@ -1,16 +1,10 @@
 <template>
   <div>
-    <b-navbar type="dark" variant="dark">
-      <b-navbar-brand href="#">Gestion Obras</b-navbar-brand>
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-      <b-collapse id="nav-collapse" is-nav>
-        <b-navbar-nav>
-          <b-nav-item href="#">
-            <router-link :to = "{ name:'obras' }" exact>GetObras</router-link>
-            </b-nav-item>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
+    <b-navbar style="background-color: #F39A27; color: #ffff">
+      <b-navbar-nav>
+        <b>CONSTRUCTORA CAMPODONICO</b>
+      </b-navbar-nav>
+  </b-navbar>
   </div>
 </template>
 
@@ -20,8 +14,7 @@
   }
 </script>
 
-<style scoped>
-  a {
-    color:rgb(255, 255, 255);
-  }
+<style lang="scss">
+  @import 'estilos.scss';
+  
 </style>
