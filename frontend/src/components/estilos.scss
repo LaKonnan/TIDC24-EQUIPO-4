@@ -7,23 +7,37 @@
     color: #1F1F1F;
 }
 
+.content {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
 // ----------------------------------------------------- TEXTOS
+.dark-title, .light-title {
+    font-size: 32px;
+    font-weight: bold;
+}
+
 // titulo con fondo claro
 .dark-title {
-    font-size: 36px;
     color: #1F1F1F;
 }
 
 // titulo con fondo oscuro
 .light-title {
-    font-size: 26px;
     color: #FFFFFF;
-    font-weight: bold;
 }
 
 // texto en negrita
 .bold {
     font-weight: bold;
+}
+
+// titulo navbar
+.navbar-title {
+    font-weight: bold;
+    font-size: 26px;
+    color: #FFFFFF;
 }
 
 // ---------------------------------------------------- FONDOS
@@ -82,3 +96,10 @@
 .disabled-button {
     background-color: #EBEBEB;
 }
+
+// ---------------------------------------------------- VARIOS
+.hr {
+    margin-top: -10px;
+    border: 1px solid #1F1F1F;
+}
+

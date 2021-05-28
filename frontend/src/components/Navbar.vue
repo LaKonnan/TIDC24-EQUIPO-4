@@ -1,7 +1,6 @@
 <template>
   <div>
     <b-navbar style="background-color: #F39A27; color: #ffff">
-      
       <!-- boton menu lateral -->
       <b-navbar-nav>
         <b-nav-item>
@@ -13,7 +12,7 @@
 
       <!-- nombre de empresa -->
       <b-nav-text class="ml-auto">
-        <b-navbar-item class="light-title">CONSTRUCTORA CAMPODÓNICO</b-navbar-item>
+        <b-navbar-item class="navbar-title">CONSTRUCTORA CAMPODÓNICO</b-navbar-item>
       </b-nav-text>
 
       <!-- nombre de usuario -->
