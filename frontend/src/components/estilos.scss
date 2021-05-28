@@ -16,8 +16,9 @@
 
 // titulo con fondo oscuro
 .light-title {
-    font-size: 36px;
+    font-size: 26px;
     color: #FFFFFF;
+    font-weight: bold;
 }
 
 // texto en negrita
@@ -75,7 +76,7 @@
 }
 
 .dark-button {
-    background-color: #717D6E;
+    background-color: #717D6E !important;
 }
 
 .disabled-button {

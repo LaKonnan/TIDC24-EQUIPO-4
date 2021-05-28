@@ -1,6 +1,6 @@
 <template>
     <div class="obras">
-        <Navbar/>
+        <navbar/>
         <div class="album py-5 bg-light">
           <div class="container">
               <h1>Obras de la empresa</h1>
@@ -23,7 +23,6 @@
 
 <script>
     import { getAPI } from '../axios-api'
-    import Navbar from '../components/Navbar'
     export default {
         name: 'Obras',
         data () {
@@ -32,7 +31,7 @@
             }
         },
         components: {
-            Navbar
+            'navbar': require('../components/Navbar.vue').default
         },
         created () {
             getAPI.get('/obras',)
