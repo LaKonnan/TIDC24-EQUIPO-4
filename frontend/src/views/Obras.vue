@@ -1,24 +1,44 @@
 <template>
     <div class="obras">
         <Navbar></Navbar>
-        <div class="album py-5 bg-light">
-          <div class="container">
-              <h1>Obras de la empresa</h1>
-                <div class="card" style="width: 50rem;">
-                    <ul class="list-group list-group-flush">
-                        <div class="row" v-for="obras in APIData" :key="obras.obraId">
-                            <li class="list-group-item">
-                                ID: {{obras.obraId.S}}
-                                Residente: {{obras.encargado.S}}
-                                Nombre: {{obras.nombre.S}}
-                                Estado: {{obras.estado.S}}
-                            </li>
-                        </div>
-                    </ul>
-                </div>
-          </div>
-      </div>     
-    </div>
+        <div>
+            <h1>Obras de la empresa.</h1>
+            <div>
+                <!--Tabla que recibe datos de obras y las muestra -->
+            <div class="container">
+           <b-table 
+           selectable
+           :headers="header"
+           :items="APIData"
+           :select-mode="selectMode"
+           >
+                </b-table>
+                  <div>
+       <!--Estructura de botones CRUD con diseño predeterminado sin funcionalidad (aún) -->             
+  <b-button-toolbar key-nav aria-label="Toolbar de CRUD">
+     <b-button-group class="mx-1">
+        <b-button> &laquo; </b-button>
+        <b-button> &lsaquo; </b-button>
+     </b-button-group>
+
+     <b-button-group class="mx-1">
+        <b-button>Crear Nueva Obra</b-button>
+        <b-button>Editar Obra</b-button>
+        <b-button>Eliminar Obra</b-button>
+     </b-button-group>
+
+     <b-button-group class="mx-1">
+        <b-button> &rsaquo; </b-button>
+        <b-button> &raquo; </b-button>
+     </b-button-group>
+   </b-button-toolbar>
+               </div>
+            </div>
+         </div>
+      </div>
+  </div>     
+    
+    
 </template>
 
 <script>
@@ -28,7 +48,9 @@
         name: 'Obras',
         data () {
             return {
-                APIData: []
+                APIData:[],
+                   selectMode: 'single',
+                 header: ['id', 'encargado', 'nombre', 'estado'],                                        
             }
         },
         components: {
@@ -37,16 +59,20 @@
         created () {
             getAPI.get('/obras',)
                 .then(response => {
-                    console.log('Obra API has recieved data')
+                    console.log('Obra API has receieved data')
                     this.APIData = response.data
                 })
                 .catch(err => {
                     console.log(err)
                 })
+        },
+        methods: {
         }
     }
+    
 </script>
 
-<style scoped>
+<style>
+
 
 </style>
