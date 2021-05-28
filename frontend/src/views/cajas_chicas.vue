@@ -1,7 +1,5 @@
 <template>
   <div>
-    <!-- barra superior y lateral -->
-    <navbar/>
     <div class="content">
       <br>
       <!-- titulo -->
@@ -15,14 +13,7 @@
 <script>
 
 export default {
-    name: 'cajas',
-    data () {
-        
-    },
-    components: {
-        'navbar': require('../components/Navbar.vue').default
-    }
-
+    name: 'cajas'
 }
 </script>
 

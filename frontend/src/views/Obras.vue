@@ -1,6 +1,5 @@
 <template>
     <div class="obras">
-        <Navbar></Navbar>
         <div>
             <h1>Obras de la empresa.</h1>
             <div>
@@ -50,9 +49,6 @@
                    selectMode: 'single',
                  header: ['id', 'encargado', 'nombre', 'estado'],                                        
             }
-        },
-        components: {
-            'navbar': require('../components/Navbar.vue').default
         },
         created () {
             getAPI.get('/obras',)
