@@ -1,0 +1,105 @@
+// importar archivos scss de bootstrap
+@import '~bootstrap/scss/bootstrap.scss';
+@import '~bootstrap-vue/src/index.scss';
+
+* {
+    font-family: 'Open Sans', sans-serif !important;
+    color: #1F1F1F;
+}
+
+.content {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+// ----------------------------------------------------- TEXTOS
+.dark-title, .light-title {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+// titulo con fondo claro
+.dark-title {
+    color: #1F1F1F;
+}
+
+// titulo con fondo oscuro
+.light-title {
+    color: #FFFFFF;
+}
+
+// texto en negrita
+.bold {
+    font-weight: bold;
+}
+
+// titulo navbar
+.navbar-title {
+    font-weight: bold;
+    font-size: 26px;
+    color: #FFFFFF;
+}
+
+// ---------------------------------------------------- FONDOS
+// color primario de la empresa para fondos
+.dark-orange {
+    background-color: #F68B01;
+}
+
+.orange {
+    background-color: #F39A27;
+}
+
+.light-orange-1 {
+    background-color: #F0A84C;
+}
+
+.light-orange-2 {
+    background-color: #EDB772;
+}
+
+// color secundario de la empresa
+.dark-green {
+    background-color: #5A6857;
+}
+
+.green  {
+    background-color: #717D6E;
+}
+
+.light-green-1 {
+    background-color: #889186;
+}
+
+.light-green-2 {
+    background-color: #9FA69D;
+}
+
+// ---------------------------------------------------- BOTONES
+.normal-button, .dark-button, .disabled-button {
+    color: #FFFFFF;
+    font-size: 14px;
+    width: 100%;
+    height: 32px;
+    font-weight: bold;
+    border-radius: 2px;
+}
+
+.normal-button {
+    background-color: #F39A27;
+}
+
+.dark-button {
+    background-color: #717D6E !important;
+}
+
+.disabled-button {
+    background-color: #EBEBEB;
+}
+
+// ---------------------------------------------------- VARIOS
+.hr {
+    margin-top: -10px;
+    border: 1px solid #1F1F1F;
+}
+
