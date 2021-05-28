@@ -10,10 +10,9 @@
            selectable
            :headers="header"
            :items="APIData"
-           :select-mode="selectMode"
-           >
-                </b-table>
-                  <div>
+           :select-mode="selectMode">
+            </b-table>
+                <div>
        <!--Estructura de botones CRUD con diseño predeterminado sin funcionalidad (aún) -->             
   <b-button-toolbar key-nav aria-label="Toolbar de CRUD">
      <b-button-group class="mx-1">
@@ -43,7 +42,6 @@
 
 <script>
     import { getAPI } from '../axios-api'
-    import Navbar from '../components/Navbar'
     export default {
         name: 'Obras',
         data () {
@@ -54,7 +52,7 @@
             }
         },
         components: {
-            Navbar
+            'navbar': require('../components/Navbar.vue').default
         },
         created () {
             getAPI.get('/obras',)
@@ -72,7 +70,7 @@
     
 </script>
 
-<style>
-
+<style lang="scss">
+    @import '../components/estilos.scss';
 
 </style>
