@@ -80,7 +80,7 @@ body {
 }
 
 // ---------------------------------------------------- BOTONES
-.normal-button, .dark-button, .disabled-button {
+.normal-button, .dark-button, .disabled-button, .button-next {
     color: #FFFFFF;
     font-size: 14px;
     width: 100%;
@@ -90,6 +90,10 @@ body {
     border: none !important; 
     text-transform: uppercase;
     font-weight: bold !important;
+}
+
+.button-next {
+    margin-top: 20px;
 }
 
 .normal-button {
@@ -110,6 +114,12 @@ body {
 
 .disabled-button {
     background-color: #bdbdbd !important;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-column-gap: 5px
 }
 
 .buttons-obra {
@@ -160,3 +170,24 @@ body {
     background-color: #5A6857 !important;
 }
 
+.nav-link {
+    color: #1F1F1F;
+}
+
+
+// -------------------------------------------------------- MODALS
+.modal-header {
+    background-color: #F39A27;
+}
+
+.modal-title {
+    color: #FFFFFF !important;
+    font-weight: bold !important;
+    
+}
+
+.nav-link.active {
+    color: #FFFFFF;
+    background-color: #F39A27 !important;
+    font-weight: bold;
+}
