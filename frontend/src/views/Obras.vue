@@ -25,7 +25,5 @@
     
 </script>
 
-<style lang="scss">
-    @import '../components/estilos.scss';
-
+<style>
 </style>
