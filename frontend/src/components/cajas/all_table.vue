@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import { getAPI } from '../axios-api'
 export default {
     data () {
         return {
@@ -38,6 +39,14 @@ export default {
 
     created() {
         // obtener lista de obras
+        getAPI.get('/obras',)
+                .then(response => {
+                    console.log('Datos de caja recibidos')
+                    this.cajas = response.data
+                })
+                .catch(err => {
+                    console.log(err)
+                })
     },
 
     computed: {
