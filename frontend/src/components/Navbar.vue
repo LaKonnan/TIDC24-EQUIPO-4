@@ -18,8 +18,13 @@
       <!-- nombre de usuario -->
       <b-navbar-nav class="ml-auto">
         <b-nav-item>
-          Nombre Apellido
-          <b-icon icon="power"></b-icon>
+          <!-- Check that the SDK client is not currently loading before accessing is methods -->
+          <div v-if="!$auth.loading">
+          <!-- show login when not authenticated -->
+            <button v-if="!$auth.isAuthenticated" @click="login" class=dark-button>Iniciar sesión</button>
+            <!-- show logout when authenticated -->
+            <button v-if="$auth.isAuthenticated" @click="logout" class=dark-button>Cerrar sesión</button>
+          </div>
         </b-nav-item>
       </b-navbar-nav>
     </b-navbar>
@@ -27,6 +32,13 @@
     <!-- menu lateral -->
     <b-sidebar class="side-bar" id="sidebar-variant" title="MENÚ" shadow>
       <b-list-group>
+        <b-list-group-item button>
+           <b-link :to="'/perfil'">
+             <b-icon icon="person-circle"></b-icon>
+             Mi perfil
+           </b-link>
+        </b-list-group-item>
+        
         <b-list-group-item button>
            <b-link :to="'/'">
              <b-icon icon="cone-striped"></b-icon>
@@ -40,6 +52,7 @@
              Cajas chicas
            </b-link>
         </b-list-group-item>
+
       </b-list-group>
     </b-sidebar>
   </div>
@@ -53,7 +66,19 @@
       { title: 'Obras', icon: 'cone-striped', to: '/'},
       { title: 'Cajas chicas', icon: 'archive-fill', to: '/cajas-chicas'}
     ]
-    })
+    }),
+    methods: {
+      // Log the user in
+      login() {
+        this.$auth.loginWithRedirect();
+      },
+      // Log the user out
+      logout() {
+        this.$auth.logout({
+          returnTo: window.location.origin
+        });
+      }
+    }
   }
 </script>
 

@@ -10,6 +10,8 @@ import {
   applyPolyfills,
   defineCustomElements,
 } from '@aws-amplify/ui-components/loader';
+import { domain, clientId } from "../auth_config.json";
+import { Auth0Plugin } from "./auth";
 
 Amplify.configure(aws_exports);
 applyPolyfills().then(() => {
@@ -20,6 +22,19 @@ applyPolyfills().then(() => {
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
+
+Vue.use(Auth0Plugin, {
+  domain,
+  clientId,
+  onRedirectCallback: appState => {
+    router.push(
+      appState && appState.targetUrl
+        ? appState.targetUrl
+        : window.location.pathname
+    );
+  }
+});
+
 Vue.config.productionTip = false
 
 new Vue({
