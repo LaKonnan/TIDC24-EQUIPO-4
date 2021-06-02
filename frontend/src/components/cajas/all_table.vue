@@ -6,6 +6,7 @@
         selectable 
         :headers="header" 
         :items="cajas" 
+        :caja="caja"
         :select-mode="selectMode"
         :per-page="perPage"
         hover
@@ -27,6 +28,7 @@
 <script>
 import { getAPI } from '../axios-api'
 export default {
+    props: ['caja'],
     data () {
         return {
             cajas: [],
