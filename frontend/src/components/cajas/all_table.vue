@@ -9,6 +9,7 @@
         :caja="caja"
         :select-mode="selectMode"
         :per-page="perPage"
+        @click="clicTable()"
         hover
         fixed
         responsive
@@ -55,6 +56,12 @@ export default {
         // obtener cantidad de elementos de cajas para paginado
         rows() {
             return this.cajas.length
+        }
+    },
+
+    methods: {
+        clicTable() {
+            console.log('Fila')
         }
     }
 }

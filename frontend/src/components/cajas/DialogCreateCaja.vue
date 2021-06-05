@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-modal id="modal-xl" size="xl" title="NUEVA CAJA CHICA" hide-footer>
+        <b-modal id="modal-create" size="xl" title="NUEVA CAJA CHICA" hide-footer>
             <b-tabs pills card vertical v-model="tabIndex">
                 <!-- paso 1 -->
                 <b-tab title="PASO 1" active id="Step1">
