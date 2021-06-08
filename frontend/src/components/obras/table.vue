@@ -4,8 +4,8 @@
       <b-table
         class = "table"
         selectable 
-        :headers="header" 
         :items="APIData" 
+        :fields="fields"
         :select-mode="selectMode"
         :per-page="perPage"
         hover
@@ -30,11 +30,11 @@
     export default {
         data () {
             return {
+                fields: [{key: 'obraId.S', label: 'ID'}, {key: 'encargado.S', label: 'Encargado'}, {key: 'nombre.S', label: 'Nombre'}, {key: 'estado.S', label: 'Estado'}],
                 APIData: [],
                 perPage: 10,
                 currentPage: 1,
-                selectMode: 'single',
-                header: ['ESTADO', 'ENCARGADO', 'NOMBRE', 'ID']
+                selectMode: 'single'
             }
         },
         
