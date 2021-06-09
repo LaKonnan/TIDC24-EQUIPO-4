@@ -40,6 +40,13 @@
         </b-list-group-item>
         
         <b-list-group-item button>
+           <b-link :to="'/usuarios'">
+             <b-icon icon="people"></b-icon>
+             Usuarios
+           </b-link>
+        </b-list-group-item>
+        
+        <b-list-group-item button>
            <b-link :to="'/'">
              <b-icon icon="cone-striped"></b-icon>
              Obras

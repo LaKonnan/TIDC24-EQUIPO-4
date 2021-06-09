@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './routes.js'
 import Amplify from 'aws-amplify';
+import Vuelidate from 'vuelidate'
 import aws_exports from './aws-exports';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -22,6 +23,8 @@ applyPolyfills().then(() => {
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
+
+Vue.use(Vuelidate)
 
 Vue.use(Auth0Plugin, {
   domain,

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Obras from './views/Obras'
 import cajas from './views/cajas_chicas'
 import Perfil from './views/Perfil'
+import Usuarios from './views/Usuarios'
 import { authGuard } from "./auth/authGuard";
 
 
@@ -28,6 +29,12 @@ export default new VueRouter({
             path: '/perfil',
             name: 'perfil',
             component: Perfil,
+            beforeEnter: authGuard
+        },
+        {
+            path: '/usuarios',
+            name: 'usuarios',
+            component: Usuarios,
             beforeEnter: authGuard
         }
     ]
