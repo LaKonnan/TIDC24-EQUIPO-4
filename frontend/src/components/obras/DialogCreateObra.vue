@@ -1,85 +1,119 @@
 <template>
     <div>
         <b-modal id="modal-xlc" size="xl" title="NUEVA OBRA" hide-footer>
-            <b-tabs pills card vertical v-model="tabIndex">
-                <!-- Modal que debe permitir crear una obra -->
-                
-                    <b-card-text>
-                        Nombre de la obra
-                        <b-form-input  v-model="nombreObra"></b-form-input>
+            <b-form @submit.stop.prevent="onSubmit">
+            <b-form-group id="input-group-1" label="Encargado" label-for="input-1">
+              <b-form-input
+                id="input-1"
+                name="input-1"
+                v-model="$v.form.name.$model"
+                :state="validateState('name')"
+                aria-describedby="input-1-live-feedback"
+              ></b-form-input>
+              <b-form-invalid-feedback
+                id="input-1-live-feedback"
+              >Este es un campo obligatorio y requiere un mínimo de 3 carácteres.</b-form-invalid-feedback>
+            </b-form-group>
 
-                        Encargado de la obra
-                        <b-form-input v-model="encargadoObra" ></b-form-input>
+            <b-form-group id="input-group-2" label="Nombre" label-for="input-2">
+              <b-form-input
+                id="input-2"
+                name="input-2"
+                type="text"
+                v-model="$v.form.name1.$model"
+                 :state="validateState1('name1')"
+                aria-describedby="input-2-live-feedback"
+              ></b-form-input>
+              <b-form-invalid-feedback
+                id="input-2-live-feedback"
+              >Este es un campo obligatorio y requiere un mínimo de 3 carácteres.</b-form-invalid-feedback>
+            </b-form-group>
 
-                        Estado de la obra
-                        <b-form-select v-model="estadoObra" :options="options3"></b-form-select>
+             <b-form-group id="input-group-3" label="Estado" label-for="input-3">
+                <b-form-select
+                    id="input-3"
+                    name="input-3"
+                    v-model="selected1" 
+                    :options="options1"
+                    required
+                ></b-form-select>
+                </b-form-group>
 
-                        <b-button :disabled="btnStep1" id="btnStep1" class="button-next dark-button" @click="next1()">Crear Obra</b-button>
-                        <b-button :disabled="btnExit1" id="btnExit1" class="button-next dark-button" >Salir</b-button>
-                    </b-card-text>
-            </b-tabs>
+                 <b-form-group id="input-group-4" label="Tipo" label-for="input-4">
+                <b-form-select
+                    id="input-4"
+                    name="input-4"
+                    type="select"
+                    v-model="selected2" 
+                    :options="options2"
+                    required
+                ></b-form-select>
+                </b-form-group>
+            <b-button type="submit" class="normal-button">Crear obra</b-button>
+          </b-form>
         </b-modal>
-
     </div>
 </template>
 
 <script>
+
+import { validationMixin } from "vuelidate";
+import { required, minLength,} from "vuelidate/lib/validators";
+
+
 export default {
-    data () {
-        return  {
-            tabIndex: 2,
-            step: 1,
-            btnStep1: true,
-            nombreObra: null,
-            encargadoObra: null,
-            estadoObra: null,
-           
-            options3: [
+    mixins: [validationMixin],
+  data() {
+    return {
+      options1: [
                 { value: 'Activa', text: 'Activa'},
-                { value: 'Inactiva', text: 'Inactiva'}
-                
-            ]
-        }
+                { value: 'Inactiva', text: 'Inactiva'},
+                { value: 'Finalizada', text: 'Finalizada' }
+            ],
+             options2: [
+                { value: 'Obra', text: 'Obra'},
+                { value: 'Gerencia', text: 'Gerencia'},
+                { value: 'Oficina', text: 'Oficina'}
+            ],
+      form: {
+        name: null,
+        name1: null,
+        selected1: null,
+        selected2: null
+      }
+    };
+  },
+  validations: {
+    form: {
+       name: {
+        required,
+        minLength: minLength(3)
+      },
+      name1: {
+        required,
+        minLength: minLength(3)
+      },
+
+      
+    }
+  },
+  methods: {
+    validateState(name) {
+      const { $dirty, $error } = this.$v.form[name];
+      return $dirty ? !$error : null;
     },
 
-    methods: {
-        nextStep() {
-            switch(this.step){
-                case 1 :
-                    if(this.nombreObra != null && this.encargadoObra != null) {
-                        this.step2 = false
-                    }
-                    if( this.nombreObra != null && this.encargadoObra != null && this.estadoObra != null){
-                        this.btnStep1 = false
-                        this.step = 2
-                    }
-                    break
-                case 2:
-                    
-                    break
-                case 3:
-                    break
-                default:
-                    break
-            }
-            
-        },
-        next1() {
-            this.step2 = false
-            const next = document.getElementById('Step1')
-            next.classList.remove('active')
-            const step = document.getElementById('Step2')
-            step.classList.add('active')
-            this.tabIndex++
-            console.log(this.tabIndex)
-        }
+     validateState1(name1) {
+      const { $dirty, $error } = this.$v.form[name1];
+      return $dirty ? !$error : null;
     },
-    
-    updated() {
-        this.nextStep()
-        console.log(this.tabIndex)
-    }    
-}
+    onSubmit() {
+      this.$v.form.$touch();
+      if (this.$v.form.$anyError) {
+        return;
+      }
+    }
+  }
+};
 </script>
 
-<style> </style> 

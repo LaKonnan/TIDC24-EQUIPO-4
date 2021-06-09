@@ -1,58 +1,146 @@
 <template>
     <div>
         <b-modal id="modal-xle" size="xl" title="EDITAR OBRA" hide-footer>
-            <b-tabs pills card vertical v-model="tabIndex">
+            
                 <!-- Modal que debe permitir editar datos seleccionados de la tabla -->
                 
-                    <b-card-text>
+                <b-card-text>
                         Los siguientes datos de obra seleccionada serán editados
-                        <br><br>
-                        Nombre de la obra
-                        <b-form-input v-model="editObra" ></b-form-input>
+                        <hr>
+                        <b>Obra:</b>
+                  <b-col>
+                    <b-row>ID: {{items[0].obraId.S}}</b-row>
+                    <b-row>Encargado: {{items[0].encargado.S}}</b-row>
+                    <b-row>Nombre: {{items[0].nombre.S}}</b-row>
+                    <b-row>Estado: {{items[0].estado.S}}</b-row>
+                  </b-col>
+                  <hr>
+                        <b-form @submit.stop.prevent="onSubmit">
+                <b-form-group id="input-group-1" label="Encargado" label-for="input-1">
+                <b-form-input
+                    id="input-1"
+                    name="input-1"
+                    v-model="$v.form.name.$model"
+                    :state="validateState('name')"
+                    aria-describedby="input-1-live-feedback"
+                ></b-form-input>
+                <b-form-invalid-feedback
+                    id="input-1-live-feedback"
+                >Este es un campo obligatorio y requiere un mínimo de 3 carácteres.</b-form-invalid-feedback>
+                </b-form-group>
 
-                        Encargado de la obra
-                        <b-form-input v-model="editEncargado" ></b-form-input>
+               <b-form-group id="input-group-2" label="Nombre" label-for="input-2">
+                <b-form-input
+                    id="input-2"
+                    name="input-2"
+                    v-model="$v.form.name1.$model"
+                    :state="validateState1('name1')"
+                    aria-describedby="input-2-live-feedback"
+                ></b-form-input>
+                <b-form-invalid-feedback
+                    id="input-2-live-feedback"
+                >Este es un campo obligatorio y requiere un mínimo de 3 carácteres.</b-form-invalid-feedback>
+                </b-form-group>
 
-                        Estado de la obra
-                        <b-form-select v-model="editState"></b-form-select>
+                <b-form-group id="input-group-3" label="Estado" label-for="input-3">
+                <b-form-select
+                    id="input-3"
+                    name="input-3"
+                    type="select"
+                    v-model="selected1" 
+                    :options="options1"
+                    
+                    :state="validateState('name')"
+                    aria-describedby="input-3-live-feedback"
+                ></b-form-select>
+                <b-form-invalid-feedback
+                    id="input-3-live-feedback"
+                >Este es un campo obligatorio y requiere seleccionar el estado.</b-form-invalid-feedback>
+                </b-form-group>
 
-                        <b-button :disabled="btnStep1" id="btnStep1" class="button-next dark-button" @click="next1()">Editar</b-button>
-                        <b-button :disabled="btnExit1" id="btnExit1" class="button-next dark-button" >Salir</b-button>
-                    </b-card-text>
-                
-
-              
-            </b-tabs>
+                <b-form-group id="input-group-4" label="Tipo" label-for="input-4">
+                <b-form-select
+                    id="input-4"
+                    name="input-4"
+                    type="select"
+                    v-model="selected1" 
+                    :options="options2"
+                    
+                    :state="validateState('name')"
+                    aria-describedby="input-4-live-feedback"
+                ></b-form-select>
+                <b-form-invalid-feedback
+                    id="input-4-live-feedback"
+                >Este es un campo obligatorio y requiere seleccionar el tipo.</b-form-invalid-feedback>
+                </b-form-group>
+                <b-button type="submit" class="normal-button">Editar</b-button>
+              </b-form>          
+          </b-card-text>
         </b-modal>
 
     </div>
 </template>
 
 <script>
+
+import { validationMixin } from "vuelidate";
+import { required, minLength} from "vuelidate/lib/validators";
+
 export default {
-    data () {
-        return  {
-            tabIndex: 2,
-            step: 1,
-            btnStep1: true,
-            editObra: null,
-            editEncargado: null,
-            editState: null,
-           
-            options3: [
+  mixins: [validationMixin],
+  props: ['items'],
+  data() {
+    return {
+        options1: [
                 { value: 'Activa', text: 'Activa'},
-                { value: 'Inactiva', text: 'Inactiva'}
-                
-            ]
-        }
+                { value: 'Inactiva', text: 'Inactiva'},
+                { value: 'Finalizada', text: 'Finalizada'}
+            ],
+            options2: [
+                { value: 'Obra', text: 'Obra'},
+                { value: 'Gerencia', text: 'Gerencia'},
+                { value: 'Oficina', text: 'Oficina'}
+            ],
+      form: {
+        name: null,
+        name1: null,
+        name2: null
+      }
+    };
+  },
+  validations: {
+    form: {
+         name: {
+        required,
+        minLength: minLength(3)
+      },
+      name1: {
+        required,
+        minLength: minLength(3)
+      },
+      name2: {
+        required
+      },
+    }
+  },
+  methods: {
+    validateState(name) {
+      const { $dirty, $error } = this.$v.form[name];
+      return $dirty ? !$error : null;
     },
-    methods: {
-    updated() {
-        this.nextStep()
-        console.log(this.tabIndex)
-    }    
-}
-}
+    validateState1(name1) {
+      const { $dirty, $error } = this.$v.form[name1];
+      return $dirty ? !$error : null;
+    },
+    
+
+    onSubmit() {
+      this.$v.form.$touch();
+      if (this.$v.form.$anyError) {
+        return;
+      }
+    }
+  }
+};
 </script>
 
-<style> </style> 

@@ -1,48 +1,73 @@
 <template>
     <div>
         <b-modal id="modal-xld" size="xl" title="ELIMINAR OBRA" hide-footer>
-            <b-tabs pills card vertical v-model="tabIndex">
-                <!-- Modal que debe contener los datos (en readonly) para eliminar -->
-                
-                    <b-card-text>
-                        Los siguientes datos de obra seleccionada serán eliminados
-                        <br><br>
-                        Nombre de la obra
-                        <b-form-input v-model="selectedObra"></b-form-input>
+            
+               Obra a eliminar:
+            <br><br>
+            <b-col>
+                <b-row>ID: {{items[0].obraId.S}}</b-row>
+                <b-row>Nombre: {{items[0].nombre.S}}</b-row>
+                <b-row>Encargado: {{items[0].encargado.S}}</b-row>
+                <b-row>Estado: {{items[0].estado.S}}</b-row>
+            </b-col>
+            <br><br>
+            <center>
+            <p><b>IMPORTANTE: </b>Una vez eliminada la obra no podrá ser recuperada</p>
+            <p><b>Para confirmar la eliminación, por favor, ingrese su contraseña de administrador.</b></p></center>
+           <b-form @submit.stop.prevent="onSubmit">
+                <b-form-group id="input-group-3" label="Contraseña" label-for="input-3">
+                <b-form-input
+                    id="input-3"
+                    name="input-3"
+                    type="password"
+                    v-model="$v.form.password.$model"
+                    :state="validateState('password')"
+                    aria-describedby="input-3-live-feedback"
+                ></b-form-input>
+                <b-form-invalid-feedback
+                    id="input-3-live-feedback"
+                >Este es un campo obligatorio, requiere ingresar una contraseña.</b-form-invalid-feedback>
+                </b-form-group>
 
-                        Encargado de la obra
-                        <b-form-input v-model="selectedEncargado"></b-form-input>
-
-                        Estado de la obra
-                        <b-form-input v-model="selectedState"></b-form-input>
-
-                        <b-button :disabled="btnStep1" id="btnStep1" class="button-next dark-button" @click="next1()">Eliminar</b-button>
-                        <b-button :disabled="btnExit1" id="btnExit1" class="button-next dark-button" >Salir</b-button>
-                    </b-card-text>
-             </b-tabs>
+                <b-button type="submit" class="dark-button">Eliminar</b-button>
+            </b-form>  
         </b-modal>
     </div>
 </template>
 
 <script>
-export default {
-    data () {
-        return  {
-            tabIndex: 2,
-            step: 1,
-            btnStep1: true,
-            selectedObra: null,
-            selectedEncargado: null,
-            selectedState: null,
-        }
-    },
-    methods: {
-    updated() {
-        this.nextStep()
-        console.log(this.tabIndex)
-    }    
-  }
-}
-</script>
+import { validationMixin } from "vuelidate";
+import { required } from "vuelidate/lib/validators";
 
-<style> </style> 
+export default {
+  mixins: [validationMixin],
+  props: ['items'],
+  data() {
+    return {
+      form: {
+        password: null
+      }
+    };
+  },
+  validations: {
+    form: {
+      password: {
+        required
+      }
+    }
+  },
+  methods: {
+    validateState(name) {
+      const { $dirty, $error } = this.$v.form[name];
+      return $dirty ? !$error : null;
+    },
+    onSubmit() {
+      this.$v.form.$touch();
+      if (this.$v.form.$anyError) {
+        return;
+      }
+    }
+  }
+};
+</script>
+ 

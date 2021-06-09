@@ -34,7 +34,8 @@ def get_obra(obra_id):
             'obraId': item.get('obraId').get('S'),
             'nombre': item.get('nombre').get('S'),
             'encargado': item.get('encargado').get('S'),
-            'estado': item.get('estado').get('S')
+            'estado': item.get('estado').get('S'),
+            'tipo': item.get('tipo').get('S')
         }
     )
 
@@ -55,6 +56,7 @@ def create_obra():
     nombre = request.json.get('nombre')
     encargado = request.json.get('encargado')
     estado = request.json.get('estado')
+    tipo = request.json.get('tipo')
     if not obra_id or not nombre or not encargado:
         return jsonify({'error': 'Por favor ingrese todos los campos obligatorios'}), 400
 
@@ -67,7 +69,8 @@ def create_obra():
             'obraId': {'S': obra_id},
             'nombre': {'S': nombre},
             'encargado': {'S': encargado},
-            'estado': {'S': estado}
+            'estado': {'S': estado},
+            'tipo': {'S': tipo}
             }
     )
 
@@ -78,6 +81,7 @@ def create_obra():
             'nombre': nombre,
             'encargado': encargado,
             'estado': estado,
+            'tipo' : tipo,
             }
         })
 

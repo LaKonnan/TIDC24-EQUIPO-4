@@ -8,6 +8,7 @@
         :fields="fields"
         :select-mode="selectMode"
         :per-page="perPage"
+        @row-selected="onRowSelected"
         hover
         fixed
         responsive
@@ -28,13 +29,15 @@
     import { getAPI } from '../axios-api'
 
     export default {
+        props: ['obra'],
         data () {
             return {
-                fields: [{key: 'obraId.S', label: 'ID'}, {key: 'encargado.S', label: 'Encargado'}, {key: 'nombre.S', label: 'Nombre'}, {key: 'estado.S', label: 'Estado'}],
+                fields: [{key: 'obraId.S', label: 'ID'}, {key: 'encargado.S', label: 'Encargado'}, {key: 'nombre.S', label: 'Nombre'}, {key: 'estado.S', label: 'Estado'}, {key: 'tipo.S', label: 'Tipo'}],
                 APIData: [],
                 perPage: 10,
                 currentPage: 1,
-                selectMode: 'single'
+                selectMode: 'single',
+                selected: []
             }
         },
         
@@ -53,8 +56,16 @@
             rows() {
                 return this.APIData.length
             }
+        },
+
+        methods: {
+        onRowSelected(items) {
+            this.selected = items
+            this.$emit('row-selected', false);
+            this.$emit('items', items);
         }
     }
+}
 
 </script>
 
