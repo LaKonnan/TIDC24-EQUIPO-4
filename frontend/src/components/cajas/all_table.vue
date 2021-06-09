@@ -4,7 +4,7 @@
       <b-table
         class = "table"
         selectable 
-        :fields="header" 
+        :fields="fields" 
         :items="cajas"
         :select-mode="selectMode"
         :per-page="perPage"
@@ -23,8 +23,8 @@
         aria-controls="my-table">
       </b-pagination>
         
-
-      {{ cajas }}
+        <b-button class="normal-button" @click="getCajas">cajas</b-button>
+        {{ test }}
   </div>
 </template>
 
@@ -35,25 +35,26 @@ export default {
     data () {
         return {
             cajas: [],
+            test: [],
             perPage: 10,
             selectMode: 'single',
             currentPage: 1,
             selected: [],
-            header: ['obraId', 'encargado', 'estado', 'nombre']
+            fields: [{key: 'obraId.S', label: 'ID'}, {key: 'encargado.S', label: 'Encargado'}, {key: 'nombre.S', label: 'Nombre'}, {key: 'estado.S', label: 'Estado'}],
         }
     },
 
     created() {
         // obtener lista de obras
-        getAPI.get('/cajas/OF53-01',)
-                .then(response => {
-                    console.log('Datos de caja recibidos')
-                    this.cajas = response.data
-                    console.log(this.cajas)
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+        getAPI.get('/obras',)
+            .then(response => {
+                console.log('Datos de caja recibidos')
+                this.cajas = response.data
+                console.log(this.cajas)
+            })
+            .catch(err => {
+                console.log(err)
+            })
     },
 
     computed: {
@@ -68,6 +69,17 @@ export default {
             this.selected = items
             console.table(this.selected)
             
+        },
+
+        getCajas() {
+            getAPI.get('/cajas_chicas',)
+            .then(response => {
+                console.log('Datos de caja recibidos')
+                this.test = response.data
+            })
+            .cath(err => {
+                console.log(err)
+            })
         }
         
     },

@@ -73,10 +73,10 @@ resources:
           - AttributeName: id_caja
             AttributeType: S
         KeySchema:
-          - AttributeName: id_caja
+          - AttributeName: obraId
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: cajas_chicas
-        
+

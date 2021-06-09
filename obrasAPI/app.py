@@ -22,7 +22,7 @@ OBRAS_TABLE = os.environ['OBRAS_TABLE']
 @app.route('/obras/<string:obra_id>')
 def get_obra(obra_id):
     result = dynamodb_client.get_item(
-        TableName=OBRAS_TABLE, Key={'obraId': {'S': obra_id}}
+        TableName='obras-dev', Key={'obraId': {'S': obra_id}}
     )
     item = result.get('Item')
     if not item:
@@ -40,7 +40,7 @@ def get_obra(obra_id):
 
 @app.route('/obras')
 def get_obras():
-    obras = dynamodb_client.scan(TableName=OBRAS_TABLE)
+    obras = dynamodb_client.scan(TableName='obras-dev')
     items = obras['Items']
     response = jsonify(items)
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -81,7 +81,13 @@ def create_obra():
         })
 
 ## ----------------------------------------------------------------------------------------------- GESTIÓN DE CAJAS CHICAS
-
+@app.route('/cajas_chicas')
+def get_obras():
+    obras = dynamodb_client.scan(TableName='obras-dev')
+    items = obras['Items']
+    response = jsonify(items)
+    response.headers.add("Access-Control-Allow-Origin", "arn:aws:dynamodb:us-east-2:118671128236:table/obras-dev")
+    return response
 
 
 @app.errorhandler(404)
