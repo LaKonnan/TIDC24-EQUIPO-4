@@ -16,6 +16,7 @@ if os.environ.get('IS_OFFLINE'):
 
 
 OBRAS_TABLE = os.environ['OBRAS_TABLE']
+CAJAS_TABLE = os.environ['CAJAS_TABLE']
 
 
 
@@ -81,13 +82,45 @@ def create_obra():
         })
 
 ## ----------------------------------------------------------------------------------------------- GESTIÓN DE CAJAS CHICAS
-@app.route('/cajas_chicas')
-def get_obras():
-    obras = dynamodb_client.scan(TableName='obras-dev')
+@app.route('/cajasChicas')
+def get_cajas():
+    obras = dynamodb_client.scan(TableName=CAJAS_TABLE)
     items = obras['Items']
     response = jsonify(items)
-    response.headers.add("Access-Control-Allow-Origin", "arn:aws:dynamodb:us-east-2:118671128236:table/obras-dev")
+    response.headers.add("Access-Control-Allow-Origin", "*")
     return response
+
+
+@app.route('/cajasChicas', methods=['POST'])
+def create_caja():
+    id_caja = request.json.get('id_caja')
+    estado = request.json.get('estado')
+    fecha_inicio = request.json.get('fecha_inicio')
+    fecha_termino = request.json.get('fecha_termino')
+    id_obra = request.json.get('id_obra')
+    monto_gastos = request.json.get('monto_gastos')
+    monto_total = request.json.get('monto_total')
+    tipo = request.json.get('tipo')
+    if not id_caja:
+        return jsonify({'error': 'Por favor ingrese todos los campos obligatorios'}), 400
+
+    dynamodb_client.put_item(
+        TableName=CAJAS_TABLE,
+        Item={
+            'id_caja': {'S': id_caja},
+            'estado': {'S': estado},
+            'fecha_inicio': {'S': fecha_inicio},
+            'fecha_termino': {'S': fecha_termino},
+            'id_obra': {'S': id_obra},
+            'monto_gastos': {'S': monto_gastos},
+            'monto_total': {'S': monto_total},
+            'tipo': {'S': tipo}
+            }
+    )
+
+    return jsonify({
+        'message': 'obra creada'
+        })
 
 
 @app.errorhandler(404)

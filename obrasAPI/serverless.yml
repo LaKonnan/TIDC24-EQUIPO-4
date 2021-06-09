@@ -35,6 +35,7 @@ provider:
             - Fn::GetAtt: [ UsersTable, Arn ]
   environment:
     OBRAS_TABLE: ${self:custom.tableName}
+    CAJAS_TABLE: cajas_chicas
 
 functions:
   api:
@@ -50,7 +51,7 @@ functions:
 plugins:
   - serverless-wsgi
   - serverless-python-requirements
-
+  - serverless-dynamodb-local
 resources:
   Resources:
     UsersTable:
@@ -73,7 +74,7 @@ resources:
           - AttributeName: id_caja
             AttributeType: S
         KeySchema:
-          - AttributeName: obraId
+          - AttributeName: id_caja
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
