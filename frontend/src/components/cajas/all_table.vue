@@ -4,12 +4,11 @@
       <b-table
         class = "table"
         selectable 
-        :headers="header" 
-        :items="cajas" 
-        :caja="caja"
+        :fields="header" 
+        :items="cajas"
         :select-mode="selectMode"
         :per-page="perPage"
-        @click="clicTable()"
+        @row-selected="onRowSelected"
         hover
         fixed
         responsive
@@ -23,6 +22,9 @@
         :per-page="perPage" 
         aria-controls="my-table">
       </b-pagination>
+        
+
+      {{ cajas }}
   </div>
 </template>
 
@@ -36,16 +38,18 @@ export default {
             perPage: 10,
             selectMode: 'single',
             currentPage: 1,
-            header: ['ID', 'ENCARGADO', 'ESTADO', 'MONTO DE GASTOS', 'MONTO TOTAL']
+            selected: [],
+            header: ['obraId', 'encargado', 'estado', 'nombre']
         }
     },
 
     created() {
         // obtener lista de obras
-        getAPI.get('/obras',)
+        getAPI.get('/cajas/OF53-01',)
                 .then(response => {
                     console.log('Datos de caja recibidos')
                     this.cajas = response.data
+                    console.log(this.cajas)
                 })
                 .catch(err => {
                     console.log(err)
@@ -60,10 +64,13 @@ export default {
     },
 
     methods: {
-        clicTable() {
-            console.log('Fila')
+        onRowSelected(items) {
+            this.selected = items
+            console.table(this.selected)
+            
         }
-    }
+        
+    },
 }
 </script>
 

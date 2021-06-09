@@ -18,6 +18,7 @@ if os.environ.get('IS_OFFLINE'):
 OBRAS_TABLE = os.environ['OBRAS_TABLE']
 
 
+
 @app.route('/obras/<string:obra_id>')
 def get_obra(obra_id):
     result = dynamodb_client.get_item(
@@ -78,6 +79,9 @@ def create_obra():
             'estado': estado,
             }
         })
+
+## ----------------------------------------------------------------------------------------------- GESTIÓN DE CAJAS CHICAS
+
 
 
 @app.errorhandler(404)
