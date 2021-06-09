@@ -33,6 +33,7 @@ provider:
             - dynamodb:DeleteItem
           Resource:
             - Fn::GetAtt: [ UsersTable, Arn ]
+            - Fn::GetAtt: [ CajasTable, Arn ]
   environment:
     OBRAS_TABLE: ${self:custom.tableName}
     CAJAS_TABLE: cajas_chicas
