@@ -1,6 +1,10 @@
 import os
 import boto3
 from flask import Flask, jsonify, make_response, request
+from dotenv import load_dotenv
+
+load_dotenv('.env')
+domain = os.getenv('AUTH0_DOMAIN')
 
 ## comentario de prueba W
 app = Flask(__name__)
@@ -44,7 +48,7 @@ def get_obra(obra_id):
 def get_obras():
     obras = dynamodb_client.scan(TableName='obras-dev')
     items = obras['Items']
-    response = jsonify(items)
+    response = jsonify(domain)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
