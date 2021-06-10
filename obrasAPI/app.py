@@ -2,15 +2,29 @@ import os
 import boto3
 from flask import Flask, jsonify, make_response, request
 from dotenv import load_dotenv
+from auth0.v3.authentication import GetToken
+from auth0.v3.management import Auth0
+from auth import AuthError, requires_auth, requires_role
+from flask_cors import CORS
 
+
+##CONFIG AUTH0
 load_dotenv('.env')
 domain = os.getenv('AUTH0_DOMAIN')
+non_interactive_client_id = os.getenv('CLIENT_ID')
+non_interactive_client_secret = os.getenv('CLIENT_SECRET')
+get_token = GetToken(domain)
+token = get_token.client_credentials(non_interactive_client_id,
+    non_interactive_client_secret, 'https://{}/api/v2/'.format(domain))
+mgmt_api_token = token['access_token']
+auth0 = Auth0(domain, mgmt_api_token)
 
-## comentario de prueba W
+
 app = Flask(__name__)
+CORS(app)
 
 
-dynamodb_client = boto3.client('dynamodb')
+dynamodb_client = boto3.client('dynamodb', region_name='us-east-2')
 
 
 if os.environ.get('IS_OFFLINE'):
@@ -48,8 +62,7 @@ def get_obra(obra_id):
 def get_obras():
     obras = dynamodb_client.scan(TableName='obras-dev')
     items = obras['Items']
-    response = jsonify(domain)
-    response.headers.add("Access-Control-Allow-Origin", "*")
+    response = jsonify(items)
     return response
 
 
@@ -131,6 +144,25 @@ def create_caja():
         })
 
 
+## GESTION DE USUARIOS
+@app.route('/usuarios')
+@requires_role('manage:users')
+##@requires_auth
+def get_auth():
+    items = auth0.users.list()
+    response = jsonify(items["users"])
+    return response
+
+## FIN GESTION DE USUARIOS
+
+
 @app.errorhandler(404)
 def resource_not_found(e):
     return make_response(jsonify(error='Not found!'), 404)
+
+
+@app.errorhandler(AuthError)
+def handle_auth_error(ex):
+    response = jsonify(ex.error)
+    response.status_code = ex.status_code
+    return response
