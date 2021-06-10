@@ -34,7 +34,7 @@ export default {
     props: ['usuario'],
     data () {
         return {
-            fields: [{key: 'obraId.S', label: 'ID'}, {key: 'nombre.S', label: 'Nombre'}, {key: 'encargado.S', label: 'email'}],
+            fields: [{key: 'created_at', label: 'Fecha de creación'}, {key: 'nickname', label: 'Nombre'}, {key: 'email', label: 'email'}],
             usuarios: [],
             perPage: 10,
             selectMode: 'single',
@@ -44,15 +44,7 @@ export default {
     },
 
     created() {
-        // obtener lista de obras
-        getAPI.get('/obras',)
-                .then(response => {
-                    console.log('Datos de usuario recibidos')
-                    this.usuarios = response.data
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+        this.get_users()
     },
 
     computed: {
@@ -67,6 +59,21 @@ export default {
             this.selected = items
             this.$emit('row-selected', false);
             this.$emit('items', items);
+        },
+        async get_users(){
+            const accessToken = await this.$auth.getTokenSilently()
+            getAPI.get('/usuarios', {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            })
+                    .then(response => {
+                        console.log('Datos de usuario recibidos')
+                        this.usuarios = response.data
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
         }
     }
 }

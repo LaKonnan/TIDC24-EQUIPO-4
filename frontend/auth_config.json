@@ -1,4 +1,5 @@
 {
     "domain": "campodonicoauth.us.auth0.com",
-    "clientId": "1ZdlCoBWm3jPSQ23xGXKJdzJnC9inGAK"
+    "clientId": "1ZdlCoBWm3jPSQ23xGXKJdzJnC9inGAK",
+    "audience": "gestion-flask-api.com"
   }

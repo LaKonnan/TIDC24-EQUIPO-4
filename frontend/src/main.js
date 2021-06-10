@@ -11,7 +11,7 @@ import {
   applyPolyfills,
   defineCustomElements,
 } from '@aws-amplify/ui-components/loader';
-import { domain, clientId } from "../auth_config.json";
+import { domain, clientId, audience} from "../auth_config.json";
 import { Auth0Plugin } from "./auth";
 
 Amplify.configure(aws_exports);
@@ -29,6 +29,7 @@ Vue.use(Vuelidate)
 Vue.use(Auth0Plugin, {
   domain,
   clientId,
+  audience,
   onRedirectCallback: appState => {
     router.push(
       appState && appState.targetUrl

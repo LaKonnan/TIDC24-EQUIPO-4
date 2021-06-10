@@ -32,16 +32,12 @@ export const useAuth0 = ({
     },
     methods: {
       /** Authenticates the user using a popup window */
-      async loginWithPopup(options, config) {
+      async loginWithPopup(o) {
         this.popupOpen = true;
 
         try {
-          await this.auth0Client.loginWithPopup(options, config);
-          this.user = await this.auth0Client.getUser();
-          this.isAuthenticated = await this.auth0Client.isAuthenticated();
-          this.error = null;
+          await this.auth0Client.loginWithPopup(o);
         } catch (e) {
-          this.error = e;
           // eslint-disable-next-line
           console.error(e);
         } finally {
@@ -58,7 +54,6 @@ export const useAuth0 = ({
           await this.auth0Client.handleRedirectCallback();
           this.user = await this.auth0Client.getUser();
           this.isAuthenticated = true;
-          this.error = null;
         } catch (e) {
           this.error = e;
         } finally {
@@ -91,21 +86,20 @@ export const useAuth0 = ({
     async created() {
       // Create a new instance of the SDK client using members of the given options object
       this.auth0Client = await createAuth0Client({
-        ...options,
+        domain: options.domain,
         client_id: options.clientId,
+        audience: options.audience,
         redirect_uri: redirectUri
       });
 
       try {
-        // If the user is returning to the app after authentication..
+        // If the user is returning to the app after authentication...
         if (
           window.location.search.includes("code=") &&
           window.location.search.includes("state=")
         ) {
           // handle the redirect and retrieve tokens
           const { appState } = await this.auth0Client.handleRedirectCallback();
-
-          this.error = null;
 
           // Notify subscribers that the redirect callback has happened, passing the appState
           // (useful for retrieving any pre-authentication state)

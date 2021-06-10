@@ -4,9 +4,9 @@
             <hr>
             <b>Usuario:</b>
             <b-col>
-                <b-row>ID: {{items[0].obraId.S}}</b-row>
-                <b-row>Nombre: {{items[0].nombre.S}}</b-row>
-                <b-row>Email: {{items[0].encargado.S}}</b-row>
+                <b-row>Fecha de creación: {{items[0].created_at}}</b-row>
+                <b-row>Nombre: {{items[0].nickname}}</b-row>
+                <b-row>Email: {{items[0].email}}</b-row>
             </b-col>
             <hr>
             <b-form @submit.stop.prevent="onSubmit">
