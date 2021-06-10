@@ -23,7 +23,6 @@ auth0 = Auth0(domain, mgmt_api_token)
 app = Flask(__name__)
 CORS(app)
 
-
 dynamodb_client = boto3.client('dynamodb', region_name='us-east-2')
 
 
@@ -37,11 +36,10 @@ OBRAS_TABLE = os.environ['OBRAS_TABLE']
 CAJAS_TABLE = os.environ['CAJAS_TABLE']
 
 
-
 @app.route('/obras/<string:obra_id>')
 def get_obra(obra_id):
     result = dynamodb_client.get_item(
-        TableName='obras-dev', Key={'obraId': {'S': obra_id}}
+        TableName=OBRAS_TABLE, Key={'obraId': {'S': obra_id}}
     )
     item = result.get('Item')
     if not item:
@@ -56,6 +54,22 @@ def get_obra(obra_id):
             'tipo': item.get('tipo').get('S')
         }
     )
+
+@app.route('/obra/tipos/<string:tipo>')
+def obras_por_tipo(tipo):
+    result = dynamodb_client.scan(
+        TableName = OBRAS_TABLE,
+        ScanFilter = { "tipo": { "ComparisonOperator": "EQ", "AttributeValueList": [{ "S": tipo } ]} } 
+    )
+
+    items = result['Items']
+    if not items:
+        return jsonify({ 'error':'No se han encontrado' }), 404
+    response = jsonify(items)
+
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
 
 
 @app.route('/obras')
@@ -88,7 +102,7 @@ def create_obra():
             'encargado': {'S': encargado},
             'estado': {'S': estado},
             'tipo': {'S': tipo}
-            }
+        }
     )
 
     return jsonify({
@@ -132,7 +146,7 @@ def create_caja():
             'estado': {'S': estado},
             'fecha_inicio': {'S': fecha_inicio},
             'fecha_termino': {'S': fecha_termino},
-            'id_obra': {'S': id_obra},
+            'id_obra': {'N': id_obra},
             'monto_gastos': {'S': monto_gastos},
             'monto_total': {'S': monto_total},
             'tipo': {'S': tipo}

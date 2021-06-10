@@ -22,9 +22,6 @@
         :per-page="perPage" 
         aria-controls="my-table">
       </b-pagination>
-        
-        <b-button class="normal-button" @click="getCajas">cajas</b-button>
-        {{ test }}
   </div>
 </template>
 
@@ -40,17 +37,24 @@ export default {
             selectMode: 'single',
             currentPage: 1,
             selected: [],
-            fields: [{key: 'obraId.S', label: 'ID'}, {key: 'encargado.S', label: 'Encargado'}, {key: 'nombre.S', label: 'Nombre'}, {key: 'estado.S', label: 'Estado'}],
+            fields: [
+                { key: 'id_caja.S', label: 'ID'},
+                { key: 'tipo.S', label: 'TIPO'},
+                { key: 'estado.S', label: 'ESTADO'},
+                { key: 'monto_gastos.S', label: 'MONTO GASTOS'},
+                { key: 'monto_total.S', label: 'MONTO TOTAL'}
+            ]
         }
     },
 
     created() {
         // obtener lista de obras
-        getAPI.get('/obras',)
+        getAPI.get('/cajasChicas',)
             .then(response => {
                 console.log('Datos de caja recibidos')
                 this.cajas = response.data
                 console.log(this.cajas)
+                // this.cajas((a, b) => (a.id_caja> b.id_caja) ? 1 : -1)
             })
             .catch(err => {
                 console.log(err)
@@ -69,19 +73,7 @@ export default {
             this.selected = items
             console.table(this.selected)
             
-        },
-
-        getCajas() {
-            getAPI.get('/cajas_chicas',)
-            .then(response => {
-                console.log('Datos de caja recibidos')
-                this.test = response.data
-            })
-            .cath(err => {
-                console.log(err)
-            })
-        }
-        
+        },       
     },
 }
 </script>
