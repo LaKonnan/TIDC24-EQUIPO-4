@@ -6,13 +6,13 @@
             <b-tab title="PASO 1" active id="step1">
                     <b-card-text>
                         Tipo de caja
-                        <b-form-select  v-model="selected1" :options="options1" @change="getObras()" ></b-form-select>
+                        <b-form-select  v-model="selected1" :options="options1" @change="getObras(); activateButton()" ></b-form-select>
                         
                         Obra a la que pertenece
-                        <b-form-select v-model="selected2" :options="options2" :disabled="booleanSelect2"></b-form-select>
+                        <b-form-select v-model="selected2" :options="options2" :disabled="booleanSelect2" @change="activateButton()"></b-form-select>
 
                         Estado de caja
-                        <b-form-select v-model="selected3" :options="options3" @change="button1()"></b-form-select>
+                        <b-form-select v-model="selected3" :options="options3" @change="activateButton()"></b-form-select>
 
                         <b-button :disabled="btnStep1" id="btnStep1" class="button-next dark-button" @click="next1()">Siguiente</b-button>
                     </b-card-text>
@@ -22,16 +22,22 @@
             <b-tab title="PASO 2" id="step2" :disabled="step2">
                 <b-card-text>
                     Fecha de inicio
-                    <b-form-datepicker :min="min_date1" placeholder="" v-model="initial_date" class="mb-2" @input="setMinFinalDate()"></b-form-datepicker>
+                    <b-form-datepicker :min="min_date1" placeholder="" v-model="initial_date" class="mb-2" @input="setMinFinalDate(); activateButton()"></b-form-datepicker>
 
                     Fecha de término
-                    <b-form-datepicker :min="min_final_date" :max="max_final_date" placeholder="Esta fecha debe ser mínimo quince días después de la fecha inicial y máximo treinda días después" v-model="final_date" class="mb-2"></b-form-datepicker>
+                    <b-form-datepicker :min="min_final_date" :max="max_final_date" @input="activateButton()" placeholder="Esta fecha debe ser mínimo quince días después de la fecha inicial y máximo treinda días después" v-model="final_date" class="mb-2"></b-form-datepicker>
 
                     Monto máximo de caja
-                    <b-form-input v-model="money" value="" type="number" @keyup="validateMoney()" id="number"></b-form-input>
+                    <b-form-input v-model="money" value="" type="number" @keyup="validateMoney(); activateButton()" id="money" :state="validateRangeMoney" aria-describedby="input-live-feedback1"></b-form-input>
+                    <b-form-invalid-feedback id="input-live-feedback1">
+                        El mínimo es $50.000 y el máximo $300.000
+                    </b-form-invalid-feedback>
 
                     Monto máximo de caja combustible
-                    <b-form-input v-model="gas_money" value="" type="number" @keyup="validateGasMoney()" id="number"></b-form-input>
+                    <b-form-input v-model="gas_money" value="" type="number" @keyup="validateGasMoney(); activateButton()" id="number" :state="validateRangeGasMoney" aria-describedby="input-live-feedback2"></b-form-input>
+                    <b-form-invalid-feedback id="input-live-feedback2">
+                        El mínimo es $100.000 y el máximo $300.000
+                    </b-form-invalid-feedback>
 
                     <b-button :disabled="btnStep2" id="btnStep2" class="button-next dark-button" @click="next2">Siguiente</b-button>
                 </b-card-text>
@@ -70,12 +76,17 @@
                                 <b-row>
                                     <b-col>MONTO MÁXIMO</b-col>
                                     <b-col>{{ this.money }}</b-col>
-                                </b-row>     
+                                </b-row>
+
+                                <b-row>
+                                    <b-col>MONTO MÁXIMO CAJA COMBUSTIBLE</b-col>
+                                    <b-col>{{ this.gas_money }}</b-col>
+                                </b-row>   
                             </b-card-text>
                         </b-card>
                         <br>
                         <p>Una vez presionado el botón, se registrará la caja en el sistema, puede regresar a cualquiera de los pasos anteriores para editar los datos.</p>
-                    <b-button id="btnStep3" class="button-next dark-button">GUARDAR</b-button>
+                    <b-button id="btnStep3" class="button-next dark-button" @click="create()">GUARDAR</b-button>
                     </b-card-text>
                     
             </b-tab>
@@ -141,9 +152,7 @@ export default {
 
             getAPI.get('/obra/tipos/'+this.selected1,)
                 .then(response => {
-                    console.log("Obras recibidas")
                     this.aux= response.data
-                    console.log(this.aux.length)
                     // paasar datos a opciones de select obra
                     for(var i = 0; i < this.aux.length; i++){
                         this.options2.push({ value: this.aux[i].obraId.S, text: (this.aux[i].obraId.S +' - '+this.aux[i].nombre.S) })
@@ -153,10 +162,30 @@ export default {
             this.booleanSelect2 = false
         },
 
-        // habilitar boton  y paso 2
-        button1() {
-            this.btnStep1 = false
-            this.step2 = false
+        // habilitar boton
+        activateButton() {
+            // identificar boton segun el paso 
+            switch(this.tabIndex){
+                // paso 1
+                case 0:
+                    if(![this.selected1, this.selected2, this.selected3].includes(null)) {
+                        this.btnStep1 = false
+                        this.step2 = false
+                    }
+                    break;
+
+                // paso 2
+                case 1:
+                    if(this.initial_date != '' && this.final_date != '' && this.money != '' && this.gas_money != ''){7
+                        this.btnStep2 = false
+                        this.step3 = false
+                    }
+                    break;
+
+                // paso 3
+                case 2:
+                    break;
+            }
         },
 
         // pasar a paso 2 a traves del boton de paso 1
@@ -198,9 +227,7 @@ export default {
                     out += this.money.charAt(i)
                 }
 
-                this.money = out
-                this.btnStep2 = false
-                this.step3 = false
+                this.money = out 
             }
         },
 
@@ -213,14 +240,60 @@ export default {
                 }
 
                 this.gas_money = out
-                this.btnStep2 = false
-                this.step3 = false
+            }
+        },
+        
+        // registrar nueva caja
+        create() {
+
+            console.log(this.selected2)
+            // cofiguracion
+            const options = {
+                headers: {
+                    'Content-Type': 'application/json;charset=UTF-8',
+                    'Access-Control-Allow-Origin': '*'
+                }
+            }
+
+            // datos
+            const data = JSON.stringify(
+                { tipo: this.selected1 ,
+                id_obra: this.selected2,
+                estado: this.selected3,
+                fecha_inicio: this.initial_date,
+                fecha_termino: this.final_date,
+                monto_total: this.money,
+                monto_combustible: this.gas_money }
+            )
+
+            // crear caja chica
+            getAPI.post('/cajasChicas', data, options)
+                .then((res) => {
+                    console.log('DATOS ENVIADOS: ', res)
+                })
+                .catch((err) => {
+                    console.log('ERROR: ', err)
+                })
+        }
+    },
+    computed: {
+        validateRangeMoney() {
+            if(this.money != '') {
+                const aux = parseInt(this.money)
+                return aux >= 50000 && aux <= 300000 ? true : false
+            }else {
+                return null
             }
         },
 
-        // validar minimo y maximo de monto
-        
-
+        validateRangeGasMoney() {
+            if(this.money != '') {
+                const aux = parseInt(this.gas_money)
+                return aux >= 100000 && aux <= 300000 ? true : false
+            }else {
+                return null
+            }
+        }
     }
 }
 </script>
