@@ -7,7 +7,7 @@
       <hr class="hr">
 
       <!-- tabla de contenidos -->
-      <table-usuarios @row-selected="onRowSelected" @items="rowItems"/>
+      <table-usuarios ref="table-usuarios" @row-selected="onRowSelected" @items="rowItems"/>
 
       <!-- botones -->
       <buttons :selectedRow="selectedRow" :items="items"/>
@@ -34,6 +34,7 @@ export default {
     methods: {
       onRowSelected(params) {
         this.selectedRow = params
+        console.log(this.$refs['table-usuarios'])
       },
       rowItems(params){
         this.items = params;

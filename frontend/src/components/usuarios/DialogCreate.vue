@@ -53,6 +53,7 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { required, minLength, email } from "vuelidate/lib/validators";
+import { getAPI } from '../axios-api';
 
 export default {
   mixins: [validationMixin],
@@ -97,10 +98,28 @@ export default {
         this.$v.$reset();
       });
     },
-    onSubmit() {
+    async onSubmit() {
       this.$v.form.$touch();
       if (this.$v.form.$anyError) {
         return;
+      }else {
+        const accessToken = await this.$auth.getTokenSilently()
+        getAPI.post('/usuarios', {
+            name: this.$v.form.name.$model,
+            email: this.$v.form.email.$model,
+            password: this.$v.form.password.$model
+        }, {
+          headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
+        .then(response => {
+          console.log(response.data)
+          this.$root.$emit('bv::hide::modal','modal-xlc')
+        })
+        .catch(err => {
+          console.log(err)
+        })
       }
     }
   }

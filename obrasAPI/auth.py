@@ -112,10 +112,11 @@ def requires_auth(f):
 
 def requires_role(required_permissions):
     def decorator(f):
+        @wraps(f)
         def wrapper(**args):
             token = get_token_auth_header()
             unverified_claims = jwt.get_unverified_claims(token)
-            
+            print(unverified_claims.get('permissions'))
             # search current token for the expected role
             if unverified_claims.get('permissions'):
                 permissions = unverified_claims.get('permissions')

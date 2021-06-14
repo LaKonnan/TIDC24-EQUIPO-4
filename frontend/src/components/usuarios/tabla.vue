@@ -3,7 +3,7 @@
       <!-- tabla -->
       <b-table
         class = "table"
-        selectable 
+        selectable
         :fields="fields"
         :items="usuarios" 
         :usuario="usuario"
@@ -34,16 +34,15 @@ export default {
     props: ['usuario'],
     data () {
         return {
-            fields: [{key: 'created_at', label: 'Fecha de creación'}, {key: 'nickname', label: 'Nombre'}, {key: 'email', label: 'email'}],
+            fields: [{key: 'created_at', label: 'Fecha de creación'}, {key: 'name', label: 'Nombre'}, {key: 'email', label: 'email'}],
             usuarios: [],
             perPage: 10,
             selectMode: 'single',
-            currentPage: 1,
-            selected: []
+            currentPage: 1
         }
     },
 
-    created() {
+    mounted() {
         this.get_users()
     },
 
@@ -56,7 +55,6 @@ export default {
 
     methods: {
         onRowSelected(items) {
-            this.selected = items
             this.$emit('row-selected', false);
             this.$emit('items', items);
         },

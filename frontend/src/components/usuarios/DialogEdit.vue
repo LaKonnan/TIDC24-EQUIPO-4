@@ -10,6 +10,7 @@
             </b-col>
             <hr>
             <b-form @submit.stop.prevent="onSubmit">
+                {{setUserId(items[0].user_id)}}
                 <b-form-group id="input-group-1" label="Nombre" label-for="input-1">
                 <b-form-input
                     id="input-1"
@@ -61,6 +62,7 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { required, minLength, email } from "vuelidate/lib/validators";
+import { getAPI } from '../axios-api';
 
 export default {
   mixins: [validationMixin],
@@ -70,7 +72,8 @@ export default {
       form: {
         name: null,
         email: null,
-        password: null
+        password: null,
+        user_id: null
       }
     };
   },
@@ -91,6 +94,9 @@ export default {
     }
   },
   methods: {
+    setUserId(user_id) {
+      this.form.user_id = user_id;
+    },
     validateState(name) {
       const { $dirty, $error } = this.$v.form[name];
       return $dirty ? !$error : null;
@@ -99,17 +105,36 @@ export default {
       this.form = {
         name: null,
         email: null,
-        password: null
+        password: null,
+        user_id: null
       };
 
       this.$nextTick(() => {
         this.$v.$reset();
       });
     },
-    onSubmit() {
+    async onSubmit() {
       this.$v.form.$touch();
       if (this.$v.form.$anyError) {
         return;
+      }else {
+        const accessToken = await this.$auth.getTokenSilently()
+        getAPI.put('/usuarios/'+this.form.user_id, {
+            name: this.$v.form.name.$model,
+            email: this.$v.form.email.$model,
+            password: this.$v.form.password.$model
+        }, {
+          headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
+        .then(response => {
+          console.log(response.data)
+          this.$root.$emit('bv::hide::modal','modal-xle')
+        })
+        .catch(err => {
+          console.log(err)
+        })
       }
     }
   }

@@ -122,7 +122,6 @@ def get_cajas():
     obras = dynamodb_client.scan(TableName=CAJAS_TABLE)
     items = obras['Items']
     response = jsonify(items)
-    response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
 
@@ -153,19 +152,60 @@ def create_caja():
             }
     )
 
-    return jsonify({
-        'message': 'obra creada'
-        })
+    return jsonify({'message': 'obra creada'})
 
 
 ## GESTION DE USUARIOS
+
+
 @app.route('/usuarios')
 @requires_role('manage:users')
-##@requires_auth
-def get_auth():
+def get_usuarios():
     items = auth0.users.list()
     response = jsonify(items["users"])
     return response
+
+
+@app.route('/usuarios', methods=['POST'])
+@requires_role('manage:users')
+def create_usuario():
+    name = request.json.get('name')
+    email = request.json.get('email')
+    password = request.json.get('password')
+    if not email:
+        return jsonify({'error': 'Por favor ingrese todos los campos obligatorios'}), 400 
+    auth0.users.create({
+        'name': name,
+        'email': email,
+        'password': password,
+        'connection': 'Username-Password-Authentication'
+    })
+    return jsonify({'message': 'usuario creado'})
+
+
+@app.route('/usuarios/<string:user_id>', methods=['PUT'])
+@requires_role('manage:users')
+def edit_usuario(user_id):
+    email = request.json.get('email')
+    name = request.json.get('name')
+    password = request.json.get('password')
+    if not email:
+        return jsonify({'error': 'Por favor ingrese todos los campos obligatorios'}), 400 
+    auth0.users.update(user_id, {
+        'email': email,
+        'name': name
+    })
+    auth0.users.update(user_id, {
+        'password': password
+    })
+    return jsonify({'message': 'usuario modificado'})
+
+
+@app.route('/usuarios/<string:user_id>', methods=['DELETE'])
+@requires_role('manage:users')
+def delete_usuarios(user_id):
+    auth0.users.delete(user_id)
+    return jsonify({'message': 'usuario eliminado'})
 
 ## FIN GESTION DE USUARIOS
 

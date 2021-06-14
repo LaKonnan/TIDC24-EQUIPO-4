@@ -11,20 +11,21 @@
             <br><br>
             <center>
             <p><b>IMPORTANTE: </b>Una vez eliminado el usuario no podrá ser recuperado</p>
-            <p><b>Para confirmar la eliminación del usuario, por favor, ingrese su contraseña de administrador.</b></p></center>
+            <p><b>Para confirmar la eliminación del usuario, por favor, ingrese {{items[0].email}}</b></p></center>
            <b-form @submit.stop.prevent="onSubmit">
-                <b-form-group id="input-group-3" label="Contraseña" label-for="input-3">
+                <b-form-group id="input-group-3" label="Email" label-for="input-3">
+                  {{setvEmail(items[0].email)}}
                 <b-form-input
                     id="input-3"
                     name="input-3"
-                    type="password"
-                    v-model="$v.form.password.$model"
-                    :state="validateState('password')"
+                    type="email"
+                    v-model="$v.form.email.$model"
+                    :state="validateState('email')"
                     aria-describedby="input-3-live-feedback"
                 ></b-form-input>
                 <b-form-invalid-feedback
                     id="input-3-live-feedback"
-                >Este es un campo obligatorio y requiere un mínimo de 6 carácteres.</b-form-invalid-feedback>
+                >Este es un campo obligatorio y requiere el email solicitado.</b-form-invalid-feedback>
                 </b-form-group>
 
                 <b-button type="submit" class="dark-button">Eliminar</b-button>
@@ -35,7 +36,8 @@
 
 <script>
 import { validationMixin } from "vuelidate";
-import { required, minLength } from "vuelidate/lib/validators";
+import { required, sameAs } from "vuelidate/lib/validators";
+import { getAPI } from '../axios-api';
 
 export default {
   mixins: [validationMixin],
@@ -43,15 +45,16 @@ export default {
   data() {
     return {
       form: {
-        password: null
+        email: null,
+        vemail: null
       }
     };
   },
   validations: {
     form: {
-      password: {
+      email: {
         required,
-        minLength: minLength(6)
+        sameAsEmail: sameAs('vemail')
       }
     }
   },
@@ -60,10 +63,27 @@ export default {
       const { $dirty, $error } = this.$v.form[name];
       return $dirty ? !$error : null;
     },
-    onSubmit() {
+    setvEmail(vemail) {
+      this.form.vemail = vemail;
+    },
+    async onSubmit() {
       this.$v.form.$touch();
       if (this.$v.form.$anyError) {
         return;
+      }else {
+        const accessToken = await this.$auth.getTokenSilently()
+        getAPI.delete('/usuarios/'+this.items[0].user_id, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
+        .then(response => {
+          console.log(response.data)
+          this.$root.$emit('bv::hide::modal','modal-xld')
+        })
+        .catch(err => {
+          console.log(err)
+        })
       }
     }
   }
