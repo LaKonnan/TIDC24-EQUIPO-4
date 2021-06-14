@@ -67,6 +67,16 @@ export default {
       const { $dirty, $error } = this.$v.form[name];
       return $dirty ? !$error : null;
     },
+    resetForm() {
+      this.form = {
+        email: null,
+        vemail: null
+      };
+
+      this.$nextTick(() => {
+        this.$v.$reset();
+      });
+    },
     setvEmail(vemail) {
       this.form.vemail = vemail;
     },
@@ -84,6 +94,7 @@ export default {
         .then(response => {
           console.log(response.data)
           this.$root.$emit('bv::hide::modal','modal-xld')
+          this.resetForm()
         })
         .catch(err => {
           console.log(err)

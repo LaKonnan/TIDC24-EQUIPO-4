@@ -31,6 +31,9 @@ export default {
       'table-usuarios': require('../components/usuarios/tabla').default,
       'buttons': require('../components/usuarios/buttons').default
     },
+    mounted(){
+      this.table = this.$refs['table-usuarios']
+    },
     methods: {
       onRowSelected(params) {
         this.selectedRow = params

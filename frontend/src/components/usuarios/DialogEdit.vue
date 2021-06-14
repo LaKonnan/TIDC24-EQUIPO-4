@@ -135,6 +135,7 @@ export default {
         .then(response => {
           console.log(response.data)
           this.$root.$emit('bv::hide::modal','modal-xle')
+          this.resetForm()
         })
         .catch(err => {
           console.log(err)
