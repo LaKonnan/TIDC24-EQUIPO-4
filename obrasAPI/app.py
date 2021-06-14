@@ -200,13 +200,7 @@ def create_caja():
         }
     )
 
-<<<<<<< HEAD
     return jsonify({'message': 'obra creada'})
-=======
-    return jsonify({
-        'message': 'Caja chica creada'
-    })
->>>>>>> 170468fe802f5c0535a7444e3653a9d4b3f08c83
 
 
 ## GESTION DE USUARIOS
