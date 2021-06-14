@@ -1,5 +1,7 @@
 import os
 import boto3
+import json
+from botocore.exceptions import DataNotFoundError
 from flask import Flask, jsonify, make_response, request
 from dotenv import load_dotenv
 from auth0.v3.authentication import GetToken
@@ -34,6 +36,7 @@ if os.environ.get('IS_OFFLINE'):
 
 OBRAS_TABLE = os.environ['OBRAS_TABLE']
 CAJAS_TABLE = os.environ['CAJAS_TABLE']
+CAJAS_COMBUSTIBLE = os.environ['CAJAS_COMBUSTIBLE']
 
 
 @app.route('/obras/<string:obra_id>')
@@ -59,7 +62,7 @@ def get_obra(obra_id):
 def obras_por_tipo(tipo):
     result = dynamodb_client.scan(
         TableName = OBRAS_TABLE,
-        ScanFilter = { "tipo": { "ComparisonOperator": "EQ", "AttributeValueList": [{ "S": tipo } ]} } 
+        ScanFilter = { "tipo": { "ComparisonOperator": "EQ", "AttributeValueList": [{ "S": tipo } ]} }
     )
 
     items = result['Items']
@@ -127,32 +130,83 @@ def get_cajas():
 
 @app.route('/cajasChicas', methods=['POST'])
 def create_caja():
-    id_caja = request.json.get('id_caja')
+    ## RECIBIR DATOS
+    id_obra = request.json.get('id_obra')
+    tipo = request.json.get('tipo')
     estado = request.json.get('estado')
     fecha_inicio = request.json.get('fecha_inicio')
     fecha_termino = request.json.get('fecha_termino')
-    id_obra = request.json.get('id_obra')
-    monto_gastos = request.json.get('monto_gastos')
     monto_total = request.json.get('monto_total')
-    tipo = request.json.get('tipo')
-    if not id_caja:
-        return jsonify({'error': 'Por favor ingrese todos los campos obligatorios'}), 400
+    monto_combustible = request.json.get('monto_combustible')
 
+
+    ## VALIDACIONES
+
+    ## GENERAR IDs
+    # identificador de tipo
+    id_caja = ''
+    if(tipo == 'Gerencia'):
+        id_caja = 'G'
+
+    elif(tipo == 'Oficina'):
+        id_caja = 'OF'
+
+    elif(tipo == 'Obra'):
+        id_caja = 'O'
+    
+    id_caja = id_caja + id_obra + '-'
+    id_caja_combustible = 'C' + id_obra + '-'
+
+    # dar version de caja (O1, 02, 03...0N)
+    result = dynamodb_client.scan(
+        TableName = CAJAS_TABLE,
+        ScanFilter = { "obraId": { "ComparisonOperator": "CONTAINS", "AttributeValueList": [{ "S": id_obra } ]} }
+    )
+
+    items = result['Items']
+
+    if not items:
+        id_caja += '01'
+        id_caja_combustible += '01'
+    else:
+        # ordenar lista
+        print('aaa')
+        # tomar ultimos dos valores del ultimo id
+
+
+    ## REGISTRAR NUEVA CAJA CHICA
     dynamodb_client.put_item(
-        TableName=CAJAS_TABLE,
-        Item={
+        TableName = CAJAS_TABLE,
+        Item = {
             'id_caja': {'S': id_caja},
             'estado': {'S': estado},
             'fecha_inicio': {'S': fecha_inicio},
             'fecha_termino': {'S': fecha_termino},
             'id_obra': {'N': id_obra},
-            'monto_gastos': {'S': monto_gastos},
+            'monto_gastos': {'S': '0'},
             'monto_total': {'S': monto_total},
             'tipo': {'S': tipo}
-            }
+        }
     )
 
+    ## REGISTRAR NUEVA CAJA COMBUSTIBLE ASOCIADA
+    dynamodb_client.put_item(
+        TableName = CAJAS_COMBUSTIBLE,
+        Item = {
+            'id_caja_asociada': {'S': id_caja},
+            'id_caja_combustible': {'S': id_caja_combustible},
+            'monto_maximo': {'S': monto_combustible },
+            'monto_gastos': {'S': '0'}
+        }
+    )
+
+<<<<<<< HEAD
     return jsonify({'message': 'obra creada'})
+=======
+    return jsonify({
+        'message': 'Caja chica creada'
+    })
+>>>>>>> 170468fe802f5c0535a7444e3653a9d4b3f08c83
 
 
 ## GESTION DE USUARIOS
