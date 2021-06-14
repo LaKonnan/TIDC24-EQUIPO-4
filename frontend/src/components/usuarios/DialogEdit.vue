@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-modal id="modal-xle" size="xl" title="EDITAR OBRA" hide-footer>
+        <b-modal id="modal-xle" size="xl" title="EDITAR OBRA" hide-footer @hidden="onHidden">
             <hr>
             <b>Usuario:</b>
             <b-col>
@@ -66,7 +66,7 @@ import { getAPI } from '../axios-api';
 
 export default {
   mixins: [validationMixin],
-  props: ['items'],
+  props: ['items','table'],
   data() {
     return {
       form: {
@@ -94,6 +94,10 @@ export default {
     }
   },
   methods: {
+    onHidden() {
+      console.log('modal cerrado')
+      this.table.get_users()
+    },
     setUserId(user_id) {
       this.form.user_id = user_id;
     },

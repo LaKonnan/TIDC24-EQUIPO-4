@@ -10,11 +10,10 @@
       <table-usuarios ref="table-usuarios" @row-selected="onRowSelected" @items="rowItems"/>
 
       <!-- botones -->
-      <buttons :selectedRow="selectedRow" :items="items"/>
+      <buttons :table=table :selectedRow="selectedRow" :items="items"/>
 
     </div>
   </div>
-
 </template>
 
 <script>
@@ -24,7 +23,8 @@ export default {
     data(){
       return {
         selectedRow: true,
-        items: []
+        items: [],
+        table: null
       }
     },
     components: {
@@ -34,7 +34,6 @@ export default {
     methods: {
       onRowSelected(params) {
         this.selectedRow = params
-        console.log(this.$refs['table-usuarios'])
       },
       rowItems(params){
         this.items = params;

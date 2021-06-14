@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-modal id="modal-xlc" size="xl" title="REGISTRAR NUEVO USUARIO" hide-footer>
+        <b-modal id="modal-xlc" size="xl" title="REGISTRAR NUEVO USUARIO" hide-footer @hidden="onHidden">
           <b-form @submit.stop.prevent="onSubmit">
             <b-form-group id="input-group-1" label="Nombre" label-for="input-1">
               <b-form-input
@@ -57,6 +57,7 @@ import { getAPI } from '../axios-api';
 
 export default {
   mixins: [validationMixin],
+  props: ['table'],
   data() {
     return {
       form: {
@@ -83,6 +84,10 @@ export default {
     }
   },
   methods: {
+    onHidden() {
+      console.log('modal cerrado')
+      this.table.get_users()
+    },
     validateState(name) {
       const { $dirty, $error } = this.$v.form[name];
       return $dirty ? !$error : null;

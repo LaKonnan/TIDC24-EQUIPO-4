@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-modal id="modal-xld" size="xl" title="ELIMINAR USUARIO" hide-footer>
+        <b-modal id="modal-xld" size="xl" title="ELIMINAR USUARIO" hide-footer @hidden="onHidden">
             Usuario a eliminar:
             <br><br>
             <b-col>
@@ -41,7 +41,7 @@ import { getAPI } from '../axios-api';
 
 export default {
   mixins: [validationMixin],
-  props: ['items'],
+  props: ['items','table'],
   data() {
     return {
       form: {
@@ -59,6 +59,10 @@ export default {
     }
   },
   methods: {
+    onHidden() {
+      console.log('modal cerrado')
+      this.table.get_users()
+    },
     validateState(name) {
       const { $dirty, $error } = this.$v.form[name];
       return $dirty ? !$error : null;

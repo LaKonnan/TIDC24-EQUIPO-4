@@ -8,18 +8,18 @@
       </div>
 
       <!-- dialogs CRUD -->
-       <dialog-create />
-       <dialog-delete :items="items"/>
-       <dialog-edit :items="items"/>
+       <dialog-create :table=table />
+       <dialog-delete :table=table :items="items"/>
+       <dialog-edit :table=table :items="items"/>
       
-     
   </div>
 </template>
+
 
 <script>
 
 export default {
-  props: ['selectedRow','items'],
+  props: ['selectedRow','items','table'],
   data() {
     return {
     }
