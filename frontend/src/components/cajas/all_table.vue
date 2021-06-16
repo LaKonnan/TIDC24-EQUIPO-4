@@ -51,9 +51,7 @@ export default {
         // obtener lista de obras
         getAPI.get('/cajasChicas',)
             .then(response => {
-                console.log('Datos de caja recibidos')
                 this.cajas = response.data
-                console.log(this.cajas)
                 // this.cajas((a, b) => (a.id_caja> b.id_caja) ? 1 : -1)
             })
             .catch(err => {
@@ -69,10 +67,9 @@ export default {
     },
 
     methods: {
+        // obtener id de caja elegida
         onRowSelected(items) {
-            this.selected = items
-            console.table(this.selected)
-            
+            this.$emit('items', items)
         },       
     },
 }

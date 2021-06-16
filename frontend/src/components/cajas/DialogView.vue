@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal id="modal-delete" size="xl" title="ELIMINAR CAJA CHICA" hide-footer>
+    <b-modal id="modal-view" size="xl" title="CAJA CHICA" hide-footer>
         <b-card-text>
             <b-card>
                 <b-row>
@@ -74,61 +74,14 @@
                 </b-row>
             </b-card>
         </b-card-text>
-        <center>
-        <p><b>IMPORTANTE: </b>Una vez eliminada la caja chica esta no podrá ser recuperada, toda información sobre los gastos efectuados y fechas se perderán.</p>
-        <p><b>Para confirmar la eliminación de la caja, por favor, ingresar su contraseña:</b></p></center>
-        <b-form-input v-model="password" type="password" style="text-align: center;" @keyup="activateButton()"></b-form-input>
-        <b-button class="normal-button" :disabled="button" @click="deleteCaja()" >ELIMINAR</b-button>
     </b-modal>
   </div>
 </template>
 
 <script>
-import { getAPI } from '../axios-api'
-
 export default {
-    props: ['items'],
-    data() {
-        return {
-            password: '',
-            // recibir id de caja seleccionada
-            data: [],
-            button: true
-        }
-    },
+    props: ['items']
 
-    methods: {
-        activateButton() {
-            this.button = false
-        },
-
-        getData() {
-            getAPI.get('/cajasChicas/'+this.caja,)
-                .then(response => {
-                    this.aux = response.data
-                    // paasar datos a opciones de select obra
-                    for(var i = 0; i < this.aux.length; i++){
-                        this.options2.push({ value: this.aux[i].obraId.S, text: (this.aux[i].obraId.S +' - '+this.aux[i].nombre.S) })
-                    }
-                })
-        },
-
-        deleteCaja() {
-            const options = {
-                headers: {
-                    'Content-Type': 'application/json;charset=UTF-8',
-                    'Access-Control-Allow-Origin': '*'
-                }
-            }
-            
-            if(this.password == '123'){
-                getAPI.delete('/cajaChica/'+ this.items[0].id_caja.S,'',options)
-                    .then(res => {
-                        console.log(res)
-                    })
-            }
-        }
-    },
 }
 </script>
 

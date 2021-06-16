@@ -1,6 +1,6 @@
 <template>
   <div>
-      <b-modal id="modal-create" size="xl" title="NUEVA CAJA CHICA" hide-footer>
+      <b-modal ref="create" id="modal-create" size="xl" title="NUEVA CAJA CHICA" hide-footer>
           <b-tabs pills card vertical v-model="tabIndex">
             <!-- paso 1 -->
             <b-tab title="PASO 1" active id="step1">
@@ -92,6 +92,13 @@
             </b-tab>
         </b-tabs>
       </b-modal>
+      
+      <b-modal ref="success-modal" id="modal-no-backdrop" hide-backdrop hide-footer hide-header>
+            <center>
+                <p class="success"><b-icon icon="check-circle" animation="fade"></b-icon></p>
+                <p>Caja creada con éxito</p>
+            </center>
+    </b-modal>
   </div>
 </template>
 
@@ -138,7 +145,8 @@ export default {
             min_final_date: '',
             max_final_date: '',
             money: '',
-            gas_money: ''
+            gas_money: '',
+            success: false
         }
     },
 
@@ -269,7 +277,14 @@ export default {
             // crear caja chica
             getAPI.post('/cajasChicas', data, options)
                 .then((res) => {
-                    console.log('DATOS ENVIADOS: ', res)
+                    if(res.statusText == 'OK'){
+                        this.sucess = true
+                        this.$refs.['create'].hide()
+                        setTimeout(() => {
+                            this.$refs.['success-modal'].show()
+                        },500)
+                        this.$refs.['success-modal'].hide()
+                    }
                 })
                 .catch((err) => {
                     console.log('ERROR: ', err)
@@ -298,6 +313,5 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss">
 </style>
