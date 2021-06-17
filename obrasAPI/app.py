@@ -39,10 +39,10 @@ CAJAS_TABLE = os.environ['CAJAS_TABLE']
 CAJAS_COMBUSTIBLE = os.environ['CAJAS_COMBUSTIBLE']
 
 
-@app.route('/obras/<string:obra_id>')
-def get_obra(obra_id):
+@app.route('/obras/<string:obraId>')
+def get_obra(obraId):
     result = dynamodb_client.get_item(
-        TableName=OBRAS_TABLE, Key={'obraId': {'S': obra_id}}
+        TableName = OBRAS_TABLE, Key={'obraId': {'S': obraId}}
     )
     item = result.get('Item')
     if not item:
@@ -77,7 +77,7 @@ def obras_por_tipo(tipo):
 
 @app.route('/obras')
 def get_obras():
-    obras = dynamodb_client.scan(TableName='obras-dev')
+    obras = dynamodb_client.scan(TableName = 'obras-dev')
     items = obras['Items']
     response = jsonify(items)
     return response
@@ -86,21 +86,22 @@ def get_obras():
 
 @app.route('/obras', methods=['POST'])
 def create_obra():
-    obra_id = request.json.get('obraId')
+    obraId = request.json.get('obraId')
     nombre = request.json.get('nombre')
     encargado = request.json.get('encargado')
     estado = request.json.get('estado')
     tipo = request.json.get('tipo')
-    if not obra_id or not nombre or not encargado:
+
+    if not obraId or not nombre or not encargado:
         return jsonify({'error': 'Por favor ingrese todos los campos obligatorios'}), 400
 
     if not estado:
         estado = "inactiva"
 
     dynamodb_client.put_item(
-        TableName=OBRAS_TABLE,
-        Item={
-            'obraId': {'S': obra_id},
+        TableName = OBRAS_TABLE,
+        Item ={
+            'obraId': {'S': obraId},
             'nombre': {'S': nombre},
             'encargado': {'S': encargado},
             'estado': {'S': estado},
@@ -111,13 +112,69 @@ def create_obra():
     return jsonify({
         'message': 'obra creada',
         'Obra': {
-            'obraId': obra_id,
+            'obraId': obraId,
             'nombre': nombre,
             'encargado': encargado,
             'estado': estado,
             'tipo' : tipo,
             }
         })
+
+@app.route('/obras', methods=['PUT'])
+def edit_obra():
+    obraId = request.json.get('obraId')
+    nombre = request.json.get('nombre')
+    encargado = request.json.get('encargado')
+    estado = request.json.get('estado')
+    tipo = request.json.get('tipo')
+
+    key ={
+        'obraId':{'S': obraId}
+    }
+    dynamodb_client.update_item(
+        TableName = OBRAS_TABLE,
+        Key= key,
+        ExpressionAttributeNames = {
+            
+            '#name': 'nombre',
+            '#enc': 'encargado',
+            '#est': 'estado',
+            '#tip': 'tipo'
+        },
+        UpdateExpression= 
+        "set #name = :nombre, #enc = :encargado, #est = :estado, #tip = :tipo "
+        ,
+        
+        ExpressionAttributeValues={
+            
+            ':nombre':{
+                'S': nombre
+            },
+             ':encargado':{
+                'S': encargado
+            },
+             ':estado':{
+                'S': estado
+            },
+             ':tipo':{
+                'S': tipo
+            }
+        }
+        
+    )
+     
+    return jsonify({'message': 'obra modificada'})
+
+@app.route('/obras/<string:obraId>', methods=['DELETE'])
+def delete_obra(obraId):
+    result = dynamodb_client.delete_item(
+         TableName = OBRAS_TABLE,
+         Key = { 'obraId': {'S': obraId}}
+    )
+   
+
+
+
 
 ## ----------------------------------------------------------------------------------------------- GESTIÓN DE CAJAS CHICAS
 @app.route('/cajasChicas')

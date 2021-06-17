@@ -47,7 +47,7 @@
         </b-list-group-item>
         
         <b-list-group-item button>
-           <b-link :to="'/'">
+           <b-link :to="'/obras'">
              <b-icon icon="cone-striped"></b-icon>
              Obras
            </b-link>

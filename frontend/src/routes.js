@@ -14,7 +14,7 @@ export default new VueRouter({
     base: process.env.BASE_URL,
     routes: [
         {
-            path: '/',
+            path: '/obras',
             name: 'obras',
             component: Obras,
             beforeEnter: authGuard

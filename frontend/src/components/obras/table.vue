@@ -32,7 +32,12 @@
         props: ['obra'],
         data () {
             return {
-                fields: [{key: 'obraId.S', label: 'ID'}, {key: 'encargado.S', label: 'Encargado'}, {key: 'nombre.S', label: 'Nombre'}, {key: 'estado.S', label: 'Estado'}, {key: 'tipo.S', label: 'Tipo'}],
+                fields: [
+                 {key: 'obraId.S', label: 'ID'},
+                 {key: 'encargado.S', label: 'Encargado'}, 
+                 {key: 'nombre.S', label: 'Nombre'}, 
+                 {key: 'estado.S', label: 'Estado'}, 
+                 {key: 'tipo.S', label: 'Tipo'}],
                 APIData: [],
                 perPage: 10,
                 currentPage: 1,

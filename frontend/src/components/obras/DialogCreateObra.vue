@@ -1,119 +1,194 @@
 <template>
     <div>
-        <b-modal id="modal-xlc" size="xl" title="NUEVA OBRA" hide-footer>
-            <b-form @submit.stop.prevent="onSubmit">
-            <b-form-group id="input-group-1" label="Encargado" label-for="input-1">
-              <b-form-input
-                id="input-1"
-                name="input-1"
-                v-model="$v.form.name.$model"
-                :state="validateState('name')"
-                aria-describedby="input-1-live-feedback"
-              ></b-form-input>
-              <b-form-invalid-feedback
-                id="input-1-live-feedback"
-              >Este es un campo obligatorio y requiere un mínimo de 3 carácteres.</b-form-invalid-feedback>
-            </b-form-group>
+      <b-modal ref="create" id="modal-xlc" size="xl" title="NUEVA OBRA" hide-footer>
+          <b-tabs pills card vertical v-model="tabIndex">
+            <!-- paso 1 -->
+            <b-tab title="PASO 1" active id="step1">
+                    <b-card-text>
+                        ID
+                        <b-form-input  v-model="obraid" @keyup="activateButton()" type="number" :state="validLength" aria-describedby="input-live-feedback1" ></b-form-input>
+                        <b-form-invalid-feedback id="input-live-feedback1">
+                        Requiere ingresar el ID de la obra
+                        </b-form-invalid-feedback>
+                        Encargado de la obra
+                        <b-form-input  v-model="encargado" @keyup="activateButton()" :state="validLength2" aria-describedby="input-live-feedback1" ></b-form-input>
+                        <b-form-invalid-feedback id="input-live-feedback1">
+                        Requiere ingresar un encargado
+                    </b-form-invalid-feedback>
+                        Nombre de la obra
+                        <b-form-input v-model="nombre" @keyup="activateButton()" :state="validLength3" aria-describedby="input-live-feedback2" ></b-form-input>
+                        <b-form-invalid-feedback id="input-live-feedback2">
+                        Requiere ingresar el nombre de la obra
+                    </b-form-invalid-feedback>
+                    
+                        Estado de la obra
+                        <b-form-select v-model="estado" :options="options1" @change="activateButton()" ></b-form-select>
 
-            <b-form-group id="input-group-2" label="Nombre" label-for="input-2">
-              <b-form-input
-                id="input-2"
-                name="input-2"
-                type="text"
-                v-model="$v.form.name1.$model"
-                 :state="validateState1('name1')"
-                aria-describedby="input-2-live-feedback"
-              ></b-form-input>
-              <b-form-invalid-feedback
-                id="input-2-live-feedback"
-              >Este es un campo obligatorio y requiere un mínimo de 3 carácteres.</b-form-invalid-feedback>
-            </b-form-group>
+                         Tipo
+                        <b-form-select v-model="tipo" :options="options2" @change="activateButton()"></b-form-select>
 
-             <b-form-group id="input-group-3" label="Estado" label-for="input-3">
-                <b-form-select
-                    id="input-3"
-                    name="input-3"
-                    v-model="selected1" 
-                    :options="options1"
-                    required
-                ></b-form-select>
-                </b-form-group>
+                        <b-button :disabled="btnStep1" id="btnStep1" class="button-next dark-button" @click="next1()">Siguiente</b-button>
+                    </b-card-text>
+            </b-tab>
 
-                 <b-form-group id="input-group-4" label="Tipo" label-for="input-4">
-                <b-form-select
-                    id="input-4"
-                    name="input-4"
-                    type="select"
-                    v-model="selected2" 
-                    :options="options2"
-                    required
-                ></b-form-select>
-                </b-form-group>
-            <b-button type="submit" class="normal-button">Crear obra</b-button>
-          </b-form>
-        </b-modal>
-    </div>
+            <!-- paso  2 -->
+            <b-tab title="PASO 2" id="step2" :disabled="step2">
+               <b-card-text>
+                        <!-- resumen de nueva obra -->
+                <b-card  title="RESUMEN DE NUEVA OBRA">
+                   <b-card-text>
+                      <b-row>
+                        <b-col>ID</b-col>
+                        <b-col>{{ this.obraid }}</b-col>
+                   </b-row>
+                   <b-row>
+                        <b-col>Encargado de la obra</b-col>
+                        <b-col>{{ this.encargado }}</b-col>
+                   </b-row>
+
+                   <b-row>
+                        <b-col>Nombre de la obra</b-col>
+                        <b-col>{{ this.nombre }}</b-col>
+                   </b-row>
+
+                   <b-row>
+                        <b-col>Estado de la obra</b-col>
+                        <b-col>{{ this.estado }}</b-col>
+                   </b-row>
+
+                   <b-row>
+                        <b-col>Tipo</b-col>
+                        <b-col>{{ this.tipo }}</b-col>
+                   </b-row>
+                   </b-card-text>
+               </b-card>
+               <br>
+                        <p>Una vez presionado el botón, se registrará la obra en el sistema.</p>
+                    <b-button id="btnStep3" class="button-next dark-button" @click="create()">GUARDAR</b-button>
+             </b-card-text>
+            </b-tab>
+        </b-tabs>
+      </b-modal>
+      <b-modal ref="success-modal" id="modal-no-backdrop" hide-backdrop hide-footer hide-header>
+            <center>
+                <p class="success"><b-icon icon="check-circle" animation="fade"></b-icon></p>
+                <p>Obra creada con éxito</p>
+            </center>
+    </b-modal>
+  </div>
 </template>
 
 <script>
+import { getAPI } from '../axios-api';
 
-import { validationMixin } from "vuelidate";
-import { required, minLength,} from "vuelidate/lib/validators";
 
 
 export default {
-    mixins: [validationMixin],
+   
   data() {
     return {
+      obraid:'',
+      encargado: '',
+      nombre: '',
+      success: false,
+      tabIndex: 2,
+      btnStep1: true,
+      step2: true,
+      estado: null,
+      tipo: null,
       options1: [
                 { value: 'Activa', text: 'Activa'},
                 { value: 'Inactiva', text: 'Inactiva'},
                 { value: 'Finalizada', text: 'Finalizada' }
             ],
-             options2: [
+      options2: [
                 { value: 'Obra', text: 'Obra'},
                 { value: 'Gerencia', text: 'Gerencia'},
-                { value: 'Oficina', text: 'Oficina'}
+                { value: 'Oficina', text: 'Oficina central'}
             ],
-      form: {
-        name: null,
-        name1: null,
-        selected1: null,
-        selected2: null
-      }
+      
     };
   },
-  validations: {
-    form: {
-       name: {
-        required,
-        minLength: minLength(3)
-      },
-      name1: {
-        required,
-        minLength: minLength(3)
-      },
-
-      
-    }
-  },
+  
   methods: {
-    validateState(name) {
-      const { $dirty, $error } = this.$v.form[name];
-      return $dirty ? !$error : null;
-    },
+   
+   activateButton(){
+     switch(this.tabIndex){
+     case 0:
+      if(![this.obraid, this.encargado, this.nombre, this.estado, this.tipo].includes(null)) {
+        this.btnStep1 = false
+        this.step2 = false
+     }
+     break;
 
-     validateState1(name1) {
-      const { $dirty, $error } = this.$v.form[name1];
-      return $dirty ? !$error : null;
+     case 1:
+       break;
+     }
+     
+   },
+
+   // pasar a paso 2 a traves del boton de paso 1
+        next1() {
+            const next = document.getElementById('step1')
+            next.classList.remove('active')
+            const step = document.getElementById('step2')
+            step.classList.add('active')
+            this.tabIndex++
+        },
+
+
+     create(){
+     console.log(this.obraid)
+     const options = {
+       headers: {
+         'Content-Type': 'application/json;charset=UTF-8',
+         'Access-Control-Allow-Origin': '*'
+       }
+     }
+
+     const data = JSON.stringify(
+       {
+         obraId: this.obraid,
+         encargado: this.encargado,
+         estado: this.estado,
+         nombre: this.nombre,
+         tipo: this.tipo
+       }
+     )
+
+     getAPI.post('/obras', data, options)
+        .then((res) =>{
+          if(res.statusText == 'OK'){
+            this.success = true
+            this.$refs['create'].hide()
+            setTimeout(() => {
+               this.$refs['success-modal'].show()
+            },500)
+            this.$refs['success-modal'].hide()
+          }
+
+        })
+        .catch((err)=>{
+          console.log('Error: ', err)
+        })
+
+     }
+  },
+
+   computed: {
+      validLength() {
+        return this.obraid.length > 0 ? true : false
+      },
+      validLength2() {
+        return this.encargado.length > 0 ? true : false
+      },
+       validLength3() {
+        return this.nombre.length > 0 ? true : false
+      },
     },
-    onSubmit() {
-      this.$v.form.$touch();
-      if (this.$v.form.$anyError) {
-        return;
-      }
-    }
+    
+
   }
-};
+
 </script>
 

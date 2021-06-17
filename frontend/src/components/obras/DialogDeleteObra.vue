@@ -1,73 +1,90 @@
 <template>
     <div>
-        <b-modal id="modal-xld" size="xl" title="ELIMINAR OBRA" hide-footer>
-            
-               Obra a eliminar:
-            <br><br>
-            <b-col>
-                <b-row>ID: {{items[0].obraId.S}}</b-row>
-                <b-row>Nombre: {{items[0].nombre.S}}</b-row>
-                <b-row>Encargado: {{items[0].encargado.S}}</b-row>
-                <b-row>Estado: {{items[0].estado.S}}</b-row>
-            </b-col>
-            <br><br>
-            <center>
-            <p><b>IMPORTANTE: </b>Una vez eliminada la obra no podrá ser recuperada</p>
-            <p><b>Para confirmar la eliminación, por favor, ingrese su contraseña de administrador.</b></p></center>
-           <b-form @submit.stop.prevent="onSubmit">
-                <b-form-group id="input-group-3" label="Contraseña" label-for="input-3">
-                <b-form-input
-                    id="input-3"
-                    name="input-3"
-                    type="password"
-                    v-model="$v.form.password.$model"
-                    :state="validateState('password')"
-                    aria-describedby="input-3-live-feedback"
-                ></b-form-input>
-                <b-form-invalid-feedback
-                    id="input-3-live-feedback"
-                >Este es un campo obligatorio, requiere ingresar una contraseña.</b-form-invalid-feedback>
-                </b-form-group>
+        <b-modal id="modal-xld" size="xl" title="ELIMINAR OBRA" hide-footer>    
+                <b-card-text>
+                        Los siguientes datos de obra seleccionada serán eliminados
+                        <hr>
+                        <b>Obra:</b>
+                          <b-card-text>
+                      <b-row>
+                        <b-col>ID</b-col>
+                        <b-col>{{items[0].obraId.S}}
+                          {{setobraID(items[0].obraId.S)}}</b-col>
+                   </b-row>
+                   <b-row>
+                        <b-col>Encargado de la obra</b-col>
+                        <b-col>{{items[0].encargado.S}}</b-col>
+                   </b-row>
 
-                <b-button type="submit" class="dark-button">Eliminar</b-button>
-            </b-form>  
+                   <b-row>
+                        <b-col>Nombre de la obra</b-col>
+                        <b-col>{{items[0].nombre.S}}</b-col>
+                   </b-row>
+
+                   <b-row>
+                        <b-col>Estado de la obra</b-col>
+                        <b-col>{{items[0].estado.S}}</b-col>
+                   </b-row>
+
+                   <b-row>
+                        <b-col>Tipo</b-col>
+                        <b-col>{{items[0].tipo.S}}</b-col>
+                   </b-row>
+                   
+                   </b-card-text>
+                  
+                  <hr>
+                    <p><b>IMPORTANTE: </b>Una vez eliminada la obra, no podrá ser recuperada.</p>
+                    <b-form-input v-model="password" type="password" style="text-align: center;" @keyup="activateButton()"></b-form-input>
+                    
+                <b-button  class="button-next dark-button" disabled:button @click="deleteObra()">Eliminar Obra</b-button>
+                        
+          </b-card-text>
         </b-modal>
     </div>
 </template>
 
 <script>
-import { validationMixin } from "vuelidate";
-import { required } from "vuelidate/lib/validators";
+import { getAPI } from '../axios-api';
 
 export default {
-  mixins: [validationMixin],
+  
   props: ['items'],
   data() {
     return {
-      form: {
-        password: null
-      }
+      obraid:'',
+      password:''
+     
     };
   },
-  validations: {
-    form: {
-      password: {
-        required
-      }
-    }
-  },
+ 
   methods: {
-    validateState(name) {
-      const { $dirty, $error } = this.$v.form[name];
-      return $dirty ? !$error : null;
+    setobraID(obraId){
+      this.obraid = obraId;
     },
-    onSubmit() {
-      this.$v.form.$touch();
-      if (this.$v.form.$anyError) {
-        return;
+    activateButton() {
+            this.button = false
+        },
+
+    deleteObra(){
+      console.log(this.obraid)
+      const options = {
+        headers: {
+         'Content-Type': 'application/json;charset=UTF-8',
+         'Access-Control-Allow-Origin': '*'
+        }
+      }
+
+     if(this.password == '123'){
+       getAPI.delete('/obras/'+this.items[0].obraId.S,'',options)
+        .then((res) =>{
+          console.log('Datos Eliminados: ', res)
+        })
       }
     }
   }
-};
+}  
+  
+
 </script>
  
