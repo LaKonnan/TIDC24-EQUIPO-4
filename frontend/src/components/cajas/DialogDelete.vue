@@ -3,75 +3,7 @@
     <b-modal id="modal-delete" size="xl" title="ELIMINAR CAJA CHICA" hide-footer>
         <b-card-text>
             <b-card>
-                <b-row>
-                    <b-col>
-                        ID
-                    </b-col>
 
-                    <b-col>
-                        {{ this.items[0].id_caja.S }}
-                    </b-col>
-                </b-row>
-
-                <b-row>
-                    <b-col>
-                        Tipo de caja
-                    </b-col>
-
-                    <b-col>
-                        {{ this.items[0].tipo.S }}
-                    </b-col>
-                </b-row>
-
-                <b-row>
-                    <b-col>
-                        Estado
-                    </b-col>
-
-                    <b-col>
-                        {{ this.items[0].estado.S }}
-                    </b-col>
-                </b-row>
-
-                <!-- <b-row>
-                    <b-col>
-                        Fecha de inicio
-                    </b-col>
-
-                    <b-col>
-                        {{ this.items[0].fecha_incio.S }}
-                    </b-col>
-                </b-row>
-
-                <b-row>
-                    <b-col>
-                        Fecha de término
-                    </b-col>
-
-                    <b-col>
-                        {{ this.items[0].fecha_termino.S }}
-                    </b-col>
-                </b-row> -->
-
-                <b-row>
-                    <b-col>
-                        Monto de gastos
-                    </b-col>
-
-                    <b-col>
-                        {{ this.items[0].monto_gastos.S }}
-                    </b-col>
-                </b-row>
-
-                <b-row>
-                    <b-col>
-                        Monto total
-                    </b-col>
-
-                    <b-col>
-                        {{ this.items[0].monto_total.S }}
-                    </b-col>
-                </b-row>
             </b-card>
         </b-card-text>
         <center>
@@ -93,7 +25,9 @@ export default {
             password: '',
             // recibir id de caja seleccionada
             data: [],
-            button: true
+            button: true,
+            caja: '',
+            item_id: this.items[0].id_caja.S
         }
     },
 
@@ -103,13 +37,9 @@ export default {
         },
 
         getData() {
-            getAPI.get('/cajasChicas/'+this.caja,)
+            getAPI.get('/cajasChicas/' + this.caja,)
                 .then(response => {
-                    this.aux = response.data
-                    // paasar datos a opciones de select obra
-                    for(var i = 0; i < this.aux.length; i++){
-                        this.options2.push({ value: this.aux[i].obraId.S, text: (this.aux[i].obraId.S +' - '+this.aux[i].nombre.S) })
-                    }
+                    this.data = response.data
                 })
         },
 
@@ -129,6 +59,13 @@ export default {
             }
         }
     },
+
+    watch: {
+        item_id: function(){
+            this.caja = this.items[0].id_caja.S
+            this.getData()
+        }
+    }
 }
 </script>
 

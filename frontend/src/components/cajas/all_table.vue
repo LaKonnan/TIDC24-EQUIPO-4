@@ -2,6 +2,7 @@
     <div>
       <!-- tabla -->
       <b-table
+        ref="cajas_table"
         class = "table"
         selectable 
         :fields="fields" 

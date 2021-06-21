@@ -93,12 +93,24 @@
         </b-tabs>
       </b-modal>
       
-      <b-modal ref="success-modal" id="modal-no-backdrop" hide-backdrop hide-footer hide-header>
+        <!-- modal de exito -->
+        <b-modal ref="success_modal" id="modal-no-backdrop" hide-backdrop hide-footer hide-header>
             <center>
                 <p class="success"><b-icon icon="check-circle" animation="fade"></b-icon></p>
-                <p>Caja creada con éxito</p>
+                <p>{{ success_text }}</p>
+                <b-button class="dark-button" @click="closeModal('success')">CERRAR</b-button>
             </center>
-    </b-modal>
+        </b-modal>
+        
+        <!-- modal de error -->
+        <b-modal ref="error_modal" id="modal-no-backdrop" hide-backdrop hide-footer hide-header>
+            <center>
+                <p class="error"><b-icon icon="exclamation-circle" animation="fade"></b-icon></p>
+                <p>{{ error_text }}</p>
+                <b-button class="normal-button" @click="modalBack()">VOLVER</b-button>
+                <b-button class="dark-button" @click="closeModal('error')">CERRAR</b-button>
+            </center>
+        </b-modal>
   </div>
 </template>
 
@@ -113,6 +125,7 @@ export default {
         const minDate = new Date(today) 
 
         return {
+            timer: 1,
             //  pasos
             tabIndex: 2,
             btnStep1: true,
@@ -146,7 +159,11 @@ export default {
             max_final_date: '',
             money: '',
             gas_money: '',
-            success: false
+
+            // general
+            success: false,
+            error_text: '',
+            success_text: ''
         }
     },
 
@@ -160,10 +177,15 @@ export default {
 
             getAPI.get('/obra/tipos/'+this.selected1,)
                 .then(response => {
+                    // recibir datos
                     this.aux= response.data
+
                     // paasar datos a opciones de select obra
                     for(var i = 0; i < this.aux.length; i++){
-                        this.options2.push({ value: this.aux[i].obraId.S, text: (this.aux[i].obraId.S +' - '+this.aux[i].nombre.S) })
+                        // filtrar obras ya terminadas
+                        if(this.aux[i].estado.S != 'Terminada'){
+                            this.options2.push({ value: this.aux[i].obraId.S, text: (this.aux[i].obraId.S +' - '+this.aux[i].nombre.S) })
+                        }
                     }
                 })
             
@@ -277,18 +299,71 @@ export default {
             // crear caja chica
             getAPI.post('/cajasChicas', data, options)
                 .then((res) => {
-                    if(res.statusText == 'OK'){
-                        this.sucess = true
-                        this.$refs.['create'].hide()
-                        setTimeout(() => {
-                            this.$refs.['success-modal'].show()
-                        },500)
-                        this.$refs.['success-modal'].hide()
+                    // cerrar modal crear
+                    this.$refs.create.hide()
+
+                    switch(res.data.message){
+                        case 'creada':
+                            this.success_text = 'Caja chica' + res.data.id_caja + 'creada con éxito'
+                            
+                            // resetear campos
+                            
+                            this.tabIndex = 2
+                            this.btnStep1 = true
+                            this.btnStep2 = true
+                            this.step2 = true
+                            this.step3 = true
+                            this.aux = []
+                            this.selected1 = null
+                            this.selected2 = null
+                            this.options2 = []
+                            this.booleanSelect2 = true
+                            this.selected3 = null
+                            this.initial_date = ''
+                            this.final_date = ''
+                            this.min_final_date = ''
+                            this.max_final_date = ''
+                            this.money = ''
+                            this.gas_money = ''
+
+                            // recargar datos de tabla
+                            this.$refs.cajas_table.refresh()
+
+                            // mostrar modal de exito al crear
+                            this.$refs.success_modal.show()
+                            break
+                        
+                        case 'activa':
+                            // mostrar modal de error
+                            this.error_text = 'ERROR - La obra ya posee una caja chica activa, no se puede registrar otra'
+                            this.$refs.error_modal.show()
+                            break
+                        
+                        case 'inactiva':
+                            this.error_text = 'ERROR - La obra posee una caja chica inactiva, no se puede registrar otra'
+                            this.$refs.error_modal.show()
+                            break
                     }
                 })
                 .catch((err) => {
                     console.log('ERROR: ', err)
                 })
+        },
+
+        // cerrar modales de exito y error
+        cerrarModal(tipo){
+            switch(tipo){
+                case 'error':
+                    this.$refs.error_modal.hide()
+                    break;
+                case 'success':
+                    this.$refs.success_modal.hide()
+            }
+        },
+
+        modalBack() {
+            this.$refs.error_modal.hide()
+            this.$refs.create.show()
         }
     },
     computed: {

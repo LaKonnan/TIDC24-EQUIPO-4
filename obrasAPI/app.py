@@ -1,4 +1,5 @@
 import os
+from re import I
 import boto3
 import json
 from botocore.exceptions import DataNotFoundError
@@ -62,7 +63,12 @@ def get_obra(obraId):
 def obras_por_tipo(tipo):
     result = dynamodb_client.scan(
         TableName = OBRAS_TABLE,
-        ScanFilter = { "tipo": { "ComparisonOperator": "EQ", "AttributeValueList": [{ "S": tipo } ]} }
+        ScanFilter = {
+            "tipo": {
+                "ComparisonOperator": "EQ",
+                "AttributeValueList": [{ "S": tipo }]
+            }
+        }
     )
 
     items = result['Items']
@@ -196,8 +202,16 @@ def create_caja():
     monto_total = request.json.get('monto_total')
     monto_combustible = request.json.get('monto_combustible')
 
-
-    ## VALIDACIONES
+    # verificar que la obra se encuentre no se encuentre finalizada
+    data = dynamodb_client.scan(
+        TableName = CAJAS_TABLE,
+        ScanFilter = { 
+            "obraId": { 
+                "ComparisonOperator": "EQ", 
+                "AttributeValueList": [{ "S": id_obra } ]
+            } 
+        }
+    )
 
     ## GENERAR IDs
     # identificador de tipo
@@ -217,19 +231,61 @@ def create_caja():
     # dar version de caja (O1, 02, 03...0N)
     result = dynamodb_client.scan(
         TableName = CAJAS_TABLE,
-        ScanFilter = { "obraId": { "ComparisonOperator": "CONTAINS", "AttributeValueList": [{ "S": id_obra } ]} }
+        ScanFilter = { 
+            "id_obra": { 
+                "ComparisonOperator": "EQ" , 
+                "AttributeValueList": [ { "N": id_obra } ]
+            } 
+        }
     )
 
     items = result['Items']
 
     if not items:
+        # la obra no posee ninguna caja
         id_caja += '01'
         id_caja_combustible += '01'
-    else:
-        # ordenar lista
-        print('aaa')
-        # tomar ultimos dos valores del ultimo id
 
+    # la obra posee caja(s) chica(s)
+    else:
+        # ordenar diccionario de cajas con metodo burbuja
+        size = len(items)
+
+        for i in range(size):
+            min_i = i
+
+            for x in range(i+1, size):
+                if items[min_i]["id_caja"]['S'] > items[x]["id_caja"]['S']:
+                    min_i = x 
+            
+            temp = items[i]
+            items[i] =  items[min_i]
+            items[min_i] = temp
+        
+        # obtener última caja
+        last = items[size-1]['id_caja']['S']
+
+        # verificar que ultima caja este cerrada
+        if(items[size-1]['estado']['S'] == 'Activa'):
+            return jsonify({'message': 'activa'})
+
+        elif(items[size-1]['estado']['S'] == 'Inactiva'):
+            return jsonify({'message': 'inactiva'})
+
+        else:
+            temp_id = ''
+            # obtener numero de ultima version
+            size_id = len(last)
+            for x in range (size_id):
+                if(x == size_id-2 | x == size_id-1):
+                    if (int(temp_id) > int(last[size_id-1]) & temp_id !=  ''):
+                        temp_id = temp_id + str(int(last[x]) + 1)
+                    else:    
+                        temp_id += last[x]
+            
+            id_caja += temp_id
+            id_caja_combustible += temp_id
+        
 
     ## REGISTRAR NUEVA CAJA CHICA
     dynamodb_client.put_item(
@@ -257,7 +313,25 @@ def create_caja():
         }
     )
 
-    return jsonify({'message': 'obra creada'})
+    return jsonify({'message': 'creada', "id_caja": id_caja })
+
+@app.route('/cajasChicas/<string:id_caja>', methods=['DELETE'])
+def delete_caja(id_caja):
+    # eliminar caja chica
+    result1 = dynamodb_client.delete_item(
+        TableName = CAJAS_TABLE,
+        Key = {
+            'id_caja': {'S': id_caja }
+        }
+    )
+
+    # eliminar caja combustible asociada
+    result2 = dynamodb_client.delete_item(
+        TableName = CAJAS_COMBUSTIBLE,
+        Key = {
+            'id_caja_asociada': {'S': id_caja }
+        }
+    )
 
 
 ## GESTION DE USUARIOS
