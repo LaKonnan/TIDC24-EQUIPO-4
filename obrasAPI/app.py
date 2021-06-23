@@ -190,6 +190,26 @@ def get_cajas():
     response = jsonify(items)
     return response
 
+@app.route('/cajasChicas/<string:id_caja1>')
+def get_caja(id_caja1):
+    result = dynamodb_client.scan(
+        TableName = CAJAS_TABLE,
+        ScanFilter = {
+            "id_caja": {
+                "ComparisonOperator": "EQ",
+                "AttributeValueList": [{ "S": id_caja1 }]
+            }
+        }
+    )
+
+    items = result['Items']
+    if not items:
+        return jsonify({ 'error':'No se han encontrado' }), 404
+    
+    response = jsonify(items)
+
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 @app.route('/cajasChicas', methods=['POST'])
 def create_caja():

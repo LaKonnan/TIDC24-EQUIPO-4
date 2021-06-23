@@ -275,8 +275,6 @@ export default {
         
         // registrar nueva caja
         create() {
-
-            console.log(this.selected2)
             // cofiguracion
             const options = {
                 headers: {

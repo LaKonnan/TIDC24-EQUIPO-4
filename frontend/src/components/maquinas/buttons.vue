@@ -27,10 +27,10 @@ export default {
   },
 
   components: {
-    'dialog-create': require('@/components/cajas/DialogCreateCaja').default,
-    'dialog-delete': require('@/components/cajas/DialogDelete').default,
-    'dialog-edit': require('@/components/cajas/DialogEdit').default,
-    'dialog-view': require('@/components/cajas/DialogView').default
+    'dialog-create': require('@/components/maquinas/DialogCreateCaja').default,
+    'dialog-delete': require('@/components/maquinas/DialogDelete').default,
+    'dialog-edit': require('@/components/maquinas/DialogEdit').default,
+    'dialog-view': require('@/components/maquinas/DialogView').default
   },
 
   methods: {
