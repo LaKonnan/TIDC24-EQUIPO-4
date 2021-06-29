@@ -57,6 +57,14 @@
               >Este es un campo obligatorio y requiere un mínimo de 6 carácteres.</b-form-invalid-feedback>
             </b-form-group>
 
+            <b-form-group id="input-group-4" label="Rol" label-for="input-4">
+              <b-form-select v-model="$v.form.rol.$model"
+                :state="validateState('rol')" :options="options"></b-form-select>
+              <b-form-invalid-feedback
+                id="input-4-live-feedback"
+              >Este es un campo obligatorio</b-form-invalid-feedback>
+            </b-form-group>
+
             <b-button type="submit" class="normal-button">Registrar</b-button>
             <b-button class="dark-button" @click="resetForm()">Limpiar Campos</b-button>
           </b-form>
@@ -78,8 +86,16 @@ export default {
         rut: null,
         name: null,
         email: null,
-        password: null
-      }
+        password: null,
+        rol: null
+      },
+      options: [
+        { value: null, text: 'Seleccione un rol' },
+        { value: 'rol_QB4JcKnGKpJS7NLv', text: 'Administrador' },
+        { value: 'rol_OwLZBI7MTfexCXk4', text: 'Gerente' },
+        { value: 'rol_gxkCaxtBYTRDeqlF', text: 'Residente' },
+        { value: 'rol_mvuY1l6CQeimpXsw', text: 'Encargado' },
+      ]
     };
   },
   validations: {
@@ -98,6 +114,9 @@ export default {
       password: {
         required,
         minLength: minLength(6)
+      },
+      rol: {
+        required
       }
     }
   },
@@ -115,7 +134,8 @@ export default {
         rut: null,
         name: null,
         email: null,
-        password: null
+        password: null,
+        rol: null
       };
 
       this.$nextTick(() => {
@@ -128,11 +148,13 @@ export default {
         return;
       }else {
         const accessToken = await this.$auth.getTokenSilently()
+        console.log(this.$v.form.rol.$model)
         getAPI.post('/usuarios', {
             rut: this.$v.form.rut.$model,
             name: this.$v.form.name.$model,
             email: this.$v.form.email.$model,
-            password: this.$v.form.password.$model
+            password: this.$v.form.password.$model,
+            rol: this.$v.form.rol.$model
         }, {
           headers: {
                 Authorization: `Bearer ${accessToken}`

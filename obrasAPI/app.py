@@ -372,7 +372,8 @@ def create_usuario():
     name = request.json.get('name')
     email = request.json.get('email')
     password = request.json.get('password')
-    if not rut and name and email and password:
+    rol = request.json.get('rol')
+    if not rut and name and email and password and rol:
         return jsonify({'error': 'Por favor ingrese todos los campos obligatorios'}), 400 
     auth0.users.create({
         'user_id': rut,
@@ -381,6 +382,7 @@ def create_usuario():
         'password': password,
         'connection': 'Username-Password-Authentication'
     })
+    auth0.users.add_roles('auth0|'+rut, [rol])
     return jsonify({'message': 'usuario creado'})
 
 
