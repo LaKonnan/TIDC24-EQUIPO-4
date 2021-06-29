@@ -4,7 +4,7 @@
             Usuario a eliminar:
             <br><br>
             <b-col>
-                <b-row>Fecha de creación: {{items[0].created_at}}</b-row>
+                <b-row>Rut: {{items[0].identities[0].user_id}}</b-row>
                 <b-row>Nombre: {{items[0].nickname}}</b-row>
                 <b-row>Email: {{items[0].email}}</b-row>
             </b-col>

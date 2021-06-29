@@ -2,6 +2,20 @@
     <div>
         <b-modal id="modal-xlc" size="xl" title="REGISTRAR NUEVO USUARIO" hide-footer @hidden="onHidden">
           <b-form @submit.stop.prevent="onSubmit">
+
+            <b-form-group id="input-group-0" label="Rut" label-for="input-0">
+              <b-form-input
+                id="input-0"
+                name="input-0"
+                v-model="$v.form.rut.$model"
+                :state="validateState('rut')"
+                aria-describedby="input-0-live-feedback"
+              ></b-form-input>
+              <b-form-invalid-feedback
+                id="input-0-live-feedback"
+              >Este es un campo obligatorio</b-form-invalid-feedback>
+            </b-form-group>
+
             <b-form-group id="input-group-1" label="Nombre" label-for="input-1">
               <b-form-input
                 id="input-1"
@@ -61,6 +75,7 @@ export default {
   data() {
     return {
       form: {
+        rut: null,
         name: null,
         email: null,
         password: null
@@ -69,6 +84,9 @@ export default {
   },
   validations: {
     form: {
+      rut: {
+        required
+      },
       name: {
         required,
         minLength: minLength(3)
@@ -94,6 +112,7 @@ export default {
     },
     resetForm() {
       this.form = {
+        rut: null,
         name: null,
         email: null,
         password: null
@@ -110,6 +129,7 @@ export default {
       }else {
         const accessToken = await this.$auth.getTokenSilently()
         getAPI.post('/usuarios', {
+            rut: this.$v.form.rut.$model,
             name: this.$v.form.name.$model,
             email: this.$v.form.email.$model,
             password: this.$v.form.password.$model

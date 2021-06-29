@@ -368,12 +368,14 @@ def get_usuarios():
 @app.route('/usuarios', methods=['POST'])
 @requires_role('manage:users')
 def create_usuario():
+    rut = request.json.get('rut')
     name = request.json.get('name')
     email = request.json.get('email')
     password = request.json.get('password')
-    if not email:
+    if not rut and name and email and password:
         return jsonify({'error': 'Por favor ingrese todos los campos obligatorios'}), 400 
     auth0.users.create({
+        'user_id': rut,
         'name': name,
         'email': email,
         'password': password,

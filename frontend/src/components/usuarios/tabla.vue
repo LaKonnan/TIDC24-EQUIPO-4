@@ -34,7 +34,7 @@ export default {
     props: ['usuario'],
     data () {
         return {
-            fields: [{key: 'created_at', label: 'Fecha de creación'}, {key: 'name', label: 'Nombre'}, {key: 'email', label: 'email'}],
+            fields: [{key: 'identities[0].user_id', label: 'Rut'}, {key: 'name', label: 'Nombre'}, {key: 'email', label: 'Email'}],
             usuarios: [],
             perPage: 10,
             selectMode: 'single',
