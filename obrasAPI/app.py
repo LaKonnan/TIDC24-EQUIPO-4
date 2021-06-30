@@ -38,7 +38,7 @@ if os.environ.get('IS_OFFLINE'):
 OBRAS_TABLE = os.environ['OBRAS_TABLE']
 CAJAS_TABLE = os.environ['CAJAS_TABLE']
 CAJAS_COMBUSTIBLE = os.environ['CAJAS_COMBUSTIBLE']
-
+GASTO_COMBUSTIBLE = os.environ['GASTO_COMBUSTIBLE']
 
 @app.route('/obras/<string:obraId>')
 def get_obra(obraId):
@@ -178,7 +178,107 @@ def delete_obra(obraId):
          Key = { 'obraId': {'S': obraId}}
     )
    
+## ------------ GESTIÓN DE GASTOS
+## Recibe Datos
+@app.route('/gastos')
+def get_gastosc():
+    gastos = dynamodb_client.scan(TableName = GASTO_COMBUSTIBLE)
+    items = gastos['Items']
+    response = jsonify(items)
+    return response
 
+## Crear gasto combustible
+@app.route('/gastos', methods=['POST'])
+def create_gastosc():
+    folio = request.json.get('folio')
+    fechaEmision = request.json.get('fechaEmision')
+    horaEmision = request.json.get('horaEmision')
+    maquina = request.json.get('maquina')
+    montoTotal = request.json.get('montoTotal')
+    nombreEstacion = request.json.get('nombreEstacion')
+    qtyBencina = request.json.get('qtyBencina')
+    tipoComprobante = request.json.get('tipoComprobante')
+
+    dynamodb_client.put_item(
+        TableName = OBRAS_TABLE,
+        Item ={
+            'folio': {'S': folio},
+            'fechaEmision': {'S': fechaEmision},
+            'horaEmision': {'S': horaEmision},
+            'maquina': {'S': maquina},
+            'montoTotal': {'S': montoTotal},
+            'nombreEstacion': {'S': nombreEstacion},
+            'qtyBencina': {'S': qtyBencina},
+            'tipoComprobante': {'S': tipoComprobante}
+        }
+    )
+
+## Editar gasto combustible
+@app.route('/gastos', methods=['PUT'])
+def edit_gastosc():
+    folio = request.json.get('folio')
+    fechaEmision = request.json.get('fechaEmision')
+    horaEmision = request.json.get('horaEmision')
+    maquina = request.json.get('maquina')
+    montoTotal = request.json.get('montoTotal')
+    nombreEstacion = request.json.get('nombreEstacion')
+    qtyBencina = request.json.get('qtyBencina')
+    tipoComprobante = request.json.get('tipoComprobante')
+
+    key ={
+        'folio':{'S': folio}
+    }
+    dynamodb_client.update_item(
+        TableName = GASTO_COMBUSTIBLE,
+        Key= key,
+        ExpressionAttributeNames = {
+            
+            '#fechaE': 'fechaEmision',
+            '#horaE': 'horaEmision',
+            '#maq': 'maquina',
+            '#montoT': 'montoTotal',
+            '#estacion': 'nombreEstacion',
+            '#qty': 'qtyBencina',
+            '#tipo': 'tipoComprobante',
+        
+        },
+        UpdateExpression= 
+        "set #fechaE = :fechaEmision, #horaE = :horaEmision, #maq = :maquina, #montoT = :montoTotal, #estacion = :nombreEstacion, #qty = :qtyBencina, #tipo = :tipoComprobante "
+        ,
+        
+        ExpressionAttributeValues={
+            
+            ':fechaEmision':{
+                'S': fechaEmision
+            },
+             ':horaEmision':{
+                'S': horaEmision
+            },
+             ':maquina':{
+                'S': maquina
+            },
+             ':montoTotal':{
+                'S': montoTotal
+            },
+             ':nombreEstacion':{
+                'S': nombreEstacion
+            },
+             ':qtyBencina':{
+                'S': qtyBencina
+            },
+             ':tipoComprobante':{
+                'S': tipoComprobante
+            }
+        }
+        
+    )
+
+@app.route('/gastos/<string:folio>', methods=['DELETE'])
+def delete_gastosc(folio):
+    result = dynamodb_client.delete_item(
+         TableName = GASTO_COMBUSTIBLE,
+         Key = { 'folio': {'S': folio}}
+    )
 
 
 

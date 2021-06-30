@@ -60,6 +60,13 @@
            </b-link>
         </b-list-group-item>
 
+        <b-list-group-item button>
+           <b-link :to="'/gastos-combustible'">
+             <b-icon icon="archive-fill"></b-icon>
+             Gastos combustibles
+           </b-link>
+        </b-list-group-item>
+
       </b-list-group>
     </b-sidebar>
   </div>

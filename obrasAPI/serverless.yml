@@ -38,6 +38,7 @@ provider:
     OBRAS_TABLE: ${self:custom.tableName}
     CAJAS_TABLE: cajas_chicas
     CAJAS_COMBUSTIBLE: caja_combustible
+    GASTO_COMBUSTIBLE: gasto_combustible
 
 functions:
   api:
@@ -96,4 +97,17 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: caja_combustible
+    GastoCTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: folio
+            AttributeType: S
+        KeySchema:
+          - AttributeName: folio
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: gasto_combustible
 
