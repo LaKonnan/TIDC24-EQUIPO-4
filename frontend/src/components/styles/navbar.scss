@@ -1,0 +1,57 @@
+.b-sidebar{
+    display: block !important;
+}
+
+.sidebar-header {
+    margin: 10px;
+}
+
+.sidebar-header img {
+    width: 95%;
+}
+
+.sidebar-body .list-group-item {
+    background: transparent;
+    transition: 0.2s ease-in-out;
+    border-bottom: 1px solid rgba(0,0,0,0.2) !important;
+    border-top: none !important;
+    border-right: none !important;
+    border-left: none;
+}
+
+.menu-item {
+    color: #FFFFFF !important;
+    text-decoration: none !important;
+    background-color: none;
+}
+
+.sidebar-body .list-group-item:hover {
+    background-color: #495057;
+}
+
+.active {
+    background: #F39A27 !important;
+    border-bottom: 1px solid #FFFFFF !important;
+    border-top: none !important;
+    border-right: none !important;
+    border-left: 5px solid #FFFFFF !important;
+    font-weight: bold;
+}
+
+
+.navbar {
+    margin-left: 320px;
+    border-bottom: 2px solid #e6e6e6;
+}
+
+.page-title {
+    color: #272b2e;
+    font-size: 25px;
+}
+
+.username {
+    float: right;
+    position: absolute;
+    right: 0;
+    margin-right: 40px;
+}

@@ -1,0 +1,38 @@
+
+
+.cards-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-column-gap: 10px;
+}
+
+
+.cards-group .card .card-body {
+    display: grid;
+    grid-template-columns: 10fr 1fr;
+    grid-column-gap: 5px;    
+}
+
+.icon-register, .title-register, 
+.title-active, .title-alert,
+.title-slash{
+    font-size: 19px;
+}
+
+.icon-slash, .icon-alert,
+.icon-active, .icon-register {
+    font-size: 22px;
+}
+
+
+.icon-active {
+    color: #1a9134;
+}
+
+.icon-alert {
+    color: #F39A27;
+}
+
+.icon-slash {
+    color: #dc3545;
+}

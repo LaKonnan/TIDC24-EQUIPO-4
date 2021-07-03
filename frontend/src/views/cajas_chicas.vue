@@ -1,20 +1,17 @@
 <template>
-  <div>
-    <div class="content">
-      <br>
-      <!-- titulo -->
-      <p class="dark-title">GESTIÓN DE CAJAS CHICAS</p>
-      <hr class="hr">
+  <div class="content">
+    <br>
 
-      <!-- tabla de contenidos -->
-      <table-cajas @items="rowItems"/>
+    <!-- resumen -->
+    <resume />
 
-      <!-- botones -->
-      <buttons :items="items" />
+    <!-- tabla de contenidos -->
+    <table-cajas @items="rowItems"/>
 
-    </div>
+    <!-- botones -->
+    <buttons :items="items" />
+
   </div>
-
 </template>
 
 <script>
@@ -31,6 +28,7 @@ export default {
     components: {
       'table-cajas': require('../components/cajas/all_table').default,
       'buttons': require('../components/cajas/buttons').default,
+      'resume': require('../components/cajas/resumen_global').default
     },
 
     methods: {
@@ -41,6 +39,6 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss">
+  @import '@/components/styles/global.scss';
 </style>

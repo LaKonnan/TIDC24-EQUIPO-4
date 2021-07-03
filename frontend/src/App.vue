@@ -9,6 +9,7 @@
 
 export default {
   name: 'App',
+
   components: {
         'navbar': require('./components/Navbar.vue').default
     }

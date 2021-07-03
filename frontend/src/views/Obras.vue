@@ -1,5 +1,5 @@
 <template>
-    <div class="obras content">
+    <div class="content">
         <br>
         <!-- titulo -->
         <p class="dark-title">GESTIÓN DE OBRAS</p>

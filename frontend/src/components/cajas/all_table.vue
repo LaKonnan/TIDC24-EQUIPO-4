@@ -38,6 +38,7 @@ export default {
             selectMode: 'single',
             currentPage: 1,
             selected: [],
+            isSelected: false,
             fields: [
                 { key: 'id_caja.S', label: 'ID'},
                 { key: 'tipo.S', label: 'TIPO'},
@@ -70,7 +71,17 @@ export default {
     methods: {
         // obtener id de caja elegida
         onRowSelected(items) {
-            this.$emit('items', items)
+            if(this.isSelected == false) {
+                this.isSelected = true
+                this.$emit('items', items)
+                this.$emit('row-selected', false)
+
+            // deshabilitar botones si no hay una fila elegida
+            }else {
+                this.isSelected = false
+                this.$emit('row-selected', true)
+            }
+            
         },       
     },
 }

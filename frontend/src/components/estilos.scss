@@ -4,18 +4,12 @@
 
 * {
     font-family: 'Open Sans', sans-serif !important;
-    color: #1F1F1F;
-}
-
-body {
-    background: #FFFFFF;
 }
 
 .content {
-    margin-left: 5%;
-    margin-right: 5%;
+    margin-left: 340px;
+    margin-right: 40px;
 }
-
 // ----------------------------------------------------- TEXTOS
 .dark-title, .light-title {
     font-size: 32px;
@@ -24,7 +18,7 @@ body {
 
 // titulo con fondo claro
 .dark-title {
-    color: #1F1F1F;
+    color: #23282c;
 }
 
 // titulo con fondo oscuro

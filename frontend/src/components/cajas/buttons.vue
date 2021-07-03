@@ -4,9 +4,9 @@
       <!-- botones -->
       <div class="buttons">
         <b-button v-b-modal.modal-create class="normal-button">INGRESAR NUEVO</b-button>
-        <b-button v-b-modal.modal-delete class="dark-button" @click="openModal('delete')">ELIMINAR</b-button>
-        <b-button v-b-modal.modal-edit class="normal-button" @click="openModal('edit')">EDITAR</b-button>
-        <b-button v-b-modal.modal-view class="normal-button" @click="openModal('view')">VER INFORMACIÓN COMPLETA</b-button>
+        <b-button v-b-modal.modal-delete class="dark-button" @click="openModal('delete')" :disabled="selectedRow">ELIMINAR</b-button>
+        <b-button v-b-modal.modal-edit class="normal-button" @click="openModal('edit')" :disabled="selectedRow">EDITAR</b-button>
+        <b-button v-b-modal.modal-view class="normal-button" @click="openModal('view')" :disabled="selectedRow">VER INFORMACIÓN COMPLETA</b-button>
       </div>
 
       <!-- dialogs CRUD -->
@@ -19,7 +19,7 @@
 
 <script>
 export default {
-  props: ['items'],
+  props: ['items', 'selectedRow'],
   data() {
     return {
       id: null

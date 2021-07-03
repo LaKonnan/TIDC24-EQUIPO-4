@@ -1,0 +1,12 @@
+// importar archivos scss de bootstrap
+@import '~bootstrap/scss/bootstrap.scss';
+@import '~bootstrap-vue/src/index.scss';
+
+* {
+    font-family: 'Open Sans', sans-serif !important;
+}
+
+.content {
+    margin-left: 340px;
+    margin-right: 40px;
+}

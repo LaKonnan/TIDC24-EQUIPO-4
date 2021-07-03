@@ -1,110 +1,102 @@
 <template>
-  <div>
-    <b-navbar style="background-color: #F39A27; color: #ffff">
-      <!-- boton menu lateral -->
-      <b-navbar-nav>
-        <b-nav-item>
-          <b-button class="menu-button" v-b-toggle.sidebar-variant>
-            <b-icon icon="justify"></b-icon>
-          </b-button>
-        </b-nav-item>
-      </b-navbar-nav>
+  <div class="div-sidebar">
+    <b-sidebar class="style-sidebar" v-model="sidebar" bg-variant="dark" no-header no-slide>
+      <!-- logo parte superior -->
+      <div class="sidebar-header">
+        <img src="@/assets/header-sidebar.png">
+      </div>
+      
+      <!-- menu -->
+      <div class="sidebar-body">
+        <b-list-group-item :active="isActive(item.to, item.id)" v-for="item in items" v-bind:key="item" :id="item.id" @click="changeActive()">
+          <a class="menu-item" :href="item.to">
+            <b-icon :icon="item.icon"></b-icon>
+            {{ item.title }}
+          </a>
+        </b-list-group-item>
+      </div>
+    </b-sidebar>
+    <b-navbar>
+      <div class="page-title">
+          {{ this.title }}
+      </div>
 
-      <!-- nombre de empresa -->
-      <b-nav-text class="ml-auto">
-        <b-navbar-item class="navbar-title">CONSTRUCTORA CAMPODÓNICO</b-navbar-item>
-      </b-nav-text>
-
-      <!-- nombre de usuario -->
-      <b-navbar-nav class="ml-auto">
-        <b-nav-item>
-          <!-- Check that the SDK client is not currently loading before accessing is methods -->
-          <div v-if="!$auth.loading">
-          <!-- show login when not authenticated -->
-            <button v-if="!$auth.isAuthenticated" @click="login" class=dark-button>Iniciar sesión</button>
-            <!-- show logout when authenticated -->
-            <button v-if="$auth.isAuthenticated" @click="logout" class=dark-button>Cerrar sesión</button>
-          </div>
-        </b-nav-item>
-      </b-navbar-nav>
+      <div class="username">
+        Nombre Apellido
+      </div>
     </b-navbar>
 
-    <!-- menu lateral -->
-    <b-sidebar class="side-bar" id="sidebar-variant" title="MENÚ" shadow>
-      <b-list-group>
-        <b-list-group-item button>
-           <b-link :to="'/perfil'">
-             <b-icon icon="person-circle"></b-icon>
-             Mi perfil
-           </b-link>
-        </b-list-group-item>
-        
-        <b-list-group-item button>
-           <b-link :to="'/usuarios'">
-             <b-icon icon="people"></b-icon>
-             Usuarios
-           </b-link>
-        </b-list-group-item>
-        
-        <b-list-group-item button>
-           <b-link :to="'/obras'">
-             <b-icon icon="cone-striped"></b-icon>
-             Obras
-           </b-link>
-        </b-list-group-item>
-
-        <b-list-group-item button>
-           <b-link :to="'/cajas-chicas'">
-             <b-icon icon="archive-fill"></b-icon>
-             Cajas chicas
-           </b-link>
-        </b-list-group-item>
-
-        <b-list-group-item button>
-           <b-link :to="'/gastos-combustible'">
-             <b-icon icon="archive-fill"></b-icon>
-             Gastos combustibles
-           </b-link>
-        </b-list-group-item>
-
-      </b-list-group>
-    </b-sidebar>
   </div>
 </template>
 
 <script>
   export default {
     name: 'Navbar',
-    data: () => ({ drawer: null,
-    items: [
-      { title: 'Obras', icon: 'cone-striped', to: '/'},
-      { title: 'Cajas chicas', icon: 'archive-fill', to: '/cajas-chicas'}
-    ]
+    data: () => ({ 
+      drawer: null,
+      active_page: null,
+      sidebar: true,
+      title: '',
+      items: [
+        { title: 'Usuarios', icon: 'people', to: '/usuarios', id: 'usuarios'},
+        { title: 'Obras', icon: 'cone-striped', to: '/obras', id: 'obras'} ,
+        { title: 'Máquinas', icon: 'cone-striped', to: '/maquinas', id: 'maquinas'},
+        { title: 'Cajas chicas', icon: 'archive-fill', to: '/cajas-chicas', id: 'cajas'}
+      ]
     }),
+
     methods: {
-      // Log the user in
+      // Autenticación de usuario para ingreso
       login() {
         this.$auth.loginWithRedirect();
       },
-      // Log the user out
+
+      // Cierre de sesion
       logout() {
         this.$auth.logout({
           returnTo: window.location.origin
         });
+      },
+      
+      isActive(item_path, item_id) {
+        this.active_page = this.$router.currentRoute.fullPath
+        
+        if(item_path == this.active_page){
+          var element = document.getElementById(item_id)
+          element.classList.add('active')
+        }
+      },
+
+      setTitle() {
+        this.title = this.$router.currentRoute.path
+        console.log(this.$router.currentRoute)
+        console.log(this.title)
+        switch(this.title) {
+          case '/obras':
+            this.title = 'GESTIÓN DE OBRAS'
+            break
+          case '/cajas-chicas':
+            this.title = 'GESTIÓN DE CAJAS CHICAS'
+            break
+          case '/usuarios':
+            this.title = 'GESTIÓN DE USUARIOS'
+            break
+          case '/maquinas':
+            this.title = 'GESTIÓN DE MAQUINAS'
+            break
+          case '/gastos':
+            this.title = 'GESTIÓN DE GASTOS'
+            break
+        }
       }
+    },
+
+    beforeMount() {
+      this.setTitle()
     }
   }
 </script>
 
 <style lang="scss">
-  @import 'estilos.scss';
-  
-  .menu-button {
-    background-color: none !important;
-    color: #ffff !important;
-  }
-
-  .side-bar{
-    background-color: #717D6E !important;
-  }
+  @import '@/components/styles/navbar.scss';
 </style>
