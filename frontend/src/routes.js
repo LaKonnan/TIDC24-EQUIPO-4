@@ -20,25 +20,25 @@ export default new VueRouter({
         },
         {
             path: '/obras',
-            name: 'obras',
+            name: 'GESTIÓN DE OBRAS',
             component: Obras,
             beforeEnter: authGuard
         },
         {
             path: '/cajas-chicas',
-            name: 'cajas',
+            name: 'GESTIÓN DE CAJAS CHICAS',
             component: cajas,
             beforeEnter: authGuard
         },
         {
             path: '/perfil',
-            name: 'perfil',
+            name: 'PERFIL',
             component: Perfil,
             beforeEnter: authGuard
         },
         {
             path: '/usuarios',
-            name: 'usuarios',
+            name: 'GESTIÓN DE USUARIOS',
             component: Usuarios,
             beforeEnter: authGuard
         }

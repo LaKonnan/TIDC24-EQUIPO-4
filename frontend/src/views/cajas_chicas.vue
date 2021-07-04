@@ -6,10 +6,10 @@
     <resume />
 
     <!-- tabla de contenidos -->
-    <table-cajas @items="rowItems"/>
+    <table-cajas @items="rowItems" @row-selected="onRowSelected"/>
 
     <!-- botones -->
-    <buttons :items="items" />
+    <buttons :items="items" :selectedRow="selectedRow" />
 
   </div>
 </template>
@@ -20,11 +20,12 @@ export default {
     name: 'cajas',
     data() {
       return {
+        selectedRow: true,
         items: []
       }
     },
     
-
+    // importar componentes de la pagina
     components: {
       'table-cajas': require('../components/cajas/all_table').default,
       'buttons': require('../components/cajas/buttons').default,
@@ -32,6 +33,12 @@ export default {
     },
 
     methods: {
+      // fila seleccionada
+      onRowSelected(params) {
+        this.selectedRow = params
+      },
+      
+      // datos de fila
       rowItems(params){
         this.items = params;
       }

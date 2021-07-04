@@ -10,7 +10,6 @@
         :select-mode="selectMode"
         :per-page="perPage"
         @row-selected="onRowSelected"
-        hover
         fixed
         responsive
         :current-page="currentPage">
@@ -54,7 +53,7 @@ export default {
         getAPI.get('/cajasChicas',)
             .then(response => {
                 this.cajas = response.data
-                // this.cajas((a, b) => (a.id_caja> b.id_caja) ? 1 : -1)
+                console.log('datos de cajas recibidos')
             })
             .catch(err => {
                 console.log(err)
@@ -78,8 +77,14 @@ export default {
 
             // deshabilitar botones si no hay una fila elegida
             }else {
-                this.isSelected = false
-                this.$emit('row-selected', true)
+                if(items['0'] != null){
+                    this.$emit('items', items)
+                }else{
+                    this.isSelected = false
+                    this.$emit('row-selected', true)
+                }
+
+                
             }
             
         },       
@@ -87,6 +92,6 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss">
+    @import '@/components/styles/table.scss'
 </style>

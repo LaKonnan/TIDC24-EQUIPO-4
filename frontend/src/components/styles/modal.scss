@@ -1,0 +1,37 @@
+// estilos generales de modal
+.modal-dialog{
+    margin-left: 25% !important;
+}
+
+#error_modal {
+    margin-left: 20%;
+}
+
+.modal-header {
+    background-color: #F39A27;
+    padding: 10px !important;
+}
+
+.modal-title {
+    color: #FFFFFF !important;
+    font-weight: bold !important;
+    
+}
+
+.nav-link.active {
+    color: #FFFFFF;
+    background-color: #F39A27 !important;
+    font-weight: bold;
+}
+
+
+// estilos de modal de error
+#error_modal header{
+    background-color: #dc3545 !important;
+}
+
+.error {
+    background-color: #e01a1af2;
+    color: #FFFFFF;
+    font-size: 80px;
+}

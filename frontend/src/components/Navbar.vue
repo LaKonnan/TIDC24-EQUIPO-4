@@ -8,7 +8,7 @@
       
       <!-- menu -->
       <div class="sidebar-body">
-        <b-list-group-item :active="isActive(item.to, item.id)" v-for="item in items" v-bind:key="item" :id="item.id" @click="changeActive()">
+        <b-list-group-item :active="isActive(item.to, item.id)" v-for="item in items" :key="item.id" :id="item.id" @click="changeActive()">
           <a class="menu-item" :href="item.to">
             <b-icon :icon="item.icon"></b-icon>
             {{ item.title }}
@@ -60,40 +60,15 @@
       
       isActive(item_path, item_id) {
         this.active_page = this.$router.currentRoute.fullPath
+        this.title = this.$route.name
         
         if(item_path == this.active_page){
           var element = document.getElementById(item_id)
           element.classList.add('active')
         }
+
       },
-
-      setTitle() {
-        this.title = this.$router.currentRoute.path
-        console.log(this.$router.currentRoute)
-        console.log(this.title)
-        switch(this.title) {
-          case '/obras':
-            this.title = 'GESTIÓN DE OBRAS'
-            break
-          case '/cajas-chicas':
-            this.title = 'GESTIÓN DE CAJAS CHICAS'
-            break
-          case '/usuarios':
-            this.title = 'GESTIÓN DE USUARIOS'
-            break
-          case '/maquinas':
-            this.title = 'GESTIÓN DE MAQUINAS'
-            break
-          case '/gastos':
-            this.title = 'GESTIÓN DE GASTOS'
-            break
-        }
-      }
     },
-
-    beforeMount() {
-      this.setTitle()
-    }
   }
 </script>
 

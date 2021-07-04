@@ -1,6 +1,6 @@
 <template>
   <div>
-      <b-modal ref="create" id="modal-create" size="xl" title="NUEVA CAJA CHICA" hide-footer>
+    <b-modal ref="create" id="modal-create" centered size="xl" title="NUEVA CAJA CHICA" hide-footer>
           <b-tabs pills card vertical v-model="tabIndex">
             <!-- paso 1 -->
             <b-tab title="PASO 1" active id="step1">
@@ -91,26 +91,14 @@
                     
             </b-tab>
         </b-tabs>
-      </b-modal>
+    </b-modal>
       
-        <!-- modal de exito -->
-        <b-modal ref="success_modal" id="modal-no-backdrop" hide-backdrop hide-footer hide-header>
-            <center>
-                <p class="success"><b-icon icon="check-circle" animation="fade"></b-icon></p>
-                <p>{{ success_text }}</p>
-                <b-button class="dark-button" @click="closeModal('success')">CERRAR</b-button>
-            </center>
-        </b-modal>
-        
-        <!-- modal de error -->
-        <b-modal ref="error_modal" id="modal-no-backdrop" hide-backdrop hide-footer hide-header>
-            <center>
-                <p class="error"><b-icon icon="exclamation-circle" animation="fade"></b-icon></p>
-                <p>{{ error_text }}</p>
-                <b-button class="normal-button" @click="modalBack()">VOLVER</b-button>
-                <b-button class="dark-button" @click="closeModal('error')">CERRAR</b-button>
-            </center>
-        </b-modal>
+    <!-- modal de exito -->
+    <modal-success :message="succes_text" />
+
+    <!-- modal de error -->
+    <modal-error :message="error_text" v-on:passData="sendMethod"/>
+
   </div>
 </template>
 
@@ -165,6 +153,11 @@ export default {
             error_text: '',
             success_text: ''
         }
+    },
+
+    components: {
+        'modal-success': require('@/components/success_error_message/modalSuccess.vue').default,
+        'modal-error': require('@/components/success_error_message/modalError.vue').default
     },
 
     methods: {
@@ -273,6 +266,26 @@ export default {
             }
         },
         
+        resetForm() {
+            this.tabIndex = 2
+            this.btnStep1 = true
+            this.btnStep2 = true
+            this.step2 = true
+            this.step3 = true
+            this.aux = []
+            this.selected1 = null
+            this.selected2 = null
+            this.options2 = []
+            this.booleanSelect2 = true
+            this.selected3 = null
+            this.initial_date = ''
+            this.final_date = ''
+            this.min_final_date = ''
+            this.max_final_date = ''
+            this.money = ''
+            this.gas_money = ''
+        },
+
         // registrar nueva caja
         create() {
             // cofiguracion
@@ -302,28 +315,12 @@ export default {
 
                     switch(res.data.message){
                         case 'creada':
+                            console.log('creada')
                             this.success_text = 'Caja chica' + res.data.id_caja + 'creada con éxito'
                             
                             // resetear campos
+                            this.resetForm()
                             
-                            this.tabIndex = 2
-                            this.btnStep1 = true
-                            this.btnStep2 = true
-                            this.step2 = true
-                            this.step3 = true
-                            this.aux = []
-                            this.selected1 = null
-                            this.selected2 = null
-                            this.options2 = []
-                            this.booleanSelect2 = true
-                            this.selected3 = null
-                            this.initial_date = ''
-                            this.final_date = ''
-                            this.min_final_date = ''
-                            this.max_final_date = ''
-                            this.money = ''
-                            this.gas_money = ''
-
                             // recargar datos de tabla
                             this.$refs.cajas_table.refresh()
 
@@ -334,12 +331,22 @@ export default {
                         case 'activa':
                             // mostrar modal de error
                             this.error_text = 'ERROR - La obra ya posee una caja chica activa, no se puede registrar otra'
-                            this.$refs.error_modal.show()
+
+                            // enviar mensaje al modal de error
+                            this.$emit('message', this.error_text)
+
+                            // mostrar modal de error 
+                            this.$bvModal.show('error_modal')
                             break
                         
                         case 'inactiva':
                             this.error_text = 'ERROR - La obra posee una caja chica inactiva, no se puede registrar otra'
-                            this.$refs.error_modal.show()
+                            
+                            // enviar mensaje al modal de error
+                            this.$emit('message', this.error_text)
+
+                            // mostrar modal de error 
+                            this.$bvModal.show('error_modal')
                             break
                     }
                 })
@@ -348,21 +355,15 @@ export default {
                 })
         },
 
-        // cerrar modales de exito y error
-        cerrarModal(tipo){
-            switch(tipo){
-                case 'error':
-                    this.$refs.error_modal.hide()
-                    break;
-                case 'success':
-                    this.$refs.success_modal.hide()
-            }
+        sendMethod(data) {
+            if (data.methodCall) return this[data.methodCall]();
         },
 
         modalBack() {
-            this.$refs.error_modal.hide()
+            this.$bvModal.hide('error_modal')
             this.$refs.create.show()
         }
+
     },
     computed: {
         validateRangeMoney() {
@@ -387,4 +388,5 @@ export default {
 </script>
 
 <style lang="scss">
+    @import '@/components/styles/modal.scss';
 </style>

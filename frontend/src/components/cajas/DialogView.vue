@@ -125,8 +125,10 @@ export default {
 
     mounted() {
       this.$root.$on('bv::modal::shown', (bvEvent, modalId) => {
-          this.getData()
-          console.log('SE MOSTRARA EL MODAL DE VIEW', bvEvent, modalId)
+          if( modalId == 'modal-view') {
+            this.getData()
+            console.log('SE MOSTRARA EL MODAL DE VIEW', bvEvent, modalId)
+          }
       })
     }
 

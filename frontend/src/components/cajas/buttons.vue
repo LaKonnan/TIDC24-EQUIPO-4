@@ -19,7 +19,7 @@
 
 <script>
 export default {
-  props: ['items', 'selectedRow'],
+  props: ['selectedRow','items'],
   data() {
     return {
       id: null
@@ -37,6 +37,7 @@ export default {
     openModal(act) {
       switch(act) {
         case 'delete':
+          console.log('delete')
           this.$root.$emit('bv::show::modal', 'modal-delete')
           break
         
@@ -45,6 +46,7 @@ export default {
           break
         
         case 'view':
+          console.log('view')
           this.$root.$emit('bv::show::modal', 'modal-view')
           break
 
@@ -56,6 +58,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+  @import '@/components/styles/buttons.scss';
 
 </style>
