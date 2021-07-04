@@ -513,6 +513,13 @@ def delete_usuarios(user_id):
     auth0.users.delete(user_id)
     return jsonify({'message': 'usuario eliminado'})
 
+
+@app.route('/rol/<string:user_id>')
+def get_rol(user_id):
+    rol = auth0.users.list_roles(user_id)
+    return jsonify(rol)
+
+
 ## FIN GESTION DE USUARIOS
 
 

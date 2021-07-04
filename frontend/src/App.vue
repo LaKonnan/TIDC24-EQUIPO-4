@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <navbar/>
+  <div id="app" v-if="$auth.isAuthenticated">
+    <navbar v-if="!$auth.loading"/>
     <router-view/>
   </div>
 </template>
