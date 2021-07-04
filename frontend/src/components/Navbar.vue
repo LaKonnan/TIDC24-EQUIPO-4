@@ -9,10 +9,10 @@
       <!-- menu -->
       <div class="sidebar-body">
         <b-list-group-item :active="isActive(item.to, item.id)" v-for="item in items" :key="item.id" :id="item.id" @click="changeActive()">
-          <a class="menu-item" :href="item.to">
+          <b-link class="menu-item" :to="item.to">
             <b-icon :icon="item.icon"></b-icon>
             {{ item.title }}
-          </a>
+          </b-link>
         </b-list-group-item>
       </div>
     </b-sidebar>
