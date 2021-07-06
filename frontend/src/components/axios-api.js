@@ -5,4 +5,9 @@ const getAPI = axios.create({
    //baseURL: 'http://localhost:5000'
 })
 
-export { getAPI }
+const getAPIarchivos = axios.create({
+   baseURL: 'https://geiead46dc.execute-api.us-east-2.amazonaws.com/dev'
+   //baseURL: 'http://localhost:5000'
+})
+
+export { getAPI, getAPIarchivos }

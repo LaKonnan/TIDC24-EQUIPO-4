@@ -15,7 +15,7 @@
 </template>
 
 <script>
-//import { getAPI } from '../axios-api';
+import { getAPIarchivos } from '../axios-api';
 
 export default {
   props: ['file'],
@@ -26,13 +26,28 @@ export default {
     onHidden() {
       console.log('modal cerrado')
       //actualizar vista del pdf
+      this.$root.$refs.A.forceRerender()
     },
-    onClickConfirmar() {
-        console.log('boton subir archivo')
-        this.$root.$emit('bv::hide::modal','modal-xlu')
+    async onClickConfirmar() {
+        const accessToken = await this.$auth.getTokenSilently()
+        var formData = new FormData()
+        formData.append('user_file', this.file)
+        getAPIarchivos.post('/upload', formData,
+        {
+          headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
+        .then(response => {
+          console.log(response.data)
+          this.$root.$emit('bv::hide::modal','modal-xlu')
+
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     onClickCancelar() {
-        console.log('boton cancelar')
         this.$root.$emit('bv::hide::modal','modal-xlu')
     }
   }

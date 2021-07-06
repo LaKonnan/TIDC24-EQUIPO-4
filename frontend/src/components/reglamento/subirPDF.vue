@@ -4,10 +4,12 @@
       v-model="file"
       :state="Boolean(file)"
       placeholder="Choose a file or drop it here..."
-      drop-placeholder="Drop file here..."
+      drop-placeholder="Drop file here..." 
     ></b-form-file>
+
     <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div>
-    <b-button v-b-modal.modal-xlu class="normal-button">Subir Archivo</b-button>
+
+    <b-button v-b-modal.modal-xlu>Subir Archivo</b-button>
 
     <dialog-upload :file=file />
   </div>
@@ -20,8 +22,8 @@
         file: null
       }
     },
-  components: {
-    'dialog-upload': require('@/components/reglamento/DialogUpload.vue').default
-  }
+    components: {
+      'dialog-upload': require('@/components/reglamento/DialogUpload.vue').default
+    }
   }
 </script>

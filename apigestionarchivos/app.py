@@ -1,12 +1,14 @@
 from flask import Flask, jsonify, make_response, request, redirect
 from helpers import *
 from werkzeug.utils import secure_filename
+from flask_cors import CORS
 
 
 app = Flask(__name__)
 app.config.from_object("config")
+CORS(app)
 
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'pdf'}
 
 @app.route("/upload", methods=["POST"])
 def upload_file():
