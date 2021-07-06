@@ -64,6 +64,7 @@
                     <b-col>{{ this.comb_monto_total }}</b-col>
                   </b-row>
                 </b-card>
+                <br>
                 <b-button class="normal-button">VER GASTOS</b-button>
               </b-tab>
         </b-tabs>
@@ -77,60 +78,66 @@
 import { getAPI } from '../axios-api'
 
 export default {
-    props: ['items'],
-    data() {
-      return {
-        caja: [],
+  props: ['items'],
+  data() {
+    return {
+      caja: [],
 
-        // datos de caja
-        id_caja: '',
-        id_obra: 0,
-        tipo: '',
-        estado: '',
-        fecha_inicio: '',
-        fecha_termino: '',
-        monto_gastos: '',
-        monto_total: '',
+      // datos de caja
+      id_caja: '',
+      id_obra: 0,
+      tipo: '',
+      estado: '',
+      fecha_inicio: '',
+      fecha_termino: '',
+      monto_gastos: '',
+      monto_total: '',
 
-        // datos caja combustible
-        id_caja_combustible: '',
-        comb_monto_gastos: '',
-        comb_monto_total: ''
-      }
-    },
-
-    methods: {
-      getData() {
-        // obtener datos de caja chica
-        getAPI.get('/cajasChicas/'+ this.items[0].id_caja.S ,)
-            .then(response => {
-                this.caja = response.data
-                
-                // determinar datos
-                this.id_caja = this.caja[0].id_caja.S
-                this.id_obra = this.caja[0].id_obra.N
-                this.tipo = this.caja[0].tipo.S
-                this.estado = this.caja[0].estado.S
-                this.fecha_inicio = this.caja[0].fecha_inicio.S
-                this.fecha_termino = this.caja[0].fecha_termino.S
-                this.monto_gastos = this.caja[0].monto_gastos.S
-                this.monto_total = this.caja[0].monto_total.S
-        })
-
-        // obtener datos de caja combustible
-        
-
-      },
-    },
-
-    mounted() {
-      this.$root.$on('bv::modal::shown', (bvEvent, modalId) => {
-          if( modalId == 'modal-view') {
-            this.getData()
-            console.log('SE MOSTRARA EL MODAL DE VIEW', bvEvent, modalId)
-          }
-      })
+      // datos caja combustible
+      id_caja_combustible: '',
+      comb_monto_gastos: '',
+      comb_monto_total: ''
     }
+  },
+
+  methods: {
+    getData() {
+      // obtener datos de caja chica
+      getAPI.get('/cajasChicas/'+ this.items[0].id_caja.S ,)
+        .then(response => {
+          this.caja = response.data
+          
+          // determinar datos
+          this.id_caja = this.caja[0].id_caja.S
+          this.id_obra = this.caja[0].id_obra.S
+          this.tipo = this.caja[0].tipo.S
+          this.estado = this.caja[0].estado.S
+          this.fecha_inicio = this.caja[0].fecha_inicio.S
+          this.fecha_termino = this.caja[0].fecha_termino.S
+          this.monto_gastos = this.caja[0].monto_gastos.S
+          this.monto_total = this.caja[0].monto_total.S
+      })
+
+      // obtener datos de caja combustible
+      getAPI.get('/cajasChicas/combustible' ,)
+        .then(response => {
+          console.log(response.data)
+          // this.caja = response.data
+          // this.id_caja_combustible = this.caja[0].id_caja_combustible.S
+          // this.comb_monto_gastos = this.caja[0].monto_gastos.S
+          // this.comb_monto_total = this.caja[0].monto_maximo.S
+        })
+    },
+  },
+
+  mounted() {
+    this.$root.$on('bv::modal::shown', (bvEvent, modalId) => {
+        if( modalId == 'modal-view') {
+          this.getData()
+          console.log('SE MOSTRARA EL MODAL DE VIEW', bvEvent, modalId)
+        }
+    })
+  }
 
 }
 </script>

@@ -46,7 +46,6 @@ export default {
           break
         
         case 'view':
-          console.log('view')
           this.$root.$emit('bv::show::modal', 'modal-view')
           break
 

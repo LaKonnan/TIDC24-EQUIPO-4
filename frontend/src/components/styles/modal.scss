@@ -3,9 +3,7 @@
     margin-left: 25% !important;
 }
 
-#error_modal {
-    margin-left: 20%;
-}
+
 
 .modal-header {
     background-color: #F39A27;
@@ -24,14 +22,19 @@
     font-weight: bold;
 }
 
-
-// estilos de modal de error
-#error_modal header{
-    background-color: #dc3545 !important;
+// estilos de modal de error y exito
+.error {
+    color: #e01a1af2;
 }
 
-.error {
-    background-color: #e01a1af2;
-    color: #FFFFFF;
+.success {
+    color: #2cd435;
+}
+
+.error, .success {
     font-size: 80px;
+}
+
+#error_modal, #success_modal {
+    margin-left: 20%;
 }
