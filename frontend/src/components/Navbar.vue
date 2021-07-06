@@ -41,7 +41,8 @@
         { title: 'Usuarios', icon: 'people', to: '/usuarios', id: 'usuarios'},
         { title: 'Obras', icon: 'cone-striped', to: '/obras', id: 'obras'} ,
         { title: 'Máquinas', icon: 'cone-striped', to: '/maquinas', id: 'maquinas'},
-        { title: 'Cajas chicas', icon: 'archive-fill', to: '/cajas-chicas', id: 'cajas'}
+        { title: 'Cajas chicas', icon: 'archive-fill', to: '/cajas-chicas', id: 'cajas'},
+        { title: 'Reglamento', icon: 'file-text-fill', to: '/reglamento', id: 'reglamento'}
       ]
     }),
 
