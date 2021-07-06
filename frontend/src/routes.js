@@ -4,6 +4,7 @@ import Obras from './views/Obras'
 import cajas from './views/cajas_chicas'
 import Perfil from './views/Perfil'
 import Usuarios from './views/Usuarios'
+import Reglamento from './views/Reglamento'
 import { authGuard } from "./auth/authGuard";
 
 
@@ -40,6 +41,12 @@ export default new VueRouter({
             path: '/usuarios',
             name: 'GESTIÓN DE USUARIOS',
             component: Usuarios,
+            beforeEnter: authGuard
+        },
+        {
+            path: '/reglamento',
+            name: 'Reglamento Interno',
+            component: Reglamento,
             beforeEnter: authGuard
         }
     ]
