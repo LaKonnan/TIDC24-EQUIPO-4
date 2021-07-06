@@ -94,7 +94,7 @@
     </b-modal>
       
     <!-- modal de exito -->
-    <modal-success :message="succes_text" />
+    <modal-success :message="succes_text" v-on:passData="sendMethod"/>
 
     <!-- modal de error -->
     <modal-error :message="error_text" v-on:passData="sendMethod"/>
@@ -325,7 +325,7 @@ export default {
                             this.$refs.cajas_table.refresh()
 
                             // mostrar modal de exito al crear
-                            this.$refs.success_modal.show()
+                            this.$bvModal.show('success_modal')
                             break
                         
                         case 'activa':
@@ -355,13 +355,14 @@ export default {
                 })
         },
 
+        // enviar métodos a componentes
         sendMethod(data) {
             if (data.methodCall) return this[data.methodCall]();
         },
 
         modalBack() {
             this.$bvModal.hide('error_modal')
-            this.$refs.create.show()
+            this.$bvModal.show('modal-create')
         }
 
     },

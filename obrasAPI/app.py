@@ -89,7 +89,6 @@ def get_obras():
     return response
 
 
-
 @app.route('/obras', methods=['POST'])
 def create_obra():
     obraId = request.json.get('obraId')
@@ -280,13 +279,20 @@ def delete_gastosc(folio):
          Key = { 'folio': {'S': folio}}
     )
 
+## ----------------------------------------------------------------------------------------------- GESTIÓN DE CAJAS COMBUSTIBLE
+@app.route('/cajasChicas/combustible')
+def get_cajaCombustible():
+    cajas = dynamodb_client.scan(TableName=CAJAS_TABLE)
+    items = cajas['Items']
+    response = jsonify(items)
+    return response
 
 
 ## ----------------------------------------------------------------------------------------------- GESTIÓN DE CAJAS CHICAS
 @app.route('/cajasChicas')
 def get_cajas():
-    obras = dynamodb_client.scan(TableName=CAJAS_TABLE)
-    items = obras['Items']
+    cajas = dynamodb_client.scan(TableName=CAJAS_TABLE)
+    items = cajas['Items']
     response = jsonify(items)
     return response
 
