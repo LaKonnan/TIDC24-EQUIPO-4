@@ -55,7 +55,6 @@ plugins:
   - serverless-wsgi
   - serverless-python-requirements
   - serverless-dynamodb-local
-
 resources:
   Resources:
     UsersTable:

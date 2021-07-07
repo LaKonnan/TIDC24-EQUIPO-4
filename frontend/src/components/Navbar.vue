@@ -1,6 +1,6 @@
 <template>
   <div class="div-sidebar">
-    <b-sidebar class="style-sidebar" v-model="sidebar" bg-variant="dark" no-header no-slide>
+    <b-sidebar class="sidebar" bg-variant="dark" no-header id="sidebar" v-model="sidebar" :no-slide="slide">
       <!-- logo parte superior -->
       <div class="sidebar-header">
         <img src="@/assets/header-sidebar.png">
@@ -8,18 +8,21 @@
       
       <!-- menu -->
       <div class="sidebar-body">
-        <b-list-group-item :active="isActive(item.to, item.id)" v-for="item in items" :key="item.id" :id="item.id" @click="changeActive()">
-          <b-link class="menu-item" :to="item.to">
+        <b-list-group-item :active="isActive(item.to)" v-for="item in items" :key="item.id" :id="item.id">
+          <b-link :href="item.to">
             <b-icon :icon="item.icon"></b-icon>
             {{ item.title }}
           </b-link>
         </b-list-group-item>
       </div>
     </b-sidebar>
+
     <b-navbar>
       <div class="page-title">
           {{ this.title }}
       </div>
+
+      <b-button @click="toggleSidebar()">Toggle Sidebar</b-button>
 
       <div class="username">
         Nombre Apellido
@@ -36,6 +39,7 @@
       drawer: null,
       active_page: null,
       sidebar: true,
+      slide: false,
       title: '',
       items: [
         { title: 'Usuarios', icon: 'people', to: '/usuarios', id: 'usuarios'},
@@ -59,17 +63,39 @@
         });
       },
       
-      isActive(item_path, item_id) {
+      // determinar el item del menu que esta activo
+      isActive(item_path) {
         this.active_page = this.$router.currentRoute.fullPath
         this.title = this.$route.name
-        
-        if(item_path == this.active_page){
-          var element = document.getElementById(item_id)
-          element.classList.add('active')
-        }
 
+        if(item_path == this.active_page){
+          return true
+        } else{
+          return false
+        }
       },
+
+      responsiveChanges() {
+        if(window.innerWidth <= 1000) {
+          // ajustes de menu lateral
+          var var_sidebar = document.getElementById('sidebar')
+          var_sidebar.style.setProperty("display", "flex", "important")
+
+          this.sidebar = false
+          this.slide = false
+        }
+      }
     },
+
+    created() {
+      // ejecutar método cada vez que las dimensiones cambian
+      window.addEventListener('resize', this.responsiveChanges)
+    },
+
+    beforeDestroy() {
+      // desactivar ejecución del método
+      window.removeEventListener('resize', this.responsiveChanges)
+    }
   }
 </script>
 

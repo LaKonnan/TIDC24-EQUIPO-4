@@ -45,7 +45,7 @@ export default new VueRouter({
         },
         {
             path: '/reglamento',
-            name: 'Reglamento Interno',
+            name: 'REGLAMENTO INTERNO',
             component: Reglamento,
             beforeEnter: authGuard
         }

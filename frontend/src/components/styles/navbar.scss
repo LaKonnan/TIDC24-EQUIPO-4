@@ -19,22 +19,24 @@
     border-left: none;
 }
 
-.menu-item {
+.list-group-item a {
     color: #FFFFFF !important;
     text-decoration: none !important;
-    background-color: none;
+    background-color: none !important;
 }
 
 .sidebar-body .list-group-item:hover {
     background-color: #495057;
 }
 
+
+
 .list-group-item ~ .active {
     background: #F39A27 !important;
     border-top: none !important;
     border-right: none !important;
     border-left: 5px solid #FFFFFF !important;
-    font-weight: bold;
+    font-weight: bold !important;
 }
 
 
@@ -53,4 +55,11 @@
     position: absolute;
     right: 0;
     margin-right: 40px;
+}
+
+@media (max-width: 1000px) {
+    .navbar {
+        display: none;
+    }
+    
 }
