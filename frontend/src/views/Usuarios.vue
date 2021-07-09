@@ -1,17 +1,13 @@
 <template>
-  <div>
-    <div class="content">
-      <br>
-      <!-- titulo -->
-      <p class="dark-title">Gestión de usuarios</p>
-      <hr class="hr">
+  <div class="content">
+    <div class="container">
+      <b-card class="card">
+        <!-- tabla de contenidos -->
+        <table-usuarios ref="table-usuarios" @row-selected="onRowSelected" @items="rowItems"/>
 
-      <!-- tabla de contenidos -->
-      <table-usuarios ref="table-usuarios" @row-selected="onRowSelected" @items="rowItems"/>
-
-      <!-- botones -->
-      <buttons :table=table :selectedRow="selectedRow" :items="items"/>
-
+        <!-- botones -->
+        <buttons :table=table :selectedRow="selectedRow" :items="items"/>
+      </b-card>
     </div>
   </div>
 </template>
@@ -44,3 +40,9 @@ export default {
     }
 }
 </script>
+
+<style>
+.container {
+  margin-top: 40px;
+}
+</style>

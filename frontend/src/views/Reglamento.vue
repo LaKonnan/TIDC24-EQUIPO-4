@@ -1,8 +1,14 @@
 <template>
   <div class="content">
-    <b-button @click="forceRerender" >Actualizar</b-button>
-    <reglamentoPDF :key="componentKey" />
+    <b-card class="card">
+      <b-button class="float-right" @click="forceRerender" >
+        <b-icon icon="arrow-clockwise"></b-icon>
+      </b-button>
+      <reglamentoPDF :key="componentKey" />
+    </b-card>
+    <hr>
     <subirPDF :componentKey=componentKey />
+    <hr>
   </div>
 </template>
 
@@ -17,9 +23,6 @@
             'reglamentoPDF': require('../components/reglamento/reglamentoPDF.vue').default,
             'subirPDF': require('../components/reglamento/subirPDF.vue').default
     },
-    created() {
-      this.$root.$refs.A = this
-    },
     methods: {
       forceRerender() {
         this.componentKey += 1;
@@ -27,3 +30,10 @@
     }
   }
 </script>
+
+<style>
+.content {
+  margin-top: 40px;
+}
+
+</style>

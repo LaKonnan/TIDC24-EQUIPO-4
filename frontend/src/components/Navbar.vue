@@ -13,8 +13,7 @@
 
       <div class="username">
         <b-icon class="logout" icon="power" @click="logout()" title="Cerrar sesión"></b-icon>
-        <!-- {{ $auth.username }} -->
-        Nombre Apellido
+        {{ $auth.user.name }}
       </div>
 
       <!-- menu lateral -->
@@ -36,8 +35,7 @@
 
       <div class="sidebar-footer">
         <b-icon class="logout" icon="power" @click="logout()" title="Cerrar sesión"></b-icon>
-        <!-- {{ $auth.username }} -->
-        Nombre Apellido
+        {{ $auth.user.name }}
       </div>
     </b-sidebar>
 

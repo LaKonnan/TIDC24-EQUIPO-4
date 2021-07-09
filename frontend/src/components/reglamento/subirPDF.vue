@@ -1,17 +1,20 @@
 <template>
   <div>
-    <b-form-file
-      v-model="file"
-      :state="Boolean(file)"
-      placeholder="Choose a file or drop it here..."
-      drop-placeholder="Drop file here..." 
-    ></b-form-file>
+    <b-card class="card">
+      <b>El nombre del archivo debe ser "reglamento" y debe estar en formato pdf</b>
+      <b-form-file
+        v-model="file"
+        :state="Boolean(file)"
+        placeholder="Puede arrastrar y soltar el archivo aquí..."
+        drop-placeholder="Suelte el archivo aquí..." 
+      ></b-form-file>
 
-    <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div>
+      <div class="mt-3">Archivo seleccionado: {{ file ? file.name : '' }}</div>
 
-    <b-button v-b-modal.modal-xlu>Subir Archivo</b-button>
+      <b-button v-b-modal.modal-xlu>Subir Archivo</b-button>
 
-    <dialog-upload :file=file />
+      <dialog-upload :file=file />
+      </b-card>
   </div>
 </template>
 

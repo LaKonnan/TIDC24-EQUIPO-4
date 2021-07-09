@@ -19,14 +19,9 @@ import { getAPIarchivos } from '../axios-api';
 
 export default {
   props: ['file'],
-  data() {
-
-  },
   methods: {
     onHidden() {
       console.log('modal cerrado')
-      //actualizar vista del pdf
-      this.$root.$refs.A.forceRerender()
     },
     async onClickConfirmar() {
         const accessToken = await this.$auth.getTokenSilently()
