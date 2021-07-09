@@ -1,7 +1,7 @@
 <template>
   <div id="app" v-if="$auth.isAuthenticated">
-    <!-- v-if="!$auth.loading" -->
-    <navbar />
+    <!--  -->
+    <navbar v-if="!$auth.loading"/>
     <router-view/>
   </div>
 </template>
@@ -17,10 +17,10 @@ export default {
 }
 </script>
 
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-    background-color:#f8f8f8!important;
+<style lang="scss">
+  @import '@/components/styles/global.scss';
+  body {  
+    background: url('assets/background.png') fixed no-repeat bottom right !important;
+    background-size: 50% !important;
   }
 </style>

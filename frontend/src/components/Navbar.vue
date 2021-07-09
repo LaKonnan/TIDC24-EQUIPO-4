@@ -1,35 +1,48 @@
 <template>
-  <div class="div-sidebar">
-    <b-sidebar class="sidebar" bg-variant="dark" no-header id="sidebar" v-model="sidebar" :no-slide="slide">
-      <!-- logo parte superior -->
-      <div class="sidebar-header">
-        <img src="@/assets/header-sidebar.png">
-      </div>
-      
-      <!-- menu -->
-      <div class="sidebar-body">
-        <b-list-group-item :active="isActive(item.to)" v-for="item in items" :key="item.id" :id="item.id">
-          <b-link :href="item.to">
-            <b-icon :icon="item.icon"></b-icon>
-            {{ item.title }}
-          </b-link>
-        </b-list-group-item>
-      </div>
-    </b-sidebar>
-
+  <div>
+    <!-- barra superior -->
     <b-navbar>
+        <div v-b-toggle.sidebar class="sidebar-button" @click="hide_menubar = !hide_menubar; hide_closemenu = !hide_closemenu">
+          <b-icon id="menubar" icon="list" variant="light" font-scale="2.5" :hidden="hide_menubar"></b-icon>
+          <b-icon id="closemenu" icon="x" variant="light" font-scale="2.5" :hidden="hide_closemenu"></b-icon>
+        </div>          
+
       <div class="page-title">
           {{ this.title }}
       </div>
 
-      <b-button @click="toggleSidebar()">Toggle Sidebar</b-button>
-
       <div class="username">
+        <b-icon class="logout" icon="power" @click="logout()" title="Cerrar sesión"></b-icon>
+        <!-- {{ $auth.username }} -->
         Nombre Apellido
       </div>
+
+      <!-- menu lateral -->
+      
     </b-navbar>
 
+    <!-- sidebar -->
+    <b-sidebar id="sidebar" bg-variant="dark" no-header>
+      <!-- logo en parte superior -->
+      <div class="logo">
+        <img src="@/assets/header-sidebar.png" alt="">
+      </div>
+
+      <!-- menu -->
+      <b-link class="menu-item" @click="isActive(); hide_menubar = !hide_menubar; hide_closemenu = !hide_closemenu" v-for="item in items" :key="item.id" :id="item.id" :to="item.to" >
+        <b-icon :icon="item.icon"></b-icon>
+        {{ item.title }}
+      </b-link>
+
+      <div class="sidebar-footer">
+        <b-icon class="logout" icon="power" @click="logout()" title="Cerrar sesión"></b-icon>
+        <!-- {{ $auth.username }} -->
+        Nombre Apellido
+      </div>
+    </b-sidebar>
+
   </div>
+
 </template>
 
 <script>
@@ -38,15 +51,16 @@
     data: () => ({ 
       drawer: null,
       active_page: null,
-      sidebar: true,
-      slide: false,
+      hide_menubar: false,
+      hide_closemenu: true,
       title: '',
       items: [
         { title: 'Usuarios', icon: 'people', to: '/usuarios', id: 'usuarios'},
         { title: 'Obras', icon: 'cone-striped', to: '/obras', id: 'obras'} ,
         { title: 'Máquinas', icon: 'cone-striped', to: '/maquinas', id: 'maquinas'},
+        { title: 'Reglamento', icon: 'file-text-fill', to: '/reglamento', id: 'reglamento'},
         { title: 'Cajas chicas', icon: 'archive-fill', to: '/cajas-chicas', id: 'cajas'},
-        { title: 'Reglamento', icon: 'file-text-fill', to: '/reglamento', id: 'reglamento'}
+
       ]
     }),
 
@@ -64,37 +78,56 @@
       },
       
       // determinar el item del menu que esta activo
-      isActive(item_path) {
+      isActive() {
         this.active_page = this.$router.currentRoute.fullPath
         this.title = this.$route.name
+        console.log(this.active_page)
+        var menu_item = ''
+        switch(this.active_page) {
+          case '/usuarios':
+            menu_item  = document.getElementById('usuarios')
+            console.log('ENCONTRADO USUARIOS')
+            break;
 
-        if(item_path == this.active_page){
-          return true
-        } else{
-          return false
+          case '/obras':
+            menu_item  = document.getElementById('obras')
+            console.log('ENCONTRADO OBRAS')
+            break;
+
+          case '/maquinas':
+            menu_item  = document.getElementById('maquinas')
+            console.log('ENCONTRADO MAQUINAS')
+            break;
+
+          case '/cajas-chicas':
+            menu_item  = document.getElementById('cajas')
+            console.log('ENCONTRADO CAJAS')
+            break;
+
+          case '/perfil':
+            menu_item  = document.getElementById('perfil')
+            console.log('ENCONTRADO PERFIL')
+            break;
+
+          case '/reglamento':
+            menu_item  = document.getElementById('reglamento')
+            console.log('ENCONTRADO REGLAMENTO')
+            break;
         }
-      },
 
-      responsiveChanges() {
-        if(window.innerWidth <= 1000) {
-          // ajustes de menu lateral
-          var var_sidebar = document.getElementById('sidebar')
-          var_sidebar.style.setProperty("display", "flex", "important")
-
-          this.sidebar = false
-          this.slide = false
+        // quitar clase active de existir un antecesor
+        var elements = document.querySelector(".active")
+        if(elements != null) {
+          elements.classList.remove("active")
         }
+        
+        console.log(menu_item) 
+        menu_item.classList.add('active')
       }
     },
 
-    created() {
-      // ejecutar método cada vez que las dimensiones cambian
-      window.addEventListener('resize', this.responsiveChanges)
-    },
-
-    beforeDestroy() {
-      // desactivar ejecución del método
-      window.removeEventListener('resize', this.responsiveChanges)
+    mounted() {
+      this.isActive()
     }
   }
 </script>
