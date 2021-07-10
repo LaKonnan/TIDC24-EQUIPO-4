@@ -2,16 +2,15 @@
     <div>
       <!-- tabla -->
       <b-table
-        ref="cajas_table"
         class = "table table-responsive-sm"
-        selectable 
         :fields="fields" 
         :items="cajas"
         :select-mode="selectMode"
         :per-page="perPage"
         @row-selected="onRowSelected"
         :current-page="currentPage"
-
+        hover
+        selectable 
         >
       </b-table>
 
@@ -27,6 +26,7 @@
 
 <script>
 import { getAPI } from '../axios-api'
+
 export default {
     props: ['caja'],
     data () {
@@ -49,8 +49,8 @@ export default {
         }
     },
 
+    // obtener lista de obras
     created() {
-        // obtener lista de obras
         getAPI.get('/cajasChicas',)
             .then(response => {
                 this.cajas = response.data

@@ -1,13 +1,11 @@
 <template>
     <div class="content">
-        <br>
-        <!-- titulo -->
-        <p class="dark-title">GESTIÓN DE OBRAS</p>
-        <hr class="hr">
-        <!--Tabla que recibe datos de obras y las muestra -->
+        <!-- resumen -->  
+        
+        <!--tabla  -->
         <table-obras @row-selected="onRowSelected" @items="rowItems"/>
 
-        <!-- botones para crud -->
+        <!-- botones -->
         <buttons :selectedRow="selectedRow" :items="items" />
   </div>     
     

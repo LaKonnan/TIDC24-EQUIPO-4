@@ -28,7 +28,7 @@
       </div>
 
       <!-- menu -->
-      <b-link class="menu-item" @click="isActive(); !show_sb_button ? '#' : hide_menubar = !hide_menubar; !show_sb_button ? '#' : hide_closemenu = !hide_closemenu" v-for="item in items" :key="item.id" :id="item.id" :to="item.to" >
+      <b-link class="menu-item" @click="isActive();  hideTitle('show'), !show_sb_button ? '#' : hide_menubar = !hide_menubar; !show_sb_button ? '#' : hide_closemenu = !hide_closemenu" v-for="item in items" :key="item.id" :id="item.id" :to="item.to" >
         <b-icon :icon="item.icon"></b-icon>
         {{ item.title }}
       </b-link>

@@ -2,17 +2,16 @@
   <div>
       <!-- tabla -->
       <b-table
-        class = "table"
-        selectable 
-        :items="APIData" 
+        class = "table table-responsive-sm"
         :fields="fields"
+        :items="obras" 
         :select-mode="selectMode"
         :per-page="perPage"
         @row-selected="onRowSelected"
+        :current-page="currentPage"
         hover
-        fixed
-        responsive
-        :current-page="currentPage">
+        selectable 
+        >
       </b-table>
 
       <!-- paginado -->
@@ -32,25 +31,26 @@
         props: ['obra'],
         data () {
             return {
-                fields: [
-                 {key: 'obraId.S', label: 'ID'},
-                 {key: 'encargado.S', label: 'Encargado'}, 
-                 {key: 'nombre.S', label: 'Nombre'}, 
-                 {key: 'estado.S', label: 'Estado'}, 
-                 {key: 'tipo.S', label: 'Tipo'}],
-                APIData: [],
+                obras: [],
                 perPage: 10,
-                currentPage: 1,
                 selectMode: 'single',
-                selected: []
+                currentPage: 1,
+                selected: [],
+                fields: [
+                    {key: 'obraId.S', label: 'ID', sortable: true},
+                    {key: 'encargado.S', label: 'Encargado', sortable: true}, 
+                    {key: 'nombre.S', label: 'Nombre', sortable: true}, 
+                    {key: 'estado.S', label: 'Estado', sortable: true}, 
+                    {key: 'tipo.S', label: 'Tipo', sortable: true}
+                ],
             }
         },
         
+        //  obtener datos de obras
         created() {
             getAPI.get('/obras',)
                 .then(response => {
-                    console.log('Obra API has recieved data')
-                    this.APIData = response.data
+                    this.obras = response.data
                 })
                 .catch(err => {
                     console.log(err)
@@ -58,17 +58,19 @@
         },
         
         computed: {
+            // obtener cantidad de elementos de cajas para paginado
             rows() {
-                return this.APIData.length
+                return this.obras.length
             }
         },
 
         methods: {
-        onRowSelected(items) {
-            this.selected = items
-            this.$emit('row-selected', false);
-            this.$emit('items', items);
-        }
+            // obtener id de caja elegida
+            onRowSelected(items) {
+                this.selected = items
+                this.$emit('row-selected', false);
+                this.$emit('items', items);
+            }
     }
 }
 
