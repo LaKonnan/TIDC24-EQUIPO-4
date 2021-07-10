@@ -1,11 +1,11 @@
 
 .navbar {
     padding-top: 10px 40px 10px 40px !important;
-    margin: 0;
+    margin: 0 0 0 320px;
     box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
-    background: rgb(243,154,39);
-    background: linear-gradient(90deg, rgba(243,154,39,1) 32%, rgba(248,248,248,1) 100%);
+    background: #F39A27;
 }
+
 
 .sidebar-button {
     background: none !important;
@@ -41,11 +41,6 @@
     margin-right: 40px;
 }
 
-
-.b-sidebar {
-    margin-top: 57px !important;
-}
-
 .logo img{
     width: 300px;
     margin: 10px;
@@ -72,7 +67,6 @@
 
 .menu-item.active {
     background-color: #F39A27;
-    border-bottom: 1px solid #ffffff;
     border-left: 4px solid #ffffff;
 }
 
@@ -81,7 +75,7 @@
     margin-bottom: 10px;
     color: rgba(255,255,255,0.6);
     position: fixed;
-    bottom: 60px;
+    bottom: 10px;
 }
 
 .sidebar-footer:hover {
@@ -89,8 +83,12 @@
     cursor: pointer;
 }
 
-@media screen and(max-width: 605px) {
+@media screen and(max-width: 900px) {
     .username {
         display: none;
+    }
+
+    .navbar {
+        margin-left: 0;
     }
 }

@@ -1,5 +1,3 @@
-
-
 .cards-group {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -21,9 +19,37 @@
 
 .icon-slash, .icon-alert,
 .icon-active, .icon-register {
-    font-size: 22px;
+    font-size: 37px;
 }
 
+.card {
+    border: none !important;
+}
+
+.cont-register  {
+    background: rgb(242,242,242);
+    background: linear-gradient(165deg, rgba(242,242,242,1) 22%, rgba(255,255,255,1) 99%);
+    border: 1px solid rgb(242,242,242) !important;
+}
+
+.cont-active { 
+    background: rgb(175,221,185);
+    background: linear-gradient(165deg, rgba(175,221,185,1) 0%, rgba(255,255,255,1) 61%);
+    border: 1px solid rgb(175,221,185) !important;  
+}
+
+.cont-alert {
+    background: rgb(255,217,167);
+    background: linear-gradient(165deg, rgba(255,217,167,1) 0%, rgba(255,255,255,1) 61%);  
+    border: 1px solid rgb(255,217,167) !important;   
+}
+
+.cont-slash {
+    background: rgb(255,169,177);
+    background: linear-gradient(165deg, rgba(255,169,177,1) 0%, rgba(255,255,255,1) 61%);
+    border: 1px solid rgb(255,169,177) !important; 
+    
+}
 
 .icon-active {
     color: #1a9134;
@@ -35,4 +61,17 @@
 
 .icon-slash {
     color: #dc3545;
+}
+
+@media screen and(max-width: 1350px) {
+    .cards-group {
+        grid-template-columns: 1fr 1fr;
+        grid-row-gap: 10px;
+    }
+}
+
+@media screen and(max-width: 630px) {
+    .cards-group {
+        grid-template-columns: 1fr;
+    }
 }

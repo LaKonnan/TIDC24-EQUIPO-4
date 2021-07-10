@@ -3,16 +3,16 @@
       <!-- tabla -->
       <b-table
         ref="cajas_table"
-        class = "table"
+        class = "table table-responsive-sm"
         selectable 
         :fields="fields" 
         :items="cajas"
         :select-mode="selectMode"
         :per-page="perPage"
         @row-selected="onRowSelected"
-        fixed
-        responsive
-        :current-page="currentPage">
+        :current-page="currentPage"
+
+        >
       </b-table>
 
       <!-- paginado -->
@@ -32,18 +32,19 @@ export default {
     data () {
         return {
             cajas: [],
-            test: [],
             perPage: 10,
             selectMode: 'single',
             currentPage: 1,
             selected: [],
             isSelected: false,
+
+            // columnas con opcion a ordenar
             fields: [
-                { key: 'id_caja.S', label: 'ID'},
-                { key: 'tipo.S', label: 'TIPO'},
-                { key: 'estado.S', label: 'ESTADO'},
-                { key: 'monto_gastos.S', label: 'MONTO GASTOS'},
-                { key: 'monto_total.S', label: 'MONTO TOTAL'}
+                { key: 'id_caja.S', label: 'ID', sortable: true },
+                { key: 'tipo.S', label: 'TIPO', sortable: true },
+                { key: 'estado.S', label: 'ESTADO', sortable: true },
+                { key: 'monto_gastos.S', label: 'MONTO GASTOS', sortable: true },
+                { key: 'monto_total.S', label: 'MONTO TOTAL',  sortable: true }
             ]
         }
     },

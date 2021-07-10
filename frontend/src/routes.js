@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Obras from './views/Obras'
 import cajas from './views/cajas_chicas'
+import maquinas from './views/maquinas'
 import Perfil from './views/Perfil'
 import Usuarios from './views/Usuarios'
 import Reglamento from './views/Reglamento'
@@ -29,6 +30,12 @@ export default new VueRouter({
             path: '/cajas-chicas',
             name: 'GESTIÓN DE CAJAS CHICAS',
             component: cajas,
+            beforeEnter: authGuard
+        },
+        {
+            path: '/maquinas',
+            name: 'Gestión de máquinas',
+            component: maquinas,
             beforeEnter: authGuard
         },
         {

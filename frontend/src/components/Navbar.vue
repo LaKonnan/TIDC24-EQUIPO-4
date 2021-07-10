@@ -2,12 +2,12 @@
   <div>
     <!-- barra superior -->
     <b-navbar>
-        <div v-b-toggle.sidebar class="sidebar-button" @click="hide_menubar = !hide_menubar; hide_closemenu = !hide_closemenu">
-          <b-icon id="menubar" icon="list" variant="light" font-scale="2.5" :hidden="hide_menubar"></b-icon>
-          <b-icon id="closemenu" icon="x" variant="light" font-scale="2.5" :hidden="hide_closemenu"></b-icon>
+        <div v-if="show_sb_button" v-b-toggle.sidebar class="sidebar-button" @click="hide_menubar = !hide_menubar; hide_closemenu = !hide_closemenu" id="sb_button">
+          <b-icon id="menubar" icon="list" variant="light" font-scale="2.5" :hidden="hide_menubar" @click="hideTitle('hide')"></b-icon>
+          <b-icon id="closemenu" icon="x" variant="light" font-scale="2.5" :hidden="hide_closemenu" @click="hideTitle('show')"></b-icon>
         </div>          
 
-      <div class="page-title">
+      <div class="page-title" id="page-title">
           {{ this.title }}
       </div>
 
@@ -21,14 +21,14 @@
     </b-navbar>
 
     <!-- sidebar -->
-    <b-sidebar id="sidebar" bg-variant="dark" no-header>
+    <b-sidebar id="sidebar" bg-variant="dark" no-header :no-close-on-route-change="show_sidebar" :no-slide="show_sidebar" :visible="show_sidebar">
       <!-- logo en parte superior -->
       <div class="logo">
         <img src="@/assets/header-sidebar.png" alt="">
       </div>
 
       <!-- menu -->
-      <b-link class="menu-item" @click="isActive(); hide_menubar = !hide_menubar; hide_closemenu = !hide_closemenu" v-for="item in items" :key="item.id" :id="item.id" :to="item.to" >
+      <b-link class="menu-item" @click="isActive(); !show_sb_button ? '#' : hide_menubar = !hide_menubar; !show_sb_button ? '#' : hide_closemenu = !hide_closemenu" v-for="item in items" :key="item.id" :id="item.id" :to="item.to" >
         <b-icon :icon="item.icon"></b-icon>
         {{ item.title }}
       </b-link>
@@ -47,28 +47,33 @@
   export default {
     name: 'Navbar',
     data: () => ({ 
-      drawer: null,
+      // titulo de pagina
+      title: '',
+
+      // variables de barra superior y menu  lateral
       active_page: null,
       hide_menubar: false,
       hide_closemenu: true,
-      title: '',
+      show_sidebar: true,
+      show_sb_button: false,
+      
+      // elementos del menu
       items: [
         { title: 'Usuarios', icon: 'people', to: '/usuarios', id: 'usuarios'},
         { title: 'Obras', icon: 'cone-striped', to: '/obras', id: 'obras'} ,
         { title: 'Máquinas', icon: 'cone-striped', to: '/maquinas', id: 'maquinas'},
-        { title: 'Reglamento', icon: 'file-text-fill', to: '/reglamento', id: 'reglamento'},
         { title: 'Cajas chicas', icon: 'archive-fill', to: '/cajas-chicas', id: 'cajas'},
-
+        { title: 'Reglamento', icon: 'file-text-fill', to: '/reglamento', id: 'reglamento'},
       ]
     }),
 
     methods: {
-      // Autenticación de usuario para ingreso
+      // autenticación de usuario para ingreso
       login() {
         this.$auth.loginWithRedirect();
       },
 
-      // Cierre de sesion
+      // cierre de sesion
       logout() {
         this.$auth.logout({
           returnTo: window.location.origin
@@ -79,27 +84,23 @@
       isActive() {
         this.active_page = this.$router.currentRoute.fullPath
         this.title = this.$route.name
-        console.log(this.active_page)
+
         var menu_item = ''
         switch(this.active_page) {
           case '/usuarios':
             menu_item  = document.getElementById('usuarios')
-            console.log('ENCONTRADO USUARIOS')
             break;
 
           case '/obras':
             menu_item  = document.getElementById('obras')
-            console.log('ENCONTRADO OBRAS')
             break;
 
           case '/maquinas':
             menu_item  = document.getElementById('maquinas')
-            console.log('ENCONTRADO MAQUINAS')
             break;
 
           case '/cajas-chicas':
             menu_item  = document.getElementById('cajas')
-            console.log('ENCONTRADO CAJAS')
             break;
 
           case '/perfil':
@@ -109,7 +110,6 @@
 
           case '/reglamento':
             menu_item  = document.getElementById('reglamento')
-            console.log('ENCONTRADO REGLAMENTO')
             break;
         }
 
@@ -121,11 +121,78 @@
         
         console.log(menu_item) 
         menu_item.classList.add('active')
+      },
+
+      // acciones reponsivas a realizar
+      responsiveActions() {
+        // elementos a utilizar
+        var e_sidebar = document.getElementById('sidebar')
+        var width  =  window.innerWidth
+
+        switch(true) {
+          case width <= 900:
+            // Mostrar boton para abrir y cerrar menu lateral
+            this.show_sb_button = true
+            
+            if(this.show_sidebar != false) {
+              // Habilitar deslizamiento de menu lateral
+              e_sidebar.style = "display: flex !important"
+              this.show_sidebar = false
+            }
+
+            break
+
+          case width >= 901:
+            this.show_sb_button = false
+            e_sidebar.style = "display: block !important"
+
+            // regresar variables a estado inicial
+            this.hide_menubar = false
+            this.hide_closemenu = true
+            this.show_sidebar = true
+
+            // mostrar titulo nuevamente, esto para asegurar que suceda al cambiar el tamaño
+            // de la ventana
+            var title  = document.getElementById('page-title')
+            title.style.display = "block"
+
+            var  button = document.getElementById('sb_button')
+            button.style.marginLeft = "20px"
+
+            break
+        }
+      },
+
+
+      // ocultar o mostrar titulo
+      hideTitle(action) {
+        var title  = document.getElementById('page-title')
+        var  button = document.getElementById('sb_button')
+
+        switch(action) {
+          case 'hide':
+            title.style.display = "none"
+            button.style.marginLeft = "310px"
+
+            break
+          case 'show':
+            title.style.display = "block"
+            button.style.marginLeft = "20px"
+            break
+        }
       }
     },
 
     mounted() {
       this.isActive()
+    },
+
+    created() {
+      window.addEventListener("resize", this.responsiveActions)
+    },
+
+    destroyed() {
+      window.removeEventListener("resize", this.responsiveActions)
     }
   }
 </script>

@@ -7,6 +7,13 @@
 }
 
 .content {
-    margin-left: 40px;
-    margin-right: 40px;
+    margin-left: 340px;
+    margin-right: 40px !important;
+    margin-top: 20px !important;
+}
+
+@media screen and(max-width: 900px) {
+    .content { 
+        margin-left: 40px;
+    }
 }

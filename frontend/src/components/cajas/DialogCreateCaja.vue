@@ -1,7 +1,7 @@
 <template>
   <div>
-    <b-modal ref="create" id="modal-create" centered size="xl" title="NUEVA CAJA CHICA" hide-footer>
-          <b-tabs pills card vertical v-model="tabIndex">
+    <b-modal ref="create" id="modal-create" size="xl" title="NUEVA CAJA CHICA" hide-footer>
+          <b-tabs pills card :vertical="vertical_steps" v-model="tabIndex">
             <!-- paso 1 -->
             <b-tab title="PASO 1" active id="step1">
                     <b-card-text>
@@ -120,6 +120,7 @@ export default {
             btnStep2: true,
             step2: true,
             step3: true,
+            vertical_steps: true,
 
             //select paso 1
             aux: [],
@@ -363,6 +364,19 @@ export default {
         modalBack() {
             this.$bvModal.hide('error_modal')
             this.$bvModal.show('modal-create')
+        },
+
+        responsiveActions() {
+            var width = window.innerWidth
+
+            switch(true){
+                case width <= 900:
+                    this.vertical_steps = false
+                    break
+                case width >= 901:
+                    this.vertical_steps = true
+                    break
+            }
         }
 
     },
@@ -384,6 +398,14 @@ export default {
                 return null
             }
         }
+    },
+
+    created() {
+        window.addEventListener("resize", this.responsiveActions)
+    },
+
+    destroyed() {
+        window.addEventListener("resize", this.responsiveActions)
     }
 }
 </script>

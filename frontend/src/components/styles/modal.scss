@@ -1,9 +1,4 @@
 // estilos generales de modal
-.modal-dialog{
-    margin-left: 25% !important;
-}
-
-
 
 .modal-header {
     background-color: #F39A27;
@@ -37,4 +32,12 @@
 
 #error_modal, #success_modal {
     margin-left: 20%;
+}
+
+@media screen and(max-width: 900px) {
+    .modal-dialog { 
+        margin-left: 0;
+        margin-right: 20% !important;
+    }
+
 }

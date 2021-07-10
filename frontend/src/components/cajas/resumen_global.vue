@@ -1,7 +1,7 @@
 <template>
 <div class="resume-cajas">
     <div class="cards-group">
-        <b-card>
+        <b-card  class="cont-register">
             <div class="title-register">
                 10 CAJAS REGISTRADAS
             </div>
@@ -11,7 +11,7 @@
             </div>
         </b-card>
 
-        <b-card>
+        <b-card class="cont-active">
             <div class="title-active">
                 3 CAJAS ACTIVAS
             </div>
@@ -21,7 +21,7 @@
             </div>
         </b-card>
 
-        <b-card>
+        <b-card class="cont-alert">
             <div class="title-alert">
                 2 CAJAS HAN OCUPADO UN 75% DE SU FONDO
             </div>
@@ -31,7 +31,7 @@
             </div>
         </b-card>
 
-        <b-card>
+        <b-card class="cont-slash"> 
             <div class="title-slash">
                 1 CAJAS HAN OCUPADO TODO SU FONDO
             </div>
