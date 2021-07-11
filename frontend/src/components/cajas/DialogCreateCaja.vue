@@ -5,14 +5,33 @@
             <!-- paso 1 -->
             <b-tab title="PASO 1" active id="step1">
                     <b-card-text>
-                        Tipo de caja
-                        <b-form-select  v-model="selected1" :options="options1" @change="getObras(); activateButton()" ></b-form-select>
+                        <!-- Tipo de caja  -->
+                        <b-form-group label="Tipo de caja">
+                            <b-form-select 
+                                v-model="selected1" 
+                                :options="options1" 
+                                @change="getObras(); activateButton()">
+                            </b-form-select>
+                        </b-form-group>
                         
-                        Obra a la que pertenece
-                        <b-form-select v-model="selected2" :options="options2" :disabled="booleanSelect2" @change="activateButton()"></b-form-select>
+                        <!-- Obra perteneciente -->
+                        <b-form-group label="Obra perteneciente">
+                            <b-form-select 
+                                v-model="selected2" 
+                                :options="options2" 
+                                :disabled="booleanSelect2" 
+                                @change="activateButton()">
+                            </b-form-select>
+                        </b-form-group>
 
-                        Estado de caja
-                        <b-form-select v-model="selected3" :options="options3" @change="activateButton()"></b-form-select>
+                        <!-- Estado -->
+                        <b-form-group label="Estado">
+                            <b-form-select 
+                                v-model="selected3" 
+                                :options="options3" 
+                                @change="activateButton()">
+                            </b-form-select>
+                        </b-form-group>
 
                         <b-button :disabled="btnStep1" id="btnStep1" class="button-next dark-button" @click="next1()">Siguiente</b-button>
                     </b-card-text>
@@ -21,73 +40,79 @@
             <!-- paso  2 -->
             <b-tab title="PASO 2" id="step2" :disabled="step2">
                 <b-card-text>
-                    Fecha de inicio
-                    <b-form-datepicker :min="min_date1" placeholder="" v-model="initial_date" class="mb-2" @input="setMinFinalDate(); activateButton()"></b-form-datepicker>
+                    <!-- Fecha de inicio -->
+                    <b-form-group label="Fecha  de inicio">
+                        <b-form-datepicker 
+                            :min="min_date1" 
+                            placeholder="" 
+                            v-model="initial_date"
+                            class="mb-2" 
+                            @input="setMinFinalDate(); activateButton()">
+                        </b-form-datepicker>
+                    </b-form-group>
 
-                    Fecha de término
-                    <b-form-datepicker :min="min_final_date" :max="max_final_date" @input="activateButton()" placeholder="Esta fecha debe ser mínimo quince días después de la fecha inicial y máximo treinda días después" v-model="final_date" class="mb-2"></b-form-datepicker>
+                    <!-- Fecha  de temrino -->
+                    <b-form-group label="Fecha  de término" description="Mínimo quince días después de la fecha inicial y máximo treinta días después">
+                        <b-form-datepicker 
+                            :min="min_final_date" 
+                            :max="max_final_date" 
+                            placeholder=""
+                            @input="activateButton()" 
+                            v-model="final_date" 
+                            class="mb-2">
+                        </b-form-datepicker>
+                    </b-form-group>
 
-                    Monto máximo de caja
-                    <b-form-input v-model="money" value="" type="number" @keyup="validateMoney(); activateButton()" id="money" :state="validateRangeMoney" aria-describedby="input-live-feedback1"></b-form-input>
-                    <b-form-invalid-feedback id="input-live-feedback1">
-                        El mínimo es $50.000 y el máximo $300.000
-                    </b-form-invalid-feedback>
+                    <!-- Monto maximo caja chica -->
+                    <b-form-group label="Monto máximo de caja" description="El monto debe ser entre $50.000 y $300.000">
+                        <vue-numeric 
+                            class="form-control" 
+                            id="money"
+                            currency="$" 
+                            v-bind:min="50000"
+                            v-bind:max="300000"
+                            v-bind:minus="false"
+                            separator="." 
+                            v-model="money"
+                            v-on:keypress.native="activateButton();">
+                        </vue-numeric>
+                    </b-form-group>
+                    
+                    <!-- Monto maximo caja combustible -->
+                    <b-form-group label="Monto máximo de caja combustible" description="El monto debe ser entre $100.000 y $300.000">
+                        <vue-numeric 
+                            class="form-control" 
+                            id="number"
+                            currency="$" 
+                            v-bind:min="100000"
+                            v-bind:max="300000"
+                            v-bind:minus="false"
+                            separator="." 
+                            v-model="gas_money"
+                            v-on:keypress.native="activateButton();">
+                        </vue-numeric>
+                    </b-form-group>
 
-                    Monto máximo de caja combustible
-                    <b-form-input v-model="gas_money" value="" type="number" @keyup="validateGasMoney(); activateButton()" id="number" :state="validateRangeGasMoney" aria-describedby="input-live-feedback2"></b-form-input>
-                    <b-form-invalid-feedback id="input-live-feedback2">
-                        El mínimo es $100.000 y el máximo $300.000
-                    </b-form-invalid-feedback>
-
-                    <b-button :disabled="btnStep2" id="btnStep2" class="button-next dark-button" @click="next2">Siguiente</b-button>
+                    <!-- boton -->
+                    <b-button 
+                        :disabled="btnStep2" 
+                        id="btnStep2" 
+                        class="button-next dark-button" 
+                        @click="next2(); setArray()">
+                            Siguiente
+                        </b-button>
                 </b-card-text>
             </b-tab>
 
             <b-tab title="PASO 3" id="step3" :disabled="step3">
                 <b-card-text>
                         <!-- resumen de nueva caja -->
-                        <b-card  title="RESUMEN DE NUEVA CAJA CHICA">
-                            <b-card-text>
-                                <b-row>
-                                    <b-col>TIPO DE CAJA</b-col>
-                                    <b-col>{{ this.selected1 }}</b-col>
-                                </b-row>
-
-                                <b-row>
-                                    <b-col>OBRA</b-col>
-                                    <b-col>{{ this.selected2 }}</b-col>
-                                </b-row>
-
-                                <b-row>
-                                    <b-col>ESTADO</b-col>
-                                    <b-col>{{ this.selected3 }}</b-col>
-                                </b-row>
-
-                                <b-row>
-                                    <b-col>FECHA DE INICIO</b-col>
-                                    <b-col>{{ this.initial_date }}</b-col>
-                                </b-row>
-
-                                <b-row>
-                                    <b-col>FECHA DE TÉRMINO</b-col>
-                                    <b-col>{{ this.final_date }}</b-col>
-                                </b-row>
-
-                                <b-row>
-                                    <b-col>MONTO MÁXIMO</b-col>
-                                    <b-col>{{ this.money }}</b-col>
-                                </b-row>
-
-                                <b-row>
-                                    <b-col>MONTO MÁXIMO CAJA COMBUSTIBLE</b-col>
-                                    <b-col>{{ this.gas_money }}</b-col>
-                                </b-row>   
-                            </b-card-text>
-                        </b-card>
-                        <br>
-                        <p>Una vez presionado el botón, se registrará la caja en el sistema, puede regresar a cualquiera de los pasos anteriores para editar los datos.</p>
+                        <b-table stacked :items="resume"></b-table>
+                        <p class="warn-message">
+                            Una vez presionado el botón, se registrará la caja en el sistema, puede regresar a cualquiera de los pasos anteriores para editar los datos.
+                        </p>
                     <b-button id="btnStep3" class="button-next dark-button" @click="create()">GUARDAR</b-button>
-                    </b-card-text>
+                </b-card-text>
                     
             </b-tab>
         </b-tabs>
@@ -104,6 +129,7 @@
 
 <script>
 import { getAPI } from '../axios-api'
+import VueNumeric from 'vue-numeric'
 
 export default {
     data() {
@@ -152,16 +178,31 @@ export default {
             // general
             success: false,
             error_text: '',
-            success_text: ''
+            success_text: '',
+            resume: []
         }
     },
 
     components: {
         'modal-success': require('@/components/success_error_message/modalSuccess.vue').default,
-        'modal-error': require('@/components/success_error_message/modalError.vue').default
+        'modal-error': require('@/components/success_error_message/modalError.vue').default,
+        VueNumeric
     },
 
     methods: {
+        // crear lista  de  datos para resumen
+        setArray() {
+            this.resume.push({
+                Tipo: this.selected1,
+                Obra: this.selected2,
+                Estado: this.selected3,
+                Fecha_de_inicio: this.initial_date,
+                Fecha_de_termino: this.final_date,
+                Monto_maximo: this.money,
+                Monto_maximo_caja_combustible: this.gas_money
+            })
+        },
+
         // obtener obras segun tipo de caja
         getObras() {
             if(this.aux.length >= 1){
@@ -230,6 +271,7 @@ export default {
             this.tabIndex++
         },
 
+        // establecer fecha  minima
         setMinFinalDate() {
             // duracion minima de quince dias
             this.min_final_date = new Date(this.initial_date)
@@ -242,31 +284,7 @@ export default {
             this.max_final_date.setDate(this.max_final_date.getDate() + 1)
         },
 
-        // validar largo de monto 
-        validateMoney() {
-            var out = ''
-            // validar largo 
-            if(this.money.length > 6){
-                for(var i = 0; i <= 6; i++){
-                    out += this.money.charAt(i)
-                }
-
-                this.money = out 
-            }
-        },
-
-        validateGasMoney() {
-            var out = ''
-            // validar largo 
-            if(this.gas_money.length > 6){
-                for(var i = 0; i <= 6; i++){
-                    out += this.gas_money.charAt(i)
-                }
-
-                this.gas_money = out
-            }
-        },
-        
+        //  regresar valores a su estado original
         resetForm() {
             this.tabIndex = 2
             this.btnStep1 = true
@@ -360,7 +378,8 @@ export default {
         sendMethod(data) {
             if (data.methodCall) return this[data.methodCall]();
         },
-
+        
+        // en caso de error, desde el modal con el mensaje, regresar al modal crear
         modalBack() {
             this.$bvModal.hide('error_modal')
             this.$bvModal.show('modal-create')

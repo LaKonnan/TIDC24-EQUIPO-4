@@ -17,6 +17,10 @@
     font-weight: bold;
 }
 
+.nav-link:hover {
+    color: #F39A27 !important;
+}
+
 // estilos de modal de error y exito
 .error {
     color: #e01a1af2;
@@ -34,10 +38,16 @@
     margin-left: 20%;
 }
 
-@media screen and(max-width: 900px) {
-    .modal-dialog { 
-        margin-left: 0;
-        margin-right: 20% !important;
-    }
+.form-group {
+    border-bottom: 0 !important;
+}
 
+.col-form-label {
+    padding-bottom: 0 !important;
+}
+
+
+.warn-message {
+    font-weight: bold;
+    text-align: center;
 }

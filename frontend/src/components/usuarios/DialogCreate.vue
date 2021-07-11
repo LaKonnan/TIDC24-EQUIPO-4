@@ -73,109 +73,109 @@
 </template>
 
 <script>
-import { validationMixin } from "vuelidate";
-import { required, minLength, email } from "vuelidate/lib/validators";
-import { getAPI } from '../axios-api';
-import {  validate } from 'rut.js'
+// import { validationMixin } from "vuelidate";
+// import { required, minLength, email } from "vuelidate/lib/validators";
+// import { getAPI } from '../axios-api';
+// import {  validate } from 'rut.js'
 
-const validRut = (value) => validate(value)
+// const validRut = (value) => validate(value)
 
 
-export default {
-  mixins: [validationMixin],
-  props: ['table'],
-  data() {
-    return {
-      form: {
-        rut: null,
-        name: null,
-        email: null,
-        password: null,
-        rol: null
-      },
-      options: [
-        { value: null, text: 'Seleccione un rol' },
-        { value: {'idRol':'rol_QB4JcKnGKpJS7NLv','rol':'Administrador'}, text: 'Administrador' },
-        { value: {'idRol':'rol_OwLZBI7MTfexCXk4','rol':'Gerente'}, text: 'Gerente' },
-        { value: {'idRol':'rol_gxkCaxtBYTRDeqlF','rol':'Residente'}, text: 'Residente' },
-        { value: {'idRol':'rol_mvuY1l6CQeimpXsw','rol':'Encargado'}, text: 'Encargado' },
-      ]
-    };
-  },
-  validations: {
-    form: {
-      rut: {
-        required,
-        validRut
-      },
-      name: {
-        required,
-        minLength: minLength(3)
-      },
-      email: {
-        email,
-        required
-      },
-      password: {
-        required,
-        minLength: minLength(6)
-      },
-      rol: {
-        required
-      }
-    }
-  },
-  methods: {
-    onHidden() {
-      console.log('modal cerrado')
-      this.table.get_users()
-    },
-    validateState(name) {
-      const { $dirty, $error } = this.$v.form[name];
-      return $dirty ? !$error : null;
-    },
-    resetForm() {
-      this.form = {
-        rut: null,
-        name: null,
-        email: null,
-        password: null,
-        rol: null
-      };
+// export default {
+//   mixins: [validationMixin],
+//   props: ['table'],
+//   data() {
+//     return {
+//       form: {
+//         rut: null,
+//         name: null,
+//         email: null,
+//         password: null,
+//         rol: null
+//       },
+//       options: [
+//         { value: null, text: 'Seleccione un rol' },
+//         { value: {'idRol':'rol_QB4JcKnGKpJS7NLv','rol':'Administrador'}, text: 'Administrador' },
+//         { value: {'idRol':'rol_OwLZBI7MTfexCXk4','rol':'Gerente'}, text: 'Gerente' },
+//         { value: {'idRol':'rol_gxkCaxtBYTRDeqlF','rol':'Residente'}, text: 'Residente' },
+//         { value: {'idRol':'rol_mvuY1l6CQeimpXsw','rol':'Encargado'}, text: 'Encargado' },
+//       ]
+//     };
+//   },
+//   validations: {
+//     form: {
+//       rut: {
+//         required,
+//         validRut
+//       },
+//       name: {
+//         required,
+//         minLength: minLength(3)
+//       },
+//       email: {
+//         email,
+//         required
+//       },
+//       password: {
+//         required,
+//         minLength: minLength(6)
+//       },
+//       rol: {
+//         required
+//       }
+//     }
+//   },
+//   methods: {
+//     onHidden() {
+//       console.log('modal cerrado')
+//       this.table.get_users()
+//     },
+//     validateState(name) {
+//       const { $dirty, $error } = this.$v.form[name];
+//       return $dirty ? !$error : null;
+//     },
+//     resetForm() {
+//       this.form = {
+//         rut: null,
+//         name: null,
+//         email: null,
+//         password: null,
+//         rol: null
+//       };
 
-      this.$nextTick(() => {
-        this.$v.$reset();
-      });
-    },
-    async onSubmit() {
-      this.$v.form.$touch();
-      if (this.$v.form.$anyError) {
-        return;
-      }else {
-        const accessToken = await this.$auth.getTokenSilently()
-        console.log(this.$v.form.rol.$model.rol)
-        getAPI.post('/usuarios', {
-            rut: this.$v.form.rut.$model,
-            name: this.$v.form.name.$model,
-            email: this.$v.form.email.$model,
-            password: this.$v.form.password.$model,
-            idRol: this.$v.form.rol.$model.idRol,
-            rol: this.$v.form.rol.$model.rol
-        }, {
-          headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        })
-        .then(response => {
-          console.log(response.data)
-          this.$root.$emit('bv::hide::modal','modal-xlc')
-          this.resetForm()
-        })
-        .catch(err => {
-          console.log(err)
-        })
-      }
-    }
-  }
-};
+//       this.$nextTick(() => {
+//         this.$v.$reset();
+//       });
+//     },
+//     async onSubmit() {
+//       this.$v.form.$touch();
+//       if (this.$v.form.$anyError) {
+//         return;
+//       }else {
+//         const accessToken = await this.$auth.getTokenSilently()
+//         console.log(this.$v.form.rol.$model.rol)
+//         getAPI.post('/usuarios', {
+//             rut: this.$v.form.rut.$model,
+//             name: this.$v.form.name.$model,
+//             email: this.$v.form.email.$model,
+//             password: this.$v.form.password.$model,
+//             idRol: this.$v.form.rol.$model.idRol,
+//             rol: this.$v.form.rol.$model.rol
+//         }, {
+//           headers: {
+//                 Authorization: `Bearer ${accessToken}`
+//             }
+//         })
+//         .then(response => {
+//           console.log(response.data)
+//           this.$root.$emit('bv::hide::modal','modal-xlc')
+//           this.resetForm()
+//         })
+//         .catch(err => {
+//           console.log(err)
+//         })
+//       }
+//     }
+//   }
+// };
 </script>

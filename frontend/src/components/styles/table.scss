@@ -46,3 +46,15 @@ ination {
 .nav-link:hover {
     color: #FFFFFF;
 }
+
+.pagination {
+    justify-content: center;
+}
+
+.page-link {
+    color: #2e3133 !important;
+}
+
+.page-item.active .page-link {
+    color: #FFFFFF !important;
+}

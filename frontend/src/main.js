@@ -7,6 +7,7 @@ import aws_exports from './aws-exports';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import VueNumeric from 'vue-numeric'
 import {
   applyPolyfills,
   defineCustomElements,
@@ -25,6 +26,8 @@ Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 
 Vue.use(Vuelidate)
+
+Vue.use(VueNumeric)
 
 Vue.use(Auth0Plugin, {
   domain,

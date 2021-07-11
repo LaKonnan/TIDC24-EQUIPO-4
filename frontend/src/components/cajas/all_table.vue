@@ -3,6 +3,7 @@
       <!-- tabla -->
       <b-table
         class = "table table-responsive-sm"
+        id="table"
         :fields="fields" 
         :items="cajas"
         :select-mode="selectMode"
@@ -19,7 +20,7 @@
         v-model="currentPage" 
         :total-rows="rows" 
         :per-page="perPage" 
-        aria-controls="my-table">
+        aria-controls="table">
       </b-pagination>
   </div>
 </template>
