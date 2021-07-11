@@ -12,9 +12,13 @@
       </div>
 
       <div class="username">
-        <b-icon class="logout" icon="power" @click="logout()" title="Cerrar sesión"></b-icon>
-        {{ $auth.user.name }}
+        Bienvenido, {{ $auth.user.name }}
       </div>
+
+      <b-nav-item class="session" @click="logout()">
+          <b-icon class="logout" icon="power" title="Cerrar sesión"></b-icon>
+          Cerrar sesión
+      </b-nav-item>
 
       <!-- menu lateral -->
       
@@ -33,10 +37,10 @@
         {{ item.title }}
       </b-link>
 
-      <div class="sidebar-footer">
-        <b-icon class="logout" icon="power" @click="logout()" title="Cerrar sesión"></b-icon>
-        {{ $auth.user.name }}
-      </div>
+      <b-link class="sidebar-footer" @click="logout()">
+        <b-icon class="logout" icon="power" title="Cerrar sesión"></b-icon>
+        Cerrar sesión
+      </b-link>
     </b-sidebar>
 
   </div>
@@ -56,6 +60,11 @@
       hide_closemenu: true,
       show_sidebar: true,
       show_sb_button: false,
+
+      // variables de acceso al menu
+      user_hasAccess: false,
+      obras_hasAccess: false,
+      cajas_hasAccess: false,
       
       // elementos del menu
       items: [
@@ -184,7 +193,7 @@
     },
 
     mounted() {
-      this.isActive()
+      this.isActive();
     },
 
     created() {

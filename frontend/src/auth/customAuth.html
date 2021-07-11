@@ -50,17 +50,14 @@
       width: 75px;
     }
     
-    .btn-block {
-      background-color: #F39A27;
+    .btn-primary {
+      background-color: #F39A27 !important;
       border: none;
     }
     
-    .btn-block:hover {
+    .btn-primary:hover {
       background-color: #F0A84C;
-    }
-    
-    .btn-block:hover {
-      background-color: #F0A84C;
+      border: none;
     }
     
     #error-message {
@@ -72,7 +69,7 @@
   <div class="login-container">
     <div class="col-xs-12 col-sm-4 col-sm-offset-4 login-box">
       <div class="login-header">
-        <img src="https://www.qbrobotics.com/wp-content/uploads/2018/03/sample-logo-170x150.png"/>
+        <img src="https://imagenes-campodonico.s3.us-east-2.amazonaws.com/logo_campodonico.png"/>
         <h3>Bienvenido</h3>
         <h5>Ingrese sus credenciales</h5>
       </div>
@@ -185,7 +182,7 @@
         e.preventDefault();
         var button = this;
         var username = 'prueba@prueba.prueba';
-        var password = 'Prueba1234567';
+        var password = 'prueba123';
         button.disabled = true;
         webAuth.login({
           realm: databaseConnection,

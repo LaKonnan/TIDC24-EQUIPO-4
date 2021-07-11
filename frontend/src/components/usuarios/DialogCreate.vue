@@ -13,7 +13,7 @@
               ></b-form-input>
               <b-form-invalid-feedback
                 id="input-0-live-feedback"
-              >Este es un campo obligatorio</b-form-invalid-feedback>
+              >Este es un campo obligatorio y requiere un rut válido</b-form-invalid-feedback>
             </b-form-group>
 
             <b-form-group id="input-group-1" label="Nombre" label-for="input-1">
@@ -76,6 +76,10 @@
 import { validationMixin } from "vuelidate";
 import { required, minLength, email } from "vuelidate/lib/validators";
 import { getAPI } from '../axios-api';
+import {  validate } from 'rut.js'
+
+const validRut = (value) => validate(value)
+
 
 export default {
   mixins: [validationMixin],
@@ -91,17 +95,18 @@ export default {
       },
       options: [
         { value: null, text: 'Seleccione un rol' },
-        { value: 'rol_QB4JcKnGKpJS7NLv', text: 'Administrador' },
-        { value: 'rol_OwLZBI7MTfexCXk4', text: 'Gerente' },
-        { value: 'rol_gxkCaxtBYTRDeqlF', text: 'Residente' },
-        { value: 'rol_mvuY1l6CQeimpXsw', text: 'Encargado' },
+        { value: {'idRol':'rol_QB4JcKnGKpJS7NLv','rol':'Administrador'}, text: 'Administrador' },
+        { value: {'idRol':'rol_OwLZBI7MTfexCXk4','rol':'Gerente'}, text: 'Gerente' },
+        { value: {'idRol':'rol_gxkCaxtBYTRDeqlF','rol':'Residente'}, text: 'Residente' },
+        { value: {'idRol':'rol_mvuY1l6CQeimpXsw','rol':'Encargado'}, text: 'Encargado' },
       ]
     };
   },
   validations: {
     form: {
       rut: {
-        required
+        required,
+        validRut
       },
       name: {
         required,
@@ -148,13 +153,14 @@ export default {
         return;
       }else {
         const accessToken = await this.$auth.getTokenSilently()
-        console.log(this.$v.form.rol.$model)
+        console.log(this.$v.form.rol.$model.rol)
         getAPI.post('/usuarios', {
             rut: this.$v.form.rut.$model,
             name: this.$v.form.name.$model,
             email: this.$v.form.email.$model,
             password: this.$v.form.password.$model,
-            rol: this.$v.form.rol.$model
+            idRol: this.$v.form.rol.$model.idRol,
+            rol: this.$v.form.rol.$model.rol
         }, {
           headers: {
                 Authorization: `Bearer ${accessToken}`

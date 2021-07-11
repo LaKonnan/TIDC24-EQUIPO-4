@@ -34,7 +34,7 @@ export default {
     props: ['usuario'],
     data () {
         return {
-            fields: [{key: 'identities[0].user_id', label: 'Rut'}, {key: 'name', label: 'Nombre'}, {key: 'email', label: 'Email'}],
+            fields: [{key: 'identities[0].user_id', label: 'Rut'}, {key: 'name', label: 'Nombre'}, {key: 'email', label: 'Email'}, {key: 'user_metadata.rol', label: 'Rol'}],
             usuarios: [],
             perPage: 10,
             selectMode: 'single',
@@ -67,6 +67,7 @@ export default {
             })
                     .then(response => {
                         console.log('Datos de usuario recibidos')
+                        console.log(response.data)
                         this.usuarios = response.data
                     })
                     .catch(err => {

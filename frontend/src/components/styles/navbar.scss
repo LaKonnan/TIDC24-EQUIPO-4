@@ -20,7 +20,7 @@
     text-transform: uppercase;
 }
 
-.page-title, .username {
+.page-title, .username, .session {
     display: inline;
     color: #2e3133;
 }
@@ -35,6 +35,14 @@
 }
 
 .username {
+    float: right;
+    position: absolute;
+    right: 17vh;
+    margin-right: 40px;
+    color: #FFFFFF;
+}
+
+.session {
     float: right;
     position: absolute;
     right: 0;
@@ -76,6 +84,7 @@
     color: rgba(255,255,255,0.6);
     position: fixed;
     bottom: 10px;
+    display: inline;
 }
 
 .sidebar-footer:hover {
@@ -88,7 +97,17 @@
         display: none;
     }
 
+    .session {
+        display: none;
+    }
+
     .navbar {
         margin-left: 0;
+    }
+}
+
+@media screen and(max-width: 1030px) {
+    .username {
+        display: none;
     }
 }
