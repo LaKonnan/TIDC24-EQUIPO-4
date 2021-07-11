@@ -2,18 +2,17 @@
     <div>
       <!-- tabla -->
       <b-table
-        class = "table"
-        selectable
+        class = "table table-responsive-sm"
+        id="table"
         :fields="fields"
         :items="usuarios" 
         :usuario="usuario"
         :select-mode="selectMode"
         :per-page="perPage"
         @row-selected="onRowSelected"
+        :current-page="currentPage"
         hover
-        fixed
-        responsive
-        :current-page="currentPage">
+        selectable>
       </b-table>
 
       <!-- paginado -->
@@ -21,7 +20,7 @@
         v-model="currentPage" 
         :total-rows="rows" 
         :per-page="perPage" 
-        aria-controls="my-table">
+        aria-controls="table">
       </b-pagination>
 
   </div>
@@ -32,13 +31,19 @@ import { getAPI } from '../axios-api'
 
 export default {
     props: ['usuario'],
+
     data () {
         return {
-            fields: [{key: 'identities[0].user_id', label: 'Rut'}, {key: 'name', label: 'Nombre'}, {key: 'email', label: 'Email'}, {key: 'user_metadata.rol', label: 'Rol'}],
+            fields: [
+                { key: 'identities[0].user_id', label: 'Rut' },
+                { key: 'name', label: 'Nombre'}, {key: 'email', label: 'Email' },
+                { key: 'user_metadata.rol', label: 'Rol' }
+            ],
             usuarios: [],
             perPage: 10,
             selectMode: 'single',
-            currentPage: 1
+            currentPage: 1,
+            isSelected: false
         }
     },
 
@@ -47,17 +52,32 @@ export default {
     },
 
     computed: {
-        // obtener cantidad de elementos de cajas para paginado
+        // obtener cantidad de elementos de usuarios para paginado
         rows() {
             return this.usuarios.length
         }
     },
 
     methods: {
+        // obtener id de usuario seleccionada
         onRowSelected(items) {
-            this.$emit('row-selected', false);
-            this.$emit('items', items);
+            if(this.isSelected == false) {
+                this.isSelected = true
+                this.$emit('items', items)
+                this.$emit('row-selected', false)
+
+            // deshabilitar botones si no hay una fila elegida
+            }else {
+                if(items['0'] != null){
+                    this.$emit('items', items)
+                }else{
+                    this.isSelected = false
+                    this.$emit('row-selected', true)
+                }    
+            }
         },
+
+        // obtener usuarios
         async get_users(){
             const accessToken = await this.$auth.getTokenSilently()
             getAPI.get('/usuarios', {
@@ -77,3 +97,7 @@ export default {
     }
 }
 </script>
+
+<style lang="scss">
+    @import '@/components/styles/table.scss'
+</style>

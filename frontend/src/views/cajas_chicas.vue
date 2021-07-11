@@ -4,7 +4,9 @@
     <resume />
 
     <!-- tabla de contenidos -->
-    <table-cajas @items="rowItems" @row-selected="onRowSelected"/>
+    <table-cajas 
+      @items="rowItems" 
+      @row-selected="onRowSelected"/>
 
     <!-- botones -->
     <buttons :items="items" :selectedRow="selectedRow" />
@@ -23,7 +25,6 @@ export default {
       }
     },
     
-    // importar componentes de la pagina
     components: {
       'table-cajas': require('../components/cajas/all_table').default,
       'buttons': require('../components/cajas/buttons').default,

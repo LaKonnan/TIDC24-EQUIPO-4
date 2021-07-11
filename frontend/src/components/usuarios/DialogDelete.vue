@@ -1,19 +1,21 @@
 <template>
     <div>
-        <b-modal id="modal-xld" size="xl" title="ELIMINAR USUARIO" hide-footer @hidden="onHidden">
-            Usuario a eliminar:
-            <br><br>
+        <b-modal id="modal-xld" size="lg" title="ELIMINAR USUARIO" hide-footer @hidden="onHidden">
+            <!-- Datos de usuario -->
             <b-col>
                 <b-row>Rut: {{items[0].identities[0].user_id}}</b-row>
                 <b-row>Nombre: {{items[0].nickname}}</b-row>
                 <b-row>Email: {{items[0].email}}</b-row>
             </b-col>
-            <br><br>
+            <br>
+
             <center>
-            <p><b>IMPORTANTE: </b>Una vez eliminado el usuario no podrá ser recuperado</p>
-            <p><b>Para confirmar la eliminación del usuario, por favor, ingrese {{items[0].email}}</b></p></center>
-           <b-form @submit.stop.prevent="onSubmit">
-                <b-form-group id="input-group-3" label="Email" label-for="input-3">
+              <p><b>IMPORTANTE: </b>Una vez eliminado el usuario no podrá ser recuperado</p>
+              <p><b>Para confirmar la eliminación del usuario, por favor, ingrese {{items[0].email}}</b></p>
+            </center>
+
+            <b-form @submit.stop.prevent="onSubmit">
+                <b-form-group id="input-group-3" label-for="input-3">
                   {{setvEmail(items[0].email)}}
                 <b-form-input
                     id="input-3"
@@ -21,6 +23,8 @@
                     type="email"
                     v-model="$v.form.email.$model"
                     :state="validateState('email')"
+                    style="text-align: center;" 
+                    @paste.prevent 
                     aria-describedby="input-3-live-feedback"
                 ></b-form-input>
                 <b-form-invalid-feedback
@@ -46,10 +50,12 @@ export default {
     return {
       form: {
         email: null,
-        vemail: null
+        vemail: null,
+        resume: []
       }
     };
   },
+
   validations: {
     form: {
       email: {
@@ -58,15 +64,18 @@ export default {
       }
     }
   },
+
   methods: {
     onHidden() {
       console.log('modal cerrado')
       this.table.get_users()
     },
+
     validateState(name) {
       const { $dirty, $error } = this.$v.form[name];
       return $dirty ? !$error : null;
     },
+
     resetForm() {
       this.form = {
         email: null,
@@ -77,9 +86,11 @@ export default {
         this.$v.$reset();
       });
     },
+
     setvEmail(vemail) {
       this.form.vemail = vemail;
     },
+
     async onSubmit() {
       this.$v.form.$touch();
       if (this.$v.form.$anyError) {
@@ -100,7 +111,7 @@ export default {
           console.log(err)
         })
       }
-    }
-  }
+    },
+  },
 };
 </script>

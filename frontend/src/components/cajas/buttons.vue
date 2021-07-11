@@ -1,6 +1,5 @@
 <template>
   <div>
-      
       <!-- botones -->
       <div class="buttons">
         <b-button v-b-modal.modal-create class="normal-button">INGRESAR NUEVO</b-button>

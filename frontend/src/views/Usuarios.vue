@@ -1,14 +1,13 @@
 <template>
   <div class="content">
-    <div class="container">
-      <b-card class="card">
-        <!-- tabla de contenidos -->
-        <table-usuarios ref="table-usuarios" @row-selected="onRowSelected" @items="rowItems"/>
+    <!-- tabla de contenidos -->
+    <table-usuarios 
+      ref="table-usuarios" 
+      @row-selected="onRowSelected" 
+      @items="rowItems"/>
 
-        <!-- botones -->
-        <buttons :table=table :selectedRow="selectedRow" :items="items"/>
-      </b-card>
-    </div>
+    <!-- botones -->
+    <buttons :table=table :selectedRow="selectedRow" :items="items"/>
   </div>
 </template>
 
@@ -23,17 +22,24 @@ export default {
         table: null
       }
     },
+
+
     components: {
       'table-usuarios': require('../components/usuarios/tabla').default,
       'buttons': require('../components/usuarios/buttons').default
     },
+
     mounted(){
       this.table = this.$refs['table-usuarios']
     },
+
     methods: {
+      // fila seleccionada
       onRowSelected(params) {
         this.selectedRow = params
       },
+
+      // datos de fila
       rowItems(params){
         this.items = params;
       }
@@ -41,8 +47,6 @@ export default {
 }
 </script>
 
-<style>
-.container {
-  margin-top: 40px;
-}
+<style lang="scss">
+  @import '@/components/styles/global.scss';
 </style>

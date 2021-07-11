@@ -8,26 +8,27 @@
       </div>
 
       <!-- dialogs CRUD -->
-       <dialog-create :table=table />
-       <dialog-delete :table=table :items="items"/>
-       <dialog-edit :table=table :items="items"/>
+      <dialog-create :table=table />
+      <dialog-delete :table=table :items="items"/>
+      <dialog-edit :table=table :items="items"/>
       
   </div>
 </template>
 
 
 <script>
+  export default {
+    props: ['selectedRow','items','table'],
+    
+    data() {
+      return {
+      }
+    },
 
-export default {
-  props: ['selectedRow','items','table'],
-  data() {
-    return {
-    }
-  },
-  components: {
-    'dialog-create': require('@/components/usuarios/DialogCreate').default,
-    'dialog-delete': require('@/components/usuarios/DialogDelete').default,
-    'dialog-edit': require('@/components/usuarios/DialogEdit').default
+    components: {
+      'dialog-create': require('@/components/usuarios/DialogCreate').default,
+      'dialog-delete': require('@/components/usuarios/DialogDelete').default,
+      'dialog-edit': require('@/components/usuarios/DialogEdit').default
+    },
   }
-}
 </script>

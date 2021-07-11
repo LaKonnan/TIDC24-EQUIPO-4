@@ -37,17 +37,10 @@
 .username {
     float: right;
     position: absolute;
-    right: 17vh;
-    margin-right: 40px;
+    right: 40px;
     color: #FFFFFF;
 }
 
-.session {
-    float: right;
-    position: absolute;
-    right: 0;
-    margin-right: 40px;
-}
 
 .logo img{
     width: 300px;
@@ -73,9 +66,10 @@
     text-decoration: none;
 }
 
-.menu-item.active {
+.b-sidebar-body .active {
     background-color: #F39A27;
     border-left: 4px solid #ffffff;
+    font-weight: bold;
 }
 
 .sidebar-footer {

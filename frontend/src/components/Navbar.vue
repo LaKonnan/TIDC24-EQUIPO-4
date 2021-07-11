@@ -13,15 +13,7 @@
 
       <div class="username">
         Bienvenido, {{ $auth.user.name }}
-      </div>
-
-      <b-nav-item class="session" @click="logout()">
-        <b-icon class="logout" icon="power" title="Cerrar sesión"></b-icon>
-        Cerrar sesión
-      </b-nav-item>
-
-      <!-- menu lateral -->
-      
+      </div>     
     </b-navbar>
 
     <!-- sidebar -->
@@ -33,7 +25,7 @@
 
       <!-- menu -->
       <div v-for="item in items" :key="item.id" :id="item.id" :to="item.to">
-        <b-link class="menu-item" v-if="item.access" @click="isActive();  hideTitle('show'), !show_sb_button ? '#' : hide_menubar = !hide_menubar; !show_sb_button ? '#' : hide_closemenu = !hide_closemenu" :key="item.id" :id="item.id" :to="item.to" >
+        <b-link class="menu-item" v-if="item.access" @click="isActive(); hideTitle('show'); !show_sb_button ? '#' : hide_menubar = !hide_menubar; !show_sb_button ? '#' : hide_closemenu = !hide_closemenu" :key="item.id" :id="item.id" :to="item.to" >
           <b-icon :icon="item.icon"></b-icon>
           {{ item.title }}
         </b-link>
