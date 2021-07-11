@@ -47,14 +47,8 @@
         },
         
         //  obtener datos de obras
-        created() {
-            getAPI.get('/obras',)
-                .then(response => {
-                    this.obras = response.data
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+        mounted() {
+            this.get_obras();
         },
         
         computed: {
@@ -70,6 +64,20 @@
                 this.selected = items
                 this.$emit('row-selected', false);
                 this.$emit('items', items);
+            },
+            async get_obras() {
+                const accessToken = await this.$auth.getTokenSilently()
+                getAPI.get('/obras', {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                })
+                .then(response => {
+                    this.obras = response.data
+                })
+                .catch(err => {
+                    console.log(err)
+                })
             }
     }
 }

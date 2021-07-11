@@ -103,12 +103,14 @@ export default {
         }
      },
     
-   createEdit(){
+   async createEdit(){
      console.log(this.obraid)
+     const accessToken = await this.$auth.getTokenSilently()
      const options = {
        headers: {
          'Content-Type': 'application/json;charset=UTF-8',
-         'Access-Control-Allow-Origin': '*'
+         'Access-Control-Allow-Origin': '*',
+        'Authorization': `Bearer ${accessToken}`
          
        }
      }

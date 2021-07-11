@@ -6,6 +6,7 @@ import maquinas from './views/maquinas'
 import Perfil from './views/Perfil'
 import Usuarios from './views/Usuarios'
 import Reglamento from './views/Reglamento'
+import NoAccess from './views/NoAccess'
 import { authGuard } from "./auth/authGuard";
 
 
@@ -19,6 +20,12 @@ export default new VueRouter({
             path: '/',
             name: 'login',
             beforeEnter: authGuard
+        },
+        {
+            path: '/no-access',
+            name: 'NO ACCESS',
+            component: NoAccess,
+            beforeEnter: authGuard      
         },
         {
             path: '/obras',

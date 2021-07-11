@@ -82,6 +82,7 @@ def obras_por_tipo(tipo):
 
 
 @app.route('/obras')
+@requires_role('manage:obras')
 def get_obras():
     obras = dynamodb_client.scan(TableName = 'obras-dev')
     items = obras['Items']
@@ -90,6 +91,7 @@ def get_obras():
 
 
 @app.route('/obras', methods=['POST'])
+@requires_role('manage:obras')
 def create_obra():
     obraId = request.json.get('obraId')
     nombre = request.json.get('nombre')
@@ -126,6 +128,7 @@ def create_obra():
         })
 
 @app.route('/obras', methods=['PUT'])
+@requires_role('manage:obras')
 def edit_obra():
     obraId = request.json.get('obraId')
     nombre = request.json.get('nombre')
@@ -171,11 +174,13 @@ def edit_obra():
     return jsonify({'message': 'obra modificada'})
 
 @app.route('/obras/<string:obraId>', methods=['DELETE'])
+@requires_role('manage:obras')
 def delete_obra(obraId):
     result = dynamodb_client.delete_item(
          TableName = OBRAS_TABLE,
          Key = { 'obraId': {'S': obraId}}
     )
+    return jsonify({'msg':'eliminado'})
    
 ## ------------ GESTIÓN DE GASTOS
 ## Recibe Datos
@@ -445,6 +450,7 @@ def create_caja():
         return jsonify({'message': 'OCURRIÓ UN ERROR:' })
 
 @app.route('/cajasChicas/<string:id_caja>', methods=['DELETE'])
+@requires_auth
 def delete_caja(id_caja):
     # eliminar caja chica
     result1 = dynamodb_client.delete_item(
@@ -523,6 +529,7 @@ def delete_usuarios(user_id):
 
 
 @app.route('/rol/<string:user_id>')
+@requires_auth
 def get_rol(user_id):
     rol = auth0.users.list_roles(user_id)
     return jsonify(rol)

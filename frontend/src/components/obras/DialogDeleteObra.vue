@@ -66,19 +66,23 @@ export default {
             this.button = false
         },
 
-    deleteObra(){
+    async deleteObra(){
       console.log(this.obraid)
+      const accessToken = await this.$auth.getTokenSilently()
       const options = {
         headers: {
          'Content-Type': 'application/json;charset=UTF-8',
-         'Access-Control-Allow-Origin': '*'
+         'Access-Control-Allow-Origin': '*',
+         'Authorization': `Bearer ${accessToken}`
         }
       }
-
      if(this.password == '123'){
-       getAPI.delete('/obras/'+this.items[0].obraId.S,'',options)
+       getAPI.delete('/obras/'+this.items[0].obraId.S, options)
         .then((res) =>{
           console.log('Datos Eliminados: ', res)
+        })
+        .catch((err)=>{
+          console.log('Error: ', err)
         })
       }
     }

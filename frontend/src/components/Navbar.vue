@@ -2,13 +2,13 @@
   <div>
     <!-- barra superior -->
     <b-navbar>
-        <div v-if="show_sb_button" v-b-toggle.sidebar class="sidebar-button" @click="hide_menubar = !hide_menubar; hide_closemenu = !hide_closemenu" id="sb_button">
-          <b-icon id="menubar" icon="list" variant="light" font-scale="2.5" :hidden="hide_menubar" @click="hideTitle('hide')"></b-icon>
-          <b-icon id="closemenu" icon="x" variant="light" font-scale="2.5" :hidden="hide_closemenu" @click="hideTitle('show')"></b-icon>
-        </div>          
+      <div v-if="show_sb_button" v-b-toggle.sidebar class="sidebar-button" @click="hide_menubar = !hide_menubar; hide_closemenu = !hide_closemenu" id="sb_button">
+        <b-icon id="menubar" icon="list" variant="light" font-scale="2.5" :hidden="hide_menubar" @click="hideTitle('hide')"></b-icon>
+        <b-icon id="closemenu" icon="x" variant="light" font-scale="2.5" :hidden="hide_closemenu" @click="hideTitle('show')"></b-icon>
+      </div>          
 
       <div class="page-title" id="page-title">
-          {{ this.title }}
+        {{ this.title }}
       </div>
 
       <div class="username">
@@ -16,8 +16,8 @@
       </div>
 
       <b-nav-item class="session" @click="logout()">
-          <b-icon class="logout" icon="power" title="Cerrar sesión"></b-icon>
-          Cerrar sesión
+        <b-icon class="logout" icon="power" title="Cerrar sesión"></b-icon>
+        Cerrar sesión
       </b-nav-item>
 
       <!-- menu lateral -->
@@ -32,10 +32,12 @@
       </div>
 
       <!-- menu -->
-      <b-link class="menu-item" @click="isActive();  hideTitle('show'), !show_sb_button ? '#' : hide_menubar = !hide_menubar; !show_sb_button ? '#' : hide_closemenu = !hide_closemenu" v-for="item in items" :key="item.id" :id="item.id" :to="item.to" >
-        <b-icon :icon="item.icon"></b-icon>
-        {{ item.title }}
-      </b-link>
+      <div v-for="item in items" :key="item.id" :id="item.id" :to="item.to">
+        <b-link class="menu-item" v-if="item.access" @click="isActive();  hideTitle('show'), !show_sb_button ? '#' : hide_menubar = !hide_menubar; !show_sb_button ? '#' : hide_closemenu = !hide_closemenu" :key="item.id" :id="item.id" :to="item.to" >
+          <b-icon :icon="item.icon"></b-icon>
+          {{ item.title }}
+        </b-link>
+      </div>
 
       <b-link class="sidebar-footer" @click="logout()">
         <b-icon class="logout" icon="power" title="Cerrar sesión"></b-icon>
@@ -48,7 +50,10 @@
 </template>
 
 <script>
+import { getAPI } from './axios-api'
+
   export default {
+    props:['user_hasAccess'],
     name: 'Navbar',
     data: () => ({ 
       // titulo de pagina
@@ -60,19 +65,14 @@
       hide_closemenu: true,
       show_sidebar: true,
       show_sb_button: false,
-
-      // variables de acceso al menu
-      user_hasAccess: false,
-      obras_hasAccess: false,
-      cajas_hasAccess: false,
       
       // elementos del menu
       items: [
-        { title: 'Usuarios', icon: 'people', to: '/usuarios', id: 'usuarios'},
-        { title: 'Obras', icon: 'cone-striped', to: '/obras', id: 'obras'} ,
-        { title: 'Máquinas', icon: 'cone-striped', to: '/maquinas', id: 'maquinas'},
-        { title: 'Cajas chicas', icon: 'archive-fill', to: '/cajas-chicas', id: 'cajas'},
-        { title: 'Reglamento', icon: 'file-text-fill', to: '/reglamento', id: 'reglamento'},
+        { title: 'Usuarios', icon: 'people', to: '/usuarios', id: 'usuarios', access: true},
+        { title: 'Obras', icon: 'cone-striped', to: '/obras', id: 'obras', access: true} ,
+        { title: 'Máquinas', icon: 'cone-striped', to: '/maquinas', id: 'maquinas', access: true},
+        { title: 'Cajas chicas', icon: 'archive-fill', to: '/cajas-chicas', id: 'cajas', access: true},
+        { title: 'Reglamento', icon: 'file-text-fill', to: '/reglamento', id: 'reglamento', access: true},
       ]
     }),
 
@@ -87,6 +87,28 @@
         this.$auth.logout({
           returnTo: window.location.origin
         });
+      },
+
+      get_rol() {
+        const id = this.$auth.user.sub
+        console.log(id)
+        getAPI.get('/rol/'+id)
+        .then(response => {
+            console.log(response.data.roles[0].name)
+            if(response.data.roles[0].name == 'gerente') {
+              this.items[0].access = false
+            }
+            if(response.data.roles[0].name == 'encargado') {
+              this.items[0].access = false
+            }
+            if(response.data.roles[0].name == 'residente') {
+              this.items[0].access = false
+              this.items[1].access = false
+            }
+        })
+        .catch(err => {
+            console.log(err)
+        })
       },
       
       // determinar el item del menu que esta activo
@@ -172,7 +194,6 @@
         }
       },
 
-
       // ocultar o mostrar titulo
       hideTitle(action) {
         var title  = document.getElementById('page-title')
@@ -198,6 +219,7 @@
 
     created() {
       window.addEventListener("resize", this.responsiveActions)
+      this.get_rol()
     },
 
     destroyed() {
