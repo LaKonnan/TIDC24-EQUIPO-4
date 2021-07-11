@@ -529,7 +529,6 @@ def delete_usuarios(user_id):
 
 
 @app.route('/rol/<string:user_id>')
-@requires_auth
 def get_rol(user_id):
     rol = auth0.users.list_roles(user_id)
     return jsonify(rol)
