@@ -35,6 +35,8 @@ provider:
             - Fn::GetAtt: [ UsersTable, Arn ]
             - Fn::GetAtt: [ CajasTable, Arn ]
             - Fn::GetAtt: [ GastoCTable, Arn ]
+            - Fn::GetAtt: [ MaquinasTable, Arn ]
+            - Fn::GetAtt: [ CombustibleTable, Arn ]
   environment:
     OBRAS_TABLE: ${self:custom.tableName}
     CAJAS_TABLE: cajas_chicas
