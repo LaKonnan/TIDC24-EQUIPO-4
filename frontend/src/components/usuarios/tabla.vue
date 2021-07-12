@@ -80,6 +80,7 @@ export default {
         // obtener usuarios
         async get_users(){
             const accessToken = await this.$auth.getTokenSilently()
+            console.log(accessToken)
             getAPI.get('/usuarios', {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
