@@ -1,0 +1,107 @@
+
+.navbar {
+    padding-top: 10px 40px 10px 40px !important;
+    margin: 0 0 0 320px;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+    background: #F39A27;
+}
+
+
+.sidebar-button {
+    background: none !important;
+    border: none !important;
+    padding-bottom: 0 !important;
+}
+
+.page-title {
+    font-size: 25px;
+    margin-left: 10px;
+    color: rgba(255,255,255,0.9) !important;
+    text-transform: uppercase;
+}
+
+.page-title, .username, .session {
+    display: inline;
+    color: #2e3133;
+}
+
+.logout {
+    font-size: 20px;
+}
+
+.logout:hover {
+    cursor: pointer;
+    font-weight: 700;    
+}
+
+.username {
+    float: right;
+    position: absolute;
+    right: 40px;
+    color: #FFFFFF;
+}
+
+
+.logo img{
+    width: 300px;
+    margin: 10px;
+}
+
+.menu-item {
+    width: 100%;
+    padding: 15px 10px 15px 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.4);
+    transition: 0.3s ease-in-out;
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 18px;
+    transition: 0.3s ease-in-out;
+    display: block;
+}
+
+.menu-item:hover {
+    background-color: rgba(0,0,0,0.2);
+    cursor: pointer;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.b-sidebar-body .active {
+    background-color: #F39A27;
+    border-left: 4px solid #ffffff;
+    font-weight: bold;
+}
+
+.sidebar-footer {
+    margin-left: 10px;
+    margin-bottom: 10px;
+    color: rgba(255,255,255,0.6);
+    position: fixed;
+    bottom: 10px;
+    display: inline;
+}
+
+.sidebar-footer:hover {
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+@media screen and(max-width: 900px) {
+    .username {
+        display: none;
+    }
+
+    .session {
+        display: none;
+    }
+
+    .navbar {
+        margin-left: 0;
+    }
+}
+
+@media screen and(max-width: 1030px) {
+    .username {
+        display: none;
+    }
+}

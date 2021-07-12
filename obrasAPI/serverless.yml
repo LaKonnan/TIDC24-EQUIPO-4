@@ -34,10 +34,13 @@ provider:
           Resource:
             - Fn::GetAtt: [ UsersTable, Arn ]
             - Fn::GetAtt: [ CajasTable, Arn ]
+            - Fn::GetAtt: [ GastoCTable, Arn ]
   environment:
     OBRAS_TABLE: ${self:custom.tableName}
     CAJAS_TABLE: cajas_chicas
     CAJAS_COMBUSTIBLE: caja_combustible
+    GASTO_COMBUSTIBLE: gasto_combustible
+    TABLE_MAQUINAS: maquinas
 
 functions:
   api:
@@ -54,7 +57,6 @@ plugins:
   - serverless-wsgi
   - serverless-python-requirements
   - serverless-dynamodb-local
-
 resources:
   Resources:
     UsersTable:
@@ -96,4 +98,30 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: caja_combustible
+    GastoCTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: folio
+            AttributeType: S
+        KeySchema:
+          - AttributeName: folio
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: gasto_combustible
+    MaquinasTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id_maquina
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id_maquina
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: maquinas
 

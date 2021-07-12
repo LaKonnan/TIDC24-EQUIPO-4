@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <navbar/>
+  <div id="app" v-if="$auth.isAuthenticated">
+    <navbar v-if="!$auth.loading"/>
     <router-view/>
   </div>
 </template>
@@ -9,16 +9,17 @@
 
 export default {
   name: 'App',
+
   components: {
         'navbar': require('./components/Navbar.vue').default
     }
 }
 </script>
 
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-    background-color:#f8f8f8!important;
+<style lang="scss">
+  @import '@/components/styles/global.scss';
+  body {  
+    background: url('assets/background.png') fixed no-repeat bottom right !important;
+    background-size: 50% !important;
   }
 </style>

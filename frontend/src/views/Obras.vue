@@ -1,17 +1,14 @@
 <template>
-    <div class="obras content">
-        <br>
-        <!-- titulo -->
-        <p class="dark-title">GESTIÓN DE OBRAS</p>
-        <hr class="hr">
-        <!--Tabla que recibe datos de obras y las muestra -->
-        <table-obras @row-selected="onRowSelected" @items="rowItems"/>
+    <div class="content">
+        <!--tabla  -->
+        <table-obras 
+            @row-selected="onRowSelected" 
+            @items="rowItems"/>
 
-        <!-- botones para crud -->
+        <!-- botones -->
         <buttons :selectedRow="selectedRow" :items="items" />
   </div>     
-    
-    
+
 </template>
 
 <script>
@@ -23,14 +20,19 @@
                 items: []
             }
         },
+
         components: {
-            'table-obras': require('../components/obras/table.vue').default,
-            'buttons': require('../components/obras/buttons').default
+            'table-obras': require('../components/obras/table').default,
+            'buttons': require('../components/obras/buttons').default,
         },
+
         methods: {
+            // fila seleccionada
             onRowSelected(params) {
                 this.selectedRow = params
             },
+
+            // datos de fila
             rowItems(params){
                 this.items = params;
             }
@@ -39,5 +41,6 @@
     
 </script>
 
-<style>
+<style lang="scss">
+  @import '@/components/styles/global.scss';
 </style>

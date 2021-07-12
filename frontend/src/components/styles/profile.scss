@@ -1,0 +1,25 @@
+.profile {
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    grid-column-gap: 10px;
+}
+
+.picture img{
+    width: 250px;
+    border-radius: 100%;
+}
+
+.data1 {
+    margin-top: 7%;
+}
+
+.data2 {
+    margin-top: 10px;
+}
+
+@media screen and(max-width: 900px) {
+    .profile{
+        display: block;
+        justify-content: center;
+    }
+}

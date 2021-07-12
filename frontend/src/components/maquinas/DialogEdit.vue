@@ -15,18 +15,17 @@
 
             <b-button class="normal-button" :disabled="button" @click="updateMaq()">ACTUALIZAR</b-button>
        </b-modal>
+        
+        <!-- modal de exito -->
+        <modal-success :message="succes_text"/>
 
-        <b-modal ref="success_modal" id="modal-no-backdrop" hide-backdrop hide-footer hide-header>
-            <center>
-                <p class="success"><b-icon icon="check-circle" animation="fade"></b-icon></p>
-                <p>{{ success_text }}</p>
-                <b-button class="dark-button" @click="closeModal()">CERRAR</b-button>
-            </center>
-        </b-modal>
+        <!-- modal de error -->
+        <modal-error :message="error_text" v-on:passData="sendMethod"/>
     </div>
 </template>
 
 <script>
+import { getAPI } from '../axios-api'
 export default {
     props: ['items'],
 
@@ -37,58 +36,76 @@ export default {
             nombre: '',
             ubicacion: 0,
             succes_text: '',
+            error_text: '',
             button: true,
             options: []
         }
+    },
+
+    components: {
+        'modal-success': require('@/components/success_error_message/modalSuccess.vue').default,
+        'modal-error': require('@/components/success_error_message/modalError.vue').default
     },
 
     mounted() {
         // obtener datos de maquina seleccionada
         this.$root.$on('bv::modal::shown', (bvEvent, modalId) => {
             console.log('SE MOSTRARA EL MODAL DE EDIT', bvEvent, modalId)
-            
-            this.recurso = this.items[0].recurso.N,
-            this.patente = this.items[0].patente.S,
-            this.nombre = this.items[0].nombre.S,
-            this.ubicacion = this.items[0].ubicacion.N
+            if (modalId == 'modal-edit') {
+                this.recurso = this.items[0].recurso.N,
+                this.patente = this.items[0].patente.S,
+                this.nombre = this.items[0].nombre.S,
+                this.ubicacion = this.items[0].ubicacion.N
+            }
         })
     },
 
     methods: {
-
-        // actualiza maquina
-        updateMaq() {
+        // actualizar maquina
+        async updateMaq() {
+            const accessToken = await this.$auth.getTokenSilently()
             const data = JSON.stringify({
-                recurso = this.recurso,
-                patente = this.patente,
-                nombre = this.nombre,
-                ubicacion = this.ubicacion
+                recurso: this.recurso,
+                patente: this.patente,
+                nombre: this.nombre,
+                ubicacion: this.ubicacion
             })
 
             const options = {
                 headers: {
                     'Content-Type': 'application/json;charset=UTF-8',
-                    'Access-Control-Allow-Origin': '*'
+                    'Access-Control-Allow-Origin': '*',
+                    'Authorization': `Bearer ${accessToken}`
                 }
             }
 
-            getAPI.put('/maquinas/'+ this.recurso, data, options).then(response => {
-                this.succes_text = 'Máquina '+ this.patente + 'actualizada con éxito.'
-                this.$refs.edit_modal.hide()
+            getAPI.put('/maquinas/'+ this.recurso, data, options)
+                .then(response => {
+                    console.log(response)
+                    this.succes_text = 'Máquina '+ this.patente + 'actualizada con éxito.'
 
-                // reestablecer datos
-                this.recurso = 0
-                this.patente = ''
-                this.nombre = ''
-                this.ubicacion = 0
+                    // mostrar modal de éxito
+                    this.$bvModal.hide('modal-edit')
+                    this.$bvModal.show('success_modal')
+            }).catch(err => {
+                 // mensaje de exito
+                this.error_text = 'ERROR: ' + err
 
-                this.$refs.success_modal.show()
-
+                // mostrar modal de éxito
+                this.$bvModal.hide('modal-edit')
+                this.$bvModal.show('error_modal')
             })
         },
 
-        closeModal() {
-            this.$refs.succes_modal.hide()
+        // enviar métodos a componentes
+        sendMethod(data) {
+            if (data.methodCall) return this[data.methodCall]();
+        },
+
+        // en caso de error, desde el modal con el mensaje, regresar al modal crear
+        modalBack() {
+            this.$bvModal.hide('error_modal')
+            this.$bvModal.show('modal-create')
         },
 
         activateButton() {
@@ -115,7 +132,7 @@ export default {
     },
 
     created() {
-        getObras()
+        this.getObras()
     }
 }
 </script>

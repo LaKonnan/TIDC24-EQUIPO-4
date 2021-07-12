@@ -27,7 +27,7 @@ export default {
   },
 
   components: {
-    'dialog-create': require('@/components/maquinas/DialogCreateCaja').default,
+    'dialog-create': require('@/components/maquinas/DialogCreate').default,
     'dialog-delete': require('@/components/maquinas/DialogDelete').default,
     'dialog-edit': require('@/components/maquinas/DialogEdit').default,
     'dialog-view': require('@/components/maquinas/DialogView').default

@@ -1,0 +1,49 @@
+// estilos generales de modal
+
+.modal-header {
+    background-color: #F39A27;
+    padding: 10px !important;
+}
+
+.modal-title {
+    color: #FFFFFF !important;
+    font-weight: bold !important;
+    
+}
+
+.nav-link.active {
+    color: #FFFFFF;
+    background-color: #F39A27 !important;
+    font-weight: bold;
+}
+
+.nav-link:hover {
+    color: #F39A27 !important;
+}
+
+// estilos de modal de error y exito
+.error {
+    color: #e01a1af2;
+}
+
+.success {
+    color: #2cd435;
+}
+
+.error, .success {
+    font-size: 80px;
+}
+
+.form-group {
+    border-bottom: 0 !important;
+}
+
+.col-form-label {
+    padding-bottom: 0 !important;
+}
+
+
+.warn-message {
+    font-weight: bold;
+    text-align: center;
+}

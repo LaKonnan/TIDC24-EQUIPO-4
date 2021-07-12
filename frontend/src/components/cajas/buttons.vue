@@ -1,12 +1,11 @@
 <template>
   <div>
-      
       <!-- botones -->
       <div class="buttons">
         <b-button v-b-modal.modal-create class="normal-button">INGRESAR NUEVO</b-button>
-        <b-button v-b-modal.modal-delete class="dark-button" @click="openModal('delete')">ELIMINAR</b-button>
-        <b-button v-b-modal.modal-edit class="normal-button" @click="openModal('edit')">EDITAR</b-button>
-        <b-button v-b-modal.modal-view class="normal-button" @click="openModal('view')">VER INFORMACIÓN COMPLETA</b-button>
+        <b-button v-b-modal.modal-delete class="dark-button" @click="openModal('delete')" :disabled="selectedRow">ELIMINAR</b-button>
+        <b-button v-b-modal.modal-edit class="normal-button" @click="openModal('edit')" :disabled="selectedRow">EDITAR</b-button>
+        <b-button v-b-modal.modal-view class="normal-button" @click="openModal('view')" :disabled="selectedRow">VER INFORMACIÓN COMPLETA</b-button>
       </div>
 
       <!-- dialogs CRUD -->
@@ -19,12 +18,7 @@
 
 <script>
 export default {
-  props: ['items'],
-  data() {
-    return {
-      id: null
-    }
-  },
+  props: ['selectedRow','items'],
 
   components: {
     'dialog-create': require('@/components/cajas/DialogCreateCaja').default,
@@ -37,6 +31,7 @@ export default {
     openModal(act) {
       switch(act) {
         case 'delete':
+          console.log('delete')
           this.$root.$emit('bv::show::modal', 'modal-delete')
           break
         
@@ -47,7 +42,6 @@ export default {
         case 'view':
           this.$root.$emit('bv::show::modal', 'modal-view')
           break
-
       }
       
     }
@@ -56,6 +50,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+  @import '@/components/styles/buttons.scss';
 
 </style>

@@ -2,17 +2,18 @@
   <div>
       <!-- tabla -->
       <b-table
-        class = "table"
-        selectable 
-        :items="APIData" 
+        class = "table table-responsive-sm"
+        id="table"
+        ref="obras_table"
         :fields="fields"
+        :items="obras" 
         :select-mode="selectMode"
         :per-page="perPage"
         @row-selected="onRowSelected"
+        :current-page="currentPage"
         hover
-        fixed
-        responsive
-        :current-page="currentPage">
+        selectable 
+        >
       </b-table>
 
       <!-- paginado -->
@@ -20,7 +21,7 @@
         v-model="currentPage" 
         :total-rows="rows" 
         :per-page="perPage" 
-        aria-controls="my-table">
+        aria-controls="table">
       </b-pagination>
   </div>
 </template>
@@ -32,45 +33,71 @@
         props: ['obra'],
         data () {
             return {
-                fields: [
-                 {key: 'obraId.S', label: 'ID'},
-                 {key: 'encargado.S', label: 'Encargado'}, 
-                 {key: 'nombre.S', label: 'Nombre'}, 
-                 {key: 'estado.S', label: 'Estado'}, 
-                 {key: 'tipo.S', label: 'Tipo'}],
-                APIData: [],
+                obras: [],
                 perPage: 10,
-                currentPage: 1,
                 selectMode: 'single',
-                selected: []
+                currentPage: 1,
+                selected: [],
+                isSeleceted: false,
+
+                // columnas con opcion a ordenar
+                fields: [
+                    { key: 'obraId.S', label: 'ID', sortable: true },
+                    { key: 'encargado.S', label: 'Encargado', sortable: true }, 
+                    { key: 'nombre.S', label: 'Nombre', sortable: true }, 
+                    { key: 'estado.S', label: 'Estado', sortable: true }, 
+                    { key: 'tipo.S', label: 'Tipo', sortable: true }
+                ],
             }
         },
         
-        created() {
-            getAPI.get('/obras',)
-                .then(response => {
-                    console.log('Obra API has recieved data')
-                    this.APIData = response.data
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        },
-        
         computed: {
+            // obtener cantidad de elementos de cajas para paginado
             rows() {
-                return this.APIData.length
+                return this.obras.length
             }
         },
 
         methods: {
-        onRowSelected(items) {
-            this.selected = items
-            this.$emit('row-selected', false);
-            this.$emit('items', items);
-        }
+            // obtener id de caja elegida
+            onRowSelected(items) {
+                if(this.isSelected == false) {
+                    this.isSelected = true
+                    this.$emit('items', items)
+                    this.$emit('row-selected', false)
+
+                // deshabilitar botones si no hay una fila elegida
+                }else {
+                    if(items['0'] != null){
+                        this.$emit('items', items)
+                    }else{
+                        this.isSelected = false
+                        this.$emit('row-selected', true)
+                    }
+                }
+            },
+            
+            async get_obras() {
+                const accessToken = await this.$auth.getTokenSilently()
+                getAPI.get('/obras', {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                })
+                .then(response => {
+                    this.obras = response.data
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            }
+        },
+
+        mounted() {
+            // obtener lista de obras
+            this.get_obras()
+        },
     }
-}
 
 </script>
 

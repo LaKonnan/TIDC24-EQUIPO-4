@@ -1,11 +1,7 @@
 <template>
   <div class="content">
-        <!-- titulo -->
-        <p class="dark-title">GESTIÓN DE MÁQUINAS Y VEHÍCULOS</p>
-        <hr class="hr">
-
         <!-- tabla de contenidos -->
-        <maquinas-table @items="rowItems"/>
+        <maq-table @items="rowItems"/>
 
         <!-- botones -->
         <buttons :items="items" />
@@ -20,20 +16,20 @@ export default {
             items: []
         }
     },
+    
+    components: {
+        'maq-table': require('@/components/maquinas/table').default,
+        'buttons': require('@/components/maquinas/buttons').default,
+    },
 
     methods: {
         rowItems(params) {
             this.items = params
         }
-    },
-
-    componentS: {
-        'maquinas-table': require('@/components/maquinas/table').default,
-
     }
 }
 </script>
 
-<style>
-
+<style lang="scss">
+    @import '@/components/styles/global.scss';
 </style>

@@ -1,12 +1,35 @@
 import { getInstance } from "./index";
+//import { getAPI } from '../components/axios-api';
 
 export const authGuard = (to, from, next) => {
   const authService = getInstance();
 
-  const fn = () => {
+  const fn = async () => {
     // If the user is authenticated, continue with the route
     if (authService.isAuthenticated) {
-      return next();
+
+      /*const rol = await getAPI.get('/rol/'+ authService.user.sub)
+      .then(response => {
+          return response.data.roles[0].name
+      })
+      .catch(err => {
+          console.log(err)
+      })
+      
+      if(
+        to.path == '/' ||
+        to.path == '/no-access' ||
+        to.path == '/login' ||
+        to.path == '/cajas-chicas' ||
+        to.path == '/maquinas' ||
+        to.path == '/reglamento' ||
+        (rol == 'admin' && to.path=='/usuarios') ||
+        ((rol == 'admin' || (rol == 'gerente') || (rol == 'encargado')) && to.path=='/obras')
+      ){*/
+        return next()
+      /*} else {
+        return next('/no-access')
+      }*/
     }
 
     // Otherwise, log in
