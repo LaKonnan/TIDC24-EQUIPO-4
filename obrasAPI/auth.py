@@ -6,20 +6,22 @@ from jose import jwt
 from urllib.request import urlopen
 from dotenv import load_dotenv
 
+# Obtener las variables privadas de Auth0 desde el archivo .env
 load_dotenv('.env')
 AUTH0_DOMAIN = os.getenv('AUTH0_DOMAIN')
 ALGORITHMS = ['RS256']
 API_AUDIENCE = os.getenv('AUTH0_AUDIENCE')
 
-
+# Definición de clase para el manejo de excepciones de Auth0
 class AuthError(Exception):
     def __init__(self, error, status_code):
         self.error = error
         self.status_code = status_code
 
-
 def get_token_auth_header():
-    """Obtains the Access Token from the Authorization Header
+    """
+        Obtiene el token de acceso desde el campo Authorization en el header de la petición. 
+
     """
     auth = request.headers.get('Authorization', None)
     if not auth:
@@ -30,18 +32,21 @@ def get_token_auth_header():
 
     parts = auth.split()
 
+    # Verificación si el header contiene un bearer
     if parts[0].lower() != 'bearer':
         raise AuthError({
             'code': 'invalid_header',
             'description': 'Authorization header must start with "Bearer".'
         }, 401)
 
+    # Verificación del token que contiene el campo Authorization
     elif len(parts) == 1:
         raise AuthError({
             'code': 'invalid_header',
             'description': 'Token not found.'
         }, 401)
 
+    # Verificación que el token entregado es de tipo bearer
     elif len(parts) > 2:
         raise AuthError({
             'code': 'invalid_header',
@@ -49,11 +54,15 @@ def get_token_auth_header():
         }, 401)
 
     token = parts[1]
+
+    # Retorna el token capturado
     return token
 
 
 def requires_auth(f):
-    """Determines if the Access Token is valid
+    """
+        Determina si el token de acceso es válido
+
     """
 
     @wraps(f)
@@ -111,6 +120,11 @@ def requires_auth(f):
 
 
 def requires_role(required_permissions):
+    """
+        Determina si el usuario tiene los permisos requeridos
+        
+    """
+
     def decorator(f):
         @wraps(f)
         def wrapper(**args):
