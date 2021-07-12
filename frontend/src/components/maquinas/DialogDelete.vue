@@ -2,88 +2,100 @@
     <div>
         <b-modal ref="delete_modal" id="modal-delete" size="lg" title="ELIMINAR MAQUINA" hide-footer>
             <!-- datos de maquina -->
-            <b-row>
-                <b-col>RECURSO</b-col>
-                <b-col>{{ this.recurso }}</b-col>
-            </b-row>
-            <b-row>
-                <b-col>PATENTE</b-col>
-                <b-col>{{ this.patente }}</b-col>
-            </b-row>
-            <b-row>
-                <b-col>NOMBRE</b-col>
-                <b-col>{{ this.nombre }}</b-col>
-            </b-row>
-            <b-row>
-                <b-col>UBICACIÓN</b-col>
-                <b-col>{{ this.ubicacion }}</b-col>
-            </b-row>
+            <b-table stacked :items="resume"></b-table>
 
             <!-- boton eliminar -->
             <p><b>¿Está seguro(a) que desea eliminar la máquina?</b></p>
              <b-button class="normal-button" @click="deleteMaq()">CONFIRMAR</b-button>
         </b-modal>
 
-        <b-modal ref="success_modal" id="modal-no-backdrop" hide-backdrop hide-footer hide-header>
-            <center>
-                <p class="success"><b-icon icon="check-circle" animation="fade"></b-icon></p>
-                <p>{{ success_text }}</p>
-                <b-button class="dark-button" @click="closeModal()">CERRAR</b-button>
-            </center>
-        </b-modal>
+        <!-- modal de exito -->
+        <modal-success :message="succes_text"/>
+
+        <!-- modal de error -->
+        <modal-error :message="error_text" v-on:passData="sendMethod"/>
+
     </div>
 
     
 </template>
 
 <script>
+import { getAPI } from '../axios-api'
+
 export default {
     props: ['items'],
 
     data() {
         return {
-            recurso: 0,
-            patente: '',
-            nombre: '',
-            ubicacion: 0,
+            resume: [],
             success_text: ''
         }
+    },
+
+    components: {
+        'modal-success': require('@/components/success_error_message/modalSuccess.vue').default,
+        'modal-error': require('@/components/success_error_message/modalError.vue').default
     },
 
     mounted() {
         // obtener datos de maquina seleccionada
         this.$root.$on('bv::modal::shown', (bvEvent, modalId) => {
             console.log('SE MOSTRARA EL MODAL DE UPDATE', bvEvent, modalId)
-            
-            this.recurso = this.items[0].recurso.N,
-            this.patente = this.items[0].patente.S,
-            this.nombre = this.items[0].nombre.S,
-            this.ubicacion = this.items[0].ubicacion.N
+            if(modalId == 'modal-delete') {
+                this.resume.push({
+                    Recurso: this.items[0].recurso.N,
+                    Patente: this.items[0].patente.S,
+                    Nombre: this.items[0].nombre.S,
+                    Ubicacion: this.items[0].ubicacion.N
+                })
+            }
         })
     },
 
     methods: {
         // eliminar maquina
-        deleteMaq() {
+        async deleteMaq() {
+            const accessToken = await this.$auth.getTokenSilently()
+
             const options = {
                 headers: {
                     'Content-Type': 'application/json;charset=UTF-8',
-                    'Access-Control-Allow-Origin': '*'
+                    'Access-Control-Allow-Origin': '*',
+                    'Authorization': `Bearer ${accessToken}`
                 }
             }
 
-            getAPI.delete('/maquinas/'+ this.recurso,'',options).then(response => {
-                console.log('Maquina correctamente eliminada')
-                this.$refs.delete_modal.hide()
-                this.success_text = 'Maquina '+ this.patente + 'ha sido eliminada con éxito' 
-                this.$refs.succes_modal.show()
+            getAPI.delete('/maquinas/'+ this.recurso,'',options)
+                    .then(response => {
+                    console.log(response)
+                    // mensaje de exito
+                    this.success_text = 'Máquina '+ this.patente + 'registrada con éxito'
+
+                    // mostrar modal de éxito
+                    this.$bvModal.hide('modal-delete')
+                    this.$bvModal.show('success_modal')
+                
+            }).catch( err => {
+                 // mensaje de exito
+                this.error_text = 'ERROR: ' + err
+
+                // mostrar modal de éxito
+                this.$bvModal.hide('modal-delete')
+                this.$bvModal.show('error_modal')
             })
         },
-
-        closeModal() {
-            this.$refs.succes_modal.hide()
-        }
         
+        // enviar métodos a componentes
+        sendMethod(data) {
+            if (data.methodCall) return this[data.methodCall]();
+        },
+
+        // en caso de error, desde el modal con el mensaje, regresar al modal crear
+        modalBack() {
+            this.$bvModal.hide('error_modal')
+            this.$bvModal.show('modal-create')
+        },
     }
 }
 </script>

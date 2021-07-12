@@ -1,80 +1,67 @@
 <template>
     <div>
-      <b-modal ref="create" id="modal-xlc" size="xl" title="NUEVA OBRA" hide-footer>
-          <b-tabs pills card vertical v-model="tabIndex">
-            <!-- paso 1 -->
-            <b-tab title="PASO 1" active id="step1">
-                    <b-card-text>
-                        ID
-                        <b-form-input  v-model="obraid" @keyup="activateButton()" type="number" :state="validLength" aria-describedby="input-live-feedback1" ></b-form-input>
-                        <b-form-invalid-feedback id="input-live-feedback1">
-                        Requiere ingresar el ID de la obra
-                        </b-form-invalid-feedback>
-                        Encargado de la obra
-                        <b-form-input  v-model="encargado" @keyup="activateButton()" :state="validLength2" aria-describedby="input-live-feedback1" ></b-form-input>
-                        <b-form-invalid-feedback id="input-live-feedback1">
-                        Requiere ingresar un encargado
-                    </b-form-invalid-feedback>
-                        Nombre de la obra
-                        <b-form-input v-model="nombre" @keyup="activateButton()" :state="validLength3" aria-describedby="input-live-feedback2" ></b-form-input>
-                        <b-form-invalid-feedback id="input-live-feedback2">
-                        Requiere ingresar el nombre de la obra
-                    </b-form-invalid-feedback>
-                    
-                        Estado de la obra
-                        <b-form-select v-model="estado" :options="options1" @change="activateButton()" ></b-form-select>
+      <b-modal ref="create" id="modal-create" size="xl" title="REGISTRAR NUEVA OBRA" hide-footer @hidden="resetForm">
+        <b-card-text>
+          <!-- ID -->
+          <b-form-group label="ID - Recurso">
+            <b-form-input 
+              v-model="obraid" 
+              @keyup="activateButton()" 
+              type="number">
+            </b-form-input>
+          </b-form-group>
 
-                         Tipo
-                        <b-form-select v-model="tipo" :options="options2" @change="activateButton()"></b-form-select>
+          <!-- Tipo -->
+          <b-form-group label="Tipo">
+            <b-form-select 
+              v-model="tipo" 
+              :options="options2" 
+              @change="activateButton(); getUsers()">
+            </b-form-select>
+          </b-form-group>
 
-                        <b-button :disabled="btnStep1" id="btnStep1" class="button-next dark-button" @click="next1()">Siguiente</b-button>
-                    </b-card-text>
-            </b-tab>
+          <!-- Encargado -->
+          <b-form-group label="Encargado">
+            <b-form-select
+              v-model="encargado"
+              :options="users"
+              :disabled="booleanUsers"
+              @change="activateButton()"
+            >
+            </b-form-select>
+          </b-form-group>
 
-            <!-- paso  2 -->
-            <b-tab title="PASO 2" id="step2" :disabled="step2">
-               <b-card-text>
-                        <!-- resumen de nueva obra -->
-                <b-card  title="RESUMEN DE NUEVA OBRA">
-                   <b-card-text>
-                      <b-row>
-                        <b-col>ID</b-col>
-                        <b-col>{{ this.obraid }}</b-col>
-                   </b-row>
-                   <b-row>
-                        <b-col>Encargado de la obra</b-col>
-                        <b-col>{{ this.encargado }}</b-col>
-                   </b-row>
+          <!-- nombre de la obra -->
+          <b-form-group label="Nombre">
+            <b-form-input 
+              v-model="nombre" 
+              @keyup="activateButton()">
+            </b-form-input>
+          </b-form-group>
+      
+          <!-- estado -->
+          <b-form-group label="Estado">
+            <b-form-select 
+              v-model="estado" 
+              :options="options1" 
+              @change="activateButton()">
+            </b-form-select>
+          </b-form-group>
 
-                   <b-row>
-                        <b-col>Nombre de la obra</b-col>
-                        <b-col>{{ this.nombre }}</b-col>
-                   </b-row>
+          <center>
+            <p><b>Una vez presionado el botón, se registrará la obra en el sistema.</b></p>
+          </center>
+          <b-button class="button-next normal-button" @click="create()">GUARDAR</b-button>
+        </b-card-text>
 
-                   <b-row>
-                        <b-col>Estado de la obra</b-col>
-                        <b-col>{{ this.estado }}</b-col>
-                   </b-row>
-
-                   <b-row>
-                        <b-col>Tipo</b-col>
-                        <b-col>{{ this.tipo }}</b-col>
-                   </b-row>
-                   </b-card-text>
-               </b-card>
-               <br>
-                        <p>Una vez presionado el botón, se registrará la obra en el sistema.</p>
-                    <b-button id="btnStep3" class="button-next dark-button" @click="create()">GUARDAR</b-button>
-             </b-card-text>
-            </b-tab>
-        </b-tabs>
       </b-modal>
-      <b-modal ref="success-modal" id="modal-no-backdrop" hide-backdrop hide-footer hide-header>
-            <center>
-                <p class="success"><b-icon icon="check-circle" animation="fade"></b-icon></p>
-                <p>Obra creada con éxito</p>
-            </center>
-    </b-modal>
+
+      <!-- modal de exito -->
+      <modal-success :message="succes_text" v-on:passData="sendMethod"/>
+
+      <!-- modal de error -->
+      <modal-error :message="error_text" v-on:passData="sendMethod"/>
+
   </div>
 </template>
 
@@ -87,6 +74,13 @@ export default {
    
   data() {
     return {
+      // variables 
+      success_text: '',
+      error_text: '',
+      aux: [],
+      users: [],
+      rol: '',
+      booleanUsers: true,
       obraid:'',
       encargado: '',
       nombre: '',
@@ -96,101 +90,143 @@ export default {
       step2: true,
       estado: null,
       tipo: null,
+
       options1: [
-                { value: 'Activa', text: 'Activa'},
-                { value: 'Inactiva', text: 'Inactiva'},
-                { value: 'Finalizada', text: 'Finalizada' }
-            ],
+        { value: 'Activa', text: 'Activa'},
+        { value: 'Inactiva', text: 'Inactiva'},
+        { value: 'Finalizada', text: 'Finalizada' }
+      ],
+
       options2: [
-                { value: 'Obra', text: 'Obra'},
-                { value: 'Gerencia', text: 'Gerencia'},
-                { value: 'Oficina', text: 'Oficina central'}
-            ],
-      
-    };
+        { value: 'Obra', text: 'Obra'},
+        { value: 'Gerencia', text: 'Gerencia'},
+        { value: 'Oficina', text: 'Oficina central'}
+      ],
+    }
   },
   
-  methods: {
-   
-   activateButton(){
-     switch(this.tabIndex){
-     case 0:
-      if(![this.obraid, this.encargado, this.nombre, this.estado, this.tipo].includes(null)) {
-        this.btnStep1 = false
-        this.step2 = false
-     }
-     break;
-
-     case 1:
-       break;
-     }
-     
-   },
-
-   // pasar a paso 2 a traves del boton de paso 1
-        next1() {
-            const next = document.getElementById('step1')
-            next.classList.remove('active')
-            const step = document.getElementById('step2')
-            step.classList.add('active')
-            this.tabIndex++
-        },
-
-
-     async create(){
-     console.log(this.obraid)
-     const accessToken = await this.$auth.getTokenSilently()
-     const options = {
-       headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-        'Access-Control-Allow-Origin': '*',
-        'Authorization': `Bearer ${accessToken}`
-       }
-     }
-
-     const data = JSON.stringify(
-       {
-         obraId: this.obraid,
-         encargado: this.encargado,
-         estado: this.estado,
-         nombre: this.nombre,
-         tipo: this.tipo
-       }
-     )
-
-     getAPI.post('/obras', data, options)
-        .then((res) =>{
-          if(res.statusText == 'OK'){
-            this.success = true
-            this.$refs['create'].hide()
-            setTimeout(() => {
-               this.$refs['success-modal'].show()
-            },500)
-            this.$refs['success-modal'].hide()
-          }
-
-        })
-        .catch((err)=>{
-          console.log('Error: ', err)
-        })
-
-     }
+  components: {
+      'modal-success': require('@/components/success_error_message/modalSuccess.vue').default,
+      'modal-error': require('@/components/success_error_message/modalError.vue').default
   },
 
-   computed: {
-      validLength() {
-        return this.obraid.length > 0 ? true : false
-      },
-      validLength2() {
-        return this.encargado.length > 0 ? true : false
-      },
-       validLength3() {
-        return this.nombre.length > 0 ? true : false
-      },
-    },
-    
+  methods: {
+    // habilitar botón para registrar nueva obra
+    activateButton(){
+      switch(this.tabIndex){
+        case 0:
+          if(![this.obraid, this.encargado, this.nombre, this.estado, this.tipo].includes(null)) {
+            this.btnStep1 = false
+            this.step2 = false
+          }
+        break
 
-  }
+        case 1:
+          break
+        }
+      
+    },
+
+    // registrar nueva obra
+    async create(){
+      const accessToken = await this.$auth.getTokenSilently()
+
+      const options = {
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+          'Access-Control-Allow-Origin': '*',
+          'Authorization': `Bearer ${accessToken}`
+        }
+      }
+
+      const data = JSON.stringify(
+        {
+          obraId: this.obraid,
+          encargado: this.encargado,
+          estado: this.estado,
+          nombre: this.nombre,
+          tipo: this.tipo
+        }
+      )
+
+      getAPI.post('/obras', data, options)
+          .then((res) =>{
+            // mensaje de exito
+            this.success_text = 'Obra '+ this.obraid + 'creada con éxito'
+
+            this.resetForm()
+
+            // mostrar modal de éxito
+            this.$bvModal.hide('modal-create')
+            this.$bvModal.show('success_modal')
+            
+            console.log(res)
+          })
+          .catch((err)=>{
+            console.log('Error: ', err)
+          })
+    },
+
+
+    // obtener usuarios
+    async getUsers() {
+      if(this.aux.length >= 1){
+        this.aux = []
+        this.users = []
+      }
+
+      const accessToken = await this.$auth.getTokenSilently()
+
+      // obtener lista de usuarios
+      getAPI.get('/usuarios', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+      .then(response => {
+        this.aux = response.data 
+        
+        for(var i = 0;  i < this.aux.length; i++) {
+          this.users.push({
+            value: this.aux[i].user_id,
+            text: this.aux[i].name
+          })
+        }
+
+        this.booleanUsers = false
+      })
+    },
+
+    // regresar variables a su estado original
+    resetForm() {
+      this.aux.splice(0)
+      this.users.splice(0)
+      this.booleanUsers = true
+      this.obraid =''
+      this.encargado = ''
+      this.nombre = ''
+      this.success = false
+      this.tabIndex = 2
+      this.btnStep1 = true
+      this.step2 = true
+      this.estado = null
+      this.tipo = null
+    },
+
+    // enviar métodos a componentes
+    sendMethod(data) {
+        if (data.methodCall) return this[data.methodCall]();
+    },
+
+    // en caso de error, desde el modal con el mensaje, regresar al modal crear
+    modalBack() {
+        this.$bvModal.hide('error_modal')
+        this.$bvModal.show('modal-create')
+    },
+
+  },
+
+}
 
 </script>
 

@@ -52,7 +52,6 @@ def get_caja(id_caja1):
 
 @blueprint.route('/cajasChicas', methods=['POST'])
 def create_caja():
-    try:
         ## RECIBIR DATOS
         id_obra = request.json.get('id_obra')
         tipo = request.json.get('tipo')
@@ -61,17 +60,8 @@ def create_caja():
         fecha_termino = request.json.get('fecha_termino')
         monto_total = request.json.get('monto_total')
         monto_combustible = request.json.get('monto_combustible')
-
-        # verificar que la obra se encuentre no se encuentre finalizada
-        data = dynamodb_client.scan(
-            TableName = CAJAS_TABLE,
-            ScanFilter = { 
-                "obraId": { 
-                    "ComparisonOperator": "EQ", 
-                    "AttributeValueList": [{ "S": id_obra } ]
-                } 
-            }
-        )
+        
+        print("REGISTRAR NUEVA CAJA")
 
         ## GENERAR IDs
         # identificador de tipo
@@ -174,8 +164,6 @@ def create_caja():
         )
 
         return jsonify({'message': 'creada', "id_caja": id_caja })
-    except:
-        return jsonify({'message': 'OCURRIÓ UN ERROR:' })
 
 @blueprint.route('/cajasChicas/<string:id_caja>', methods=['DELETE'])
 def delete_caja(id_caja):
@@ -193,4 +181,72 @@ def delete_caja(id_caja):
         Key = {
             'id_caja_asociada': {'S': id_caja }
         }
+    )
+
+
+@blueprint.route('/cajaChica/<string:id_caja>', methods=['PUT'])
+def update_caja():
+    ## RECIBIR DATOS
+    id_caja = request.json.get('id_caja')
+    estado = request.json.get('estado')
+    fecha_inicio = request.json.get('fecha_inicio')
+    fecha_termino = request.json.get('fecha_termino')
+    monto_total = request.json.get('monto_total')
+    monto_combustible = request.json.get('maximo_caja_combustible')
+
+    key = {
+        'id_caja': {'S': id_caja}
+    }
+
+    # actualizar caja chica
+    dynamodb_client.update_item(
+        TableName = CAJAS_TABLE,
+        key = key,
+
+        ExpressionAttributeNames = {
+            '#estado': 'estado',
+            '#fechaI': 'fecha_inicio',
+            '#fechaF': 'fecha_final',
+            '#monto': 'monto_total'
+        },
+
+        UpdateExpression = "set #estado = :estado, #fechaI = :fecha_inicio, #fechaT = :fecha_inicio, #fechaF = :fecha_final, #monto = :monto_total"
+        ,
+
+        ExpressionAttributeValues = {
+            ':estado': {
+                'S': estado
+            },
+            ':fecha_inicio': {
+                'S': fecha_inicio
+            },
+            ':fecha_final': {
+                'S': fecha_termino
+            },
+            ':monto_total': {
+                'S': monto_total
+            }
+        }
+    )
+    
+    key = {
+        'id_caja_asociada': {'S': id_caja}
+    }
+
+    # actualizar caja combustible
+    dynamodb_client.update_item (
+        TableName = CAJAS_COMBUSTIBLE,
+        key =  key,
+        ExpressionAttributeNames = {
+            '#monto': 'monto_total'
+        },
+        UpdateExpression= 
+        "set #monto = :monto_total"
+        ,
+        ExpressionAttributeValues = {
+            ':monto_total': {
+                'S': monto_combustible
+            }
+        }
+
     )

@@ -204,25 +204,34 @@ export default {
         },
 
         // obtener obras segun tipo de caja
-        getObras() {
+        async getObras() {
             if(this.aux.length >= 1){
                 this.aux = []
                 this.options2 = []
             }
 
-            getAPI.get('/obra/tipos/'+this.selected1,)
-                .then(response => {
-                    // recibir datos
-                    this.aux= response.data
+            const accessToken = await this.$auth.getTokenSilently()
 
-                    // paasar datos a opciones de select obra
-                    for(var i = 0; i < this.aux.length; i++){
-                        // filtrar obras ya terminadas
-                        if(this.aux[i].estado.S != 'Terminada'){
-                            this.options2.push({ value: this.aux[i].obraId.S, text: (this.aux[i].obraId.S +' - '+this.aux[i].nombre.S) })
-                        }
+            getAPI.get('/obra/tipos/'+this.selected1, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            })
+            .then(response => {
+                // recibir datos
+                this.aux= response.data
+
+                // paasar datos a opciones de select obra
+                for(var i = 0; i < this.aux.length; i++){
+                    // filtrar obras ya terminadas
+                    if(this.aux[i].estado.S != 'Terminada'){
+                        this.options2.push({ 
+                            value: this.aux[i].obraId.S, 
+                            text: (this.aux[i].obraId.S +' - '+this.aux[i].nombre.S) 
+                        })
                     }
-                })
+                }
+            })
             
             this.booleanSelect2 = false
         },
@@ -306,44 +315,46 @@ export default {
         },
 
         // registrar nueva caja
-        create() {
+        async create() {
             // cofiguracion
+            const accessToken = await this.$auth.getTokenSilently()
+
             const options = {
                 headers: {
                     'Content-Type': 'application/json;charset=UTF-8',
-                    'Access-Control-Allow-Origin': '*'
+                    'Access-Control-Allow-Origin': '*',
+                    'Authorization': `Bearer ${accessToken}`
                 }
             }
 
             // datos
-            const data = JSON.stringify(
-                { tipo: this.selected1 ,
+            const data = JSON.stringify({
+                tipo: this.selected1 ,
                 id_obra: this.selected2,
                 estado: this.selected3,
                 fecha_inicio: this.initial_date,
                 fecha_termino: this.final_date,
                 monto_total: this.money,
-                monto_combustible: this.gas_money }
-            )
+                monto_combustible: this.gas_money 
+            })
 
+            console.log(data)
+            
             // crear caja chica
             getAPI.post('/cajasChicas', data, options)
                 .then((res) => {
-                    // cerrar modal crear
-                    this.$refs.create.hide()
-
+                    console.log(res.data.message)
                     switch(res.data.message){
                         case 'creada':
                             console.log('creada')
                             this.success_text = 'Caja chica' + res.data.id_caja + 'creada con éxito'
+                            this.$emit('message', this.success_text)
                             
                             // resetear campos
                             this.resetForm()
-                            
-                            // recargar datos de tabla
-                            this.$refs.cajas_table.refresh()
-
-                            // mostrar modal de exito al crear
+                        
+                            // mostrar modal de éxito
+                            this.$bvModal.hide('modal-create')
                             this.$bvModal.show('success_modal')
                             break
                         
@@ -398,25 +409,6 @@ export default {
             }
         }
 
-    },
-    computed: {
-        validateRangeMoney() {
-            if(this.money != '') {
-                const aux = parseInt(this.money)
-                return aux >= 50000 && aux <= 300000 ? true : false
-            }else {
-                return null
-            }
-        },
-
-        validateRangeGasMoney() {
-            if(this.money != '') {
-                const aux = parseInt(this.gas_money)
-                return aux >= 100000 && aux <= 300000 ? true : false
-            }else {
-                return null
-            }
-        }
     },
 
     created() {

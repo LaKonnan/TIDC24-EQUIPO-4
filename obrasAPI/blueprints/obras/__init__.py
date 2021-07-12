@@ -119,6 +119,7 @@ def edit_obra():
     key ={
         'obraId':{'S': obraId}
     }
+    
     dynamodb_client.update_item(
         TableName = OBRAS_TABLE,
         Key= key,

@@ -3,6 +3,8 @@
       <!-- tabla -->
       <b-table
         class = "table table-responsive-sm"
+        id="table"
+        ref="obras_table"
         :fields="fields"
         :items="obras" 
         :select-mode="selectMode"
@@ -19,7 +21,7 @@
         v-model="currentPage" 
         :total-rows="rows" 
         :per-page="perPage" 
-        aria-controls="my-table">
+        aria-controls="table">
       </b-pagination>
   </div>
 </template>
@@ -36,19 +38,17 @@
                 selectMode: 'single',
                 currentPage: 1,
                 selected: [],
+                isSeleceted: false,
+
+                // columnas con opcion a ordenar
                 fields: [
-                    {key: 'obraId.S', label: 'ID', sortable: true},
-                    {key: 'encargado.S', label: 'Encargado', sortable: true}, 
-                    {key: 'nombre.S', label: 'Nombre', sortable: true}, 
-                    {key: 'estado.S', label: 'Estado', sortable: true}, 
-                    {key: 'tipo.S', label: 'Tipo', sortable: true}
+                    { key: 'obraId.S', label: 'ID', sortable: true },
+                    { key: 'encargado.S', label: 'Encargado', sortable: true }, 
+                    { key: 'nombre.S', label: 'Nombre', sortable: true }, 
+                    { key: 'estado.S', label: 'Estado', sortable: true }, 
+                    { key: 'tipo.S', label: 'Tipo', sortable: true }
                 ],
             }
-        },
-        
-        //  obtener datos de obras
-        mounted() {
-            this.get_obras();
         },
         
         computed: {
@@ -61,10 +61,22 @@
         methods: {
             // obtener id de caja elegida
             onRowSelected(items) {
-                this.selected = items
-                this.$emit('row-selected', false);
-                this.$emit('items', items);
+                if(this.isSelected == false) {
+                    this.isSelected = true
+                    this.$emit('items', items)
+                    this.$emit('row-selected', false)
+
+                // deshabilitar botones si no hay una fila elegida
+                }else {
+                    if(items['0'] != null){
+                        this.$emit('items', items)
+                    }else{
+                        this.isSelected = false
+                        this.$emit('row-selected', true)
+                    }
+                }
             },
+            
             async get_obras() {
                 const accessToken = await this.$auth.getTokenSilently()
                 getAPI.get('/obras', {
@@ -79,8 +91,13 @@
                     console.log(err)
                 })
             }
+        },
+
+        mounted() {
+            // obtener lista de obras
+            this.get_obras()
+        },
     }
-}
 
 </script>
 

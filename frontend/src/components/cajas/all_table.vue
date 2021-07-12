@@ -4,6 +4,7 @@
       <b-table
         class = "table table-responsive-sm"
         id="table"
+        ref="cajas_table"
         :fields="fields" 
         :items="cajas"
         :select-mode="selectMode"
@@ -50,18 +51,6 @@ export default {
         }
     },
 
-    // obtener lista de obras
-    created() {
-        getAPI.get('/cajasChicas',)
-            .then(response => {
-                this.cajas = response.data
-                console.log('datos de cajas recibidos')
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    },
-
     computed: {
         // obtener cantidad de elementos de cajas para paginado
         rows() {
@@ -85,12 +74,31 @@ export default {
                     this.isSelected = false
                     this.$emit('row-selected', true)
                 }
-
-                
             }
             
-        },       
+        },
+        
+        // obtener lista de cajas chicas
+        async get_cajas() {
+            const accessToken = await this.$auth.getTokenSilently()
+            getAPI.get('/cajasChicas',{
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            })
+            .then(response => {
+                this.cajas = response.data
+                console.log('datos de cajas recibidos')
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        }
     },
+
+    mounted() {
+        this.get_cajas()
+    }
 }
 </script>
 

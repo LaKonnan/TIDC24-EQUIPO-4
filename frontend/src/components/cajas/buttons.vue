@@ -19,11 +19,6 @@
 <script>
 export default {
   props: ['selectedRow','items'],
-  data() {
-    return {
-      id: null
-    }
-  },
 
   components: {
     'dialog-create': require('@/components/cajas/DialogCreateCaja').default,
@@ -47,7 +42,6 @@ export default {
         case 'view':
           this.$root.$emit('bv::show::modal', 'modal-view')
           break
-
       }
       
     }

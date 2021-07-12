@@ -35,9 +35,10 @@ export default {
     data () {
         return {
             fields: [
-                { key: 'identities[0].user_id', label: 'Rut' },
-                { key: 'name', label: 'Nombre'}, {key: 'email', label: 'Email' },
-                { key: 'user_metadata.rol', label: 'Rol' }
+                { key: 'identities[0].user_id', label: 'Rut', sortable: true },
+                { key: 'name', label: 'Nombre', sortable: true},
+                { key: 'email', label: 'Email', sortable: true },
+                { key: 'user_metadata.rol', label: 'Rol', sortable: true }
             ],
             usuarios: [],
             perPage: 10,

@@ -2,29 +2,35 @@
   <div>
       <!-- modal crear -->
        <b-modal ref="create" id="modal-create" size="xl" title="REGISTRAR MÁQUINA" hide-footer>
-            Recurso
-            <b-form-input v-model="recurso" type="number"  @keyup="activateButton()" aria-describedby="input-live-feedback2"></b-form-input>
+           <!-- Recurso -->
+            <b-form-group label="Recurso">
+                <b-form-input v-model="recurso" type="number"  @keyup="activateButton()" aria-describedby="input-live-feedback2"></b-form-input>
+            </b-form-group>
             
-            Patente
-            <b-form-input v-model="patente"  @keyup="activateButton()" aria-describedby="input-live-feedback2"></b-form-input>
-            
-            Nombre
-            <b-form-input v-model="nombre"  @keyup="activateButton()" aria-describedby="input-live-feedback2"></b-form-input>
-            
-            Ubicación
-            <b-form-select  v-model="ubicacion" :options="options" @change="activateButton()" ></b-form-select>
+            <!-- Patente -->
+            <b-form-group label="Patente">
+                <b-form-input v-model="patente"  @keyup="activateButton()" aria-describedby="input-live-feedback2"></b-form-input>
+            </b-form-group>
 
+            <!-- Nombre -->
+            <b-form-group label="Nombre">
+                <b-form-input v-model="nombre"  @keyup="activateButton()" aria-describedby="input-live-feedback2"></b-form-input>
+            </b-form-group>
+            
+            <!-- Ubicación -->
+            <b-form-group label="Ubicación">
+                <b-form-select  v-model="ubicacion" :options="options" @change="activateButton()" ></b-form-select>
+            </b-form-group>
+
+            <!-- boton -->
             <b-button class="normal-button" :disabled="button" @click="createMaq()">REGISTRAR</b-button>
        </b-modal>
 
         <!-- modal de exito -->
-        <b-modal ref="success_modal" id="modal-no-backdrop" hide-backdrop hide-footer hide-header>
-            <center>
-                <p class="success"><b-icon icon="check-circle" animation="fade"></b-icon></p>
-                <p>{{ success_text }}</p>
-                <b-button class="dark-button" @click="closeModal()">CERRAR</b-button>
-            </center>
-        </b-modal>
+        <modal-success :message="succes_text" v-on:passData="sendMethod"/>
+
+        <!-- modal de error -->
+        <modal-error :message="error_text" v-on:passData="sendMethod"/>
   </div>
 </template>
 
@@ -41,14 +47,26 @@ export default {
             ubicacion: null,
             options: [],
             success_text: '',
+            error_text: '',
             button: true
         }
+    },
+    
+    components: {
+      'modal-success': require('@/components/success_error_message/modalSuccess.vue').default,
+      'modal-error': require('@/components/success_error_message/modalError.vue').default
     },
 
     methods: {
         // obtener lista de obras
-        getObras() {
-            getAPI.get('/obras',).then(response => {
+        async getObras() {
+            const accessToken = await this.$auth.getTokenSilently()
+
+            getAPI.get('/obras', {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            }).then(response => {
                 this.aux = response.data
 
                 // asignar datos al select
@@ -63,31 +81,41 @@ export default {
         },
 
         // registrar nueva maquina
-        create() {
+        async create() {
            // cofiguracion
+           const accessToken = await this.$auth.getTokenSilently()
+
             const options = {
                 headers: {
                     'Content-Type': 'application/json;charset=UTF-8',
-                    'Access-Control-Allow-Origin': '*'
+                    'Access-Control-Allow-Origin': '*',
+                    'Authorization': `Bearer ${accessToken}`
                 }
             }
 
             const data = JSON.stringify({
-                tipo: this.recurso,
+                id_maquina: this.recurso,
                 patente: this.patente,
                 nombre: this.nombre,
                 ubicacion: this.ubicacion
             })
 
-            getAPI.post('maquinas', data, options).then(response => {
-                this.$refs.create.hide()
-                this.success_text = 'Máquina '+ this.patente +' ha sido registrada con éxito.'
-                this.$refs.success_modal.show()
-            })
-        },
+            getAPI.post('/maquinas', data, options).then(response => {
+                console.log(response)
+                // mensaje de exito
+                this.success_text = 'Máquina '+ this.patente + 'registrada con éxito'
 
-        closeModal() {
-            this.$refs.success_modal.hide()
+                // mostrar modal de éxito
+                this.$bvModal.hide('modal-create')
+                this.$bvModal.show('success_modal')
+            }).catch( err => {
+                 // mensaje de exito
+                this.error_text = 'ERROR: ' + err
+
+                // mostrar modal de éxito
+                this.$bvModal.hide('modal-create')
+                this.$bvModal.show('error_modal')
+            })
         },
 
         activateButton() {
@@ -95,8 +123,18 @@ export default {
                 this.button = false
             }
         },
-    },
 
+        // enviar métodos a componentes
+        sendMethod(data) {
+            if (data.methodCall) return this[data.methodCall]();
+        },
+
+        // en caso de error, desde el modal con el mensaje, regresar al modal crear
+        modalBack() {
+            this.$bvModal.hide('error_modal')
+            this.$bvModal.show('modal-create')
+        },
+    },
 
     created() {
         this.getObras()

@@ -10,7 +10,6 @@
 
     <!-- botones -->
     <buttons :items="items" :selectedRow="selectedRow" />
-
   </div>
 </template>
 

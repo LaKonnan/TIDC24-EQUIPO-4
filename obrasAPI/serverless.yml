@@ -40,6 +40,7 @@ provider:
     CAJAS_TABLE: cajas_chicas
     CAJAS_COMBUSTIBLE: caja_combustible
     GASTO_COMBUSTIBLE: gasto_combustible
+    TABLE_MAQUINAS: maquinas
 
 functions:
   api:
@@ -110,4 +111,17 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: gasto_combustible
+    MaquinasTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id_maquina
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id_maquina
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: maquinas
 

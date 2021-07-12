@@ -176,6 +176,9 @@ import { getAPI } from '../axios-api'
 export default {
   props: ['items'],
   data() {
+      const now = new Date()
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+      const minDate = new Date(today) 
       return {
         caja: [],
         button: false,
@@ -190,6 +193,7 @@ export default {
         disableInitialDate: false,
 
         // datos de caja
+        today: minDate,
         id_caja: '',
         id_obra: 0,
         tipo: '',
@@ -231,7 +235,62 @@ export default {
               this.monto_gastos = this.caja[0].monto_gastos.S
               this.monto_total = this.caja[0].monto_total.S
       })
-    }
+    },
+
+    async updateCaja() {
+      const accessToken = await this.$auth.getTokenSilently()
+
+      const options = {
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            'Access-Control-Allow-Origin': '*',
+            'Authorization': `Bearer ${accessToken}`
+        }
+      }
+
+      const data = JSON.stringify({
+        id_caja: this.id_caja,
+        estado: this.selected3,
+        fecha_inicio: this.initial_date,
+        fecha_termino: this.final_date,
+        monto_total: this.money,
+        maximo_caja_combustible: this.gas_money
+      })
+
+      getAPI.put('cajaChica/' + this.id_caja, data, options)
+      .then(res => {
+          console.log(res)        
+          // mensaje de éxito
+          this.success_text = 'Caja chica' + this.items[0].id_caja.S + 'actualizada con éxito'
+          
+          // mostrar modal de éxito
+          this.$bvModal.hide('modal-edit')
+          this.$bvModal.show('success_modal')
+
+      }).catch(err => {
+        this.error_text = 'ERROR: '+ err
+
+        // mostrar modal de error
+        this.$bvModal.hide('modal-edit')
+        this.$bvModal.show('error_modal')
+      })
+
+
+
+    },
+
+    // establecer fecha  minima
+    setMinFinalDate() {
+      // duracion minima de quince dias
+      this.min_final_date = new Date(this.initial_date)
+      this.min_final_date.setMonth(this.min_final_date.getMonth())
+      this.min_final_date.setDate(this.min_final_date.getDate() + 17)
+      
+      // duracion  maxima de  un mes
+      this.max_final_date = new Date(this.initial_date)
+      this.max_final_date.setMonth(this.max_final_date.getMonth() + 1)
+      this.max_final_date.setDate(this.max_final_date.getDate() + 1)
+    },
   },
 
   mounted() {

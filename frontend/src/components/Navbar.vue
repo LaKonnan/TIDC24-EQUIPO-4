@@ -60,9 +60,10 @@ import { getAPI } from './axios-api'
       
       // elementos del menu
       items: [
-        { title: 'Usuarios', icon: 'people', to: '/usuarios', id: 'usuarios', access: true},
+        { title: 'Perfil', icon: 'person-fill', to: '/perfil', id: 'perfil', access: true },
+        { title: 'Usuarios', icon: 'people-fill', to: '/usuarios', id: 'usuarios', access: true},
         { title: 'Obras', icon: 'cone-striped', to: '/obras', id: 'obras', access: true} ,
-        { title: 'Máquinas', icon: 'cone-striped', to: '/maquinas', id: 'maquinas', access: true},
+        { title: 'Máquinas', icon: 'truck', to: '/maquinas', id: 'maquinas', access: true},
         { title: 'Cajas chicas', icon: 'archive-fill', to: '/cajas-chicas', id: 'cajas', access: true},
         { title: 'Reglamento', icon: 'file-text-fill', to: '/reglamento', id: 'reglamento', access: true},
       ]
@@ -133,7 +134,7 @@ import { getAPI } from './axios-api'
 
           case '/reglamento':
             menu_item  = document.getElementById('reglamento')
-            break;
+            break;         
         }
 
         // quitar clase active de existir un antecesor

@@ -75,38 +75,34 @@ export default {
         },
 
         // Eliminar caja
-        deleteCaja() {
+        async deleteCaja() {
+            const accessToken = await this.$auth.getTokenSilently()
+
             const options = {
                 headers: {
                     'Content-Type': 'application/json;charset=UTF-8',
-                    'Access-Control-Allow-Origin': '*'
+                    'Access-Control-Allow-Origin': '*',
+                    'Authorization': `Bearer ${accessToken}`
                 }
             }
 
             if(this.id_caja == this.caja[0].id_caja.S){
                 getAPI.delete('/cajasChicas/'+ this.items[0].id_caja.S,'',options)
                     .then(res => {
+                        console.log(res)
+                        
                         // mensaje de éxito
                         this.success_text = 'Caja chica' + this.items[0].id_caja.S + 'eliminada con éxito'
                         
-                        // resetear campos
-                        this.resetForm()
-                        
-                        // recargar datos de tabla
-                        this.$refs.cajas_table.refresh()
-
-                        // mostrar modal de exito al crear
+                        // mostrar modal de éxito
+                        this.$bvModal.hide('modal-delete')
                         this.$bvModal.show('success_modal')
-
-                        this.caja = []
-                        this.resume = []
-
-                        console.log(res)
                     })
             }else{
                 this.error_text = 'ID incorrecto, intente nuevamente'
 
                 // mostrar modal de error
+                this.$bvModal.hide('modal-delete')
                 this.$bvModal.show('error_modal')
             }
         },

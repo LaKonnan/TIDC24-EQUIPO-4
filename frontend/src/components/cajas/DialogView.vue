@@ -63,8 +63,10 @@ export default {
           
       })
 
+      var id_asociada = this.caja[0].id_caja.S
+      
       // obtener datos de caja combustible
-      getAPI.get('/cajasChicas/combustible' ,)
+      getAPI.get('/combustible/'+ id_asociada ,)
         .then(response => {
           this.caja = response.data
 

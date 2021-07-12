@@ -13,6 +13,8 @@ from blueprints.cajas_chicas import blueprint as cajas_chicas
 
 from blueprints.usuarios import blueprint as usuarios
 
+from blueprints.maquinas import blueprint as maquinas
+
 from flask_cors import CORS
 
 
@@ -27,6 +29,8 @@ app.register_blueprint(cajas_combustible)
 app.register_blueprint(cajas_chicas)
 
 app.register_blueprint(usuarios)
+
+app.register_blueprint(maquinas)
 
 CORS(app)
 

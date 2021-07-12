@@ -41,10 +41,16 @@ export default {
       }
     },
 
-    created() {
+    async created() {
+        const accessToken = await this.$auth.getTokenSilently()
         // obtener lista de maquinas
-        getAPI.get('/maquinas',)
+        getAPI.get('/maquinas', {
+            header: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
             .then(response => {
+                console.log(response)
                 this.maquinas = response.data
             })
     },
